@@ -13,12 +13,6 @@ spring:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
         show-sql: true
         
-security:
-    authentication:
-        jwt:
-            secret-key: beeland
-            token-validity-in-seconds: 360000000
-            token-validity-in-seconds-for-remember-me: 720000000
 cors:
     allowed-origins: "*"
     allowed-methods: "*"

@@ -15,9 +15,9 @@ public interface BucketsInfoRepository extends JpaRepository<BucketsInfo, Long> 
   Page<BucketsInfo> findAll(Pageable pageable);
   
   @Query("select b from BucketsInfo b where b.serviceProgram.programId is not null "
-      + "and ((:search is not null and b.serviceProgram.description like CONCAT('%',upper(:search),'%')) or "
-      + "(:search is not null and b.bucName like CONCAT('%',upper(:search),'%')) or "
-      + "(:search is not null and b.bucType like CONCAT('%',upper(:search),'%'))) "
+      + "and ((:search is not null and upper(b.serviceProgram.description) like CONCAT('%',upper(:search),'%')) or "
+      + "(:search is not null and upper(b.bucName) like CONCAT('%',upper(:search),'%')) or "
+      + "(:search is not null and upper(b.bucType) like CONCAT('%',upper(:search),'%'))) "
       + "order by b.bucketsId desc")
   Page<BucketsInfo> findAll(@Param("search") String search, Pageable pageable);
 

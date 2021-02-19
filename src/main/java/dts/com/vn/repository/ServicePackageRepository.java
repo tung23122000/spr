@@ -12,9 +12,9 @@ import dts.com.vn.entities.ServicePackage;
 @Repository
 public interface ServicePackageRepository extends JpaRepository<ServicePackage, Long> {
 
-  @Query("select sp from ServicePackage sp where (:search is not null and sp.code like CONCAT('%',:search,'%')) "
-      + "or (:search is not null and sp.name like CONCAT('%',:search,'%')) or "
-      + " (:search is not null and sp.groupCode like CONCAT('%',:search,'%')) order by sp.packageId desc")
+  @Query("select sp from ServicePackage sp where (:search is not null and upper(sp.code) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(sp.name) like CONCAT('%',upper(:search),'%')) or "
+      + " (:search is not null and upper(sp.groupCode) like CONCAT('%',upper(:search),'%')) order by sp.packageId desc")
   Page<ServicePackage> findAll(@Param("search") String search, Pageable pageable);
   
   @Query("select sp from ServicePackage sp order by sp.packageId desc")

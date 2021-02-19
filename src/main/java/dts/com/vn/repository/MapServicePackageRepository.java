@@ -15,11 +15,11 @@ public interface MapServicePackageRepository extends JpaRepository<MapServicePac
   Page<MapServicePackage> findAll(Pageable pageable);
   
   @Query("select m from MapServicePackage m where m.serviceProgram.programId is not null "
-      + "and ((:search is not null and m.regMapCode like CONCAT('%',upper(:search),'%')) or "
-      + "(:search is not null and m.delMapCode like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and m.promCode like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and m.mobType like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and m.serviceProgram.description like CONCAT('%',upper(:search),'%'))) "
+      + "and ((:search is not null and upper(m.regMapCode) like CONCAT('%',upper(:search),'%')) or "
+      + "(:search is not null and upper(m.delMapCode) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(m.promCode) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(m.mobType) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(m.serviceProgram.description) like CONCAT('%',upper(:search),'%'))) "
       + "order by m.mapId desc")
   Page<MapServicePackage> findAll(@Param("search") String search, Pageable pageable);
   

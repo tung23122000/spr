@@ -11,8 +11,8 @@ import dts.com.vn.entities.ServiceProgram;
 @Repository
 public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, Long> {
 
-  @Query("select sp from ServiceProgram sp where (:search is not null and sp.servicePackage.code like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and sp.description like CONCAT('%',upper(:search),'%')) "
+  @Query("select sp from ServiceProgram sp where (:search is not null and upper(sp.servicePackage.code) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(sp.description) like CONCAT('%',upper(:search),'%')) "
       + " order by sp.programId desc")
   Page<ServiceProgram> findAll(String search, Pageable pageable);
   

@@ -14,6 +14,14 @@ spring:
         show-sql: true
     profiles:
         active: local
+    
+        
+security:
+    authentication:
+        jwt:
+            secret-key: beeland
+            token-validity-in-seconds: 360000000
+            token-validity-in-seconds-for-remember-me: 720000000
 cors:
     allowed-origins: "*"
     allowed-methods: "*"
@@ -22,5 +30,5 @@ cors:
     allow-credentials: true
     max-age: 1800
 server:
-    port : 8080
+    port : 8083
 

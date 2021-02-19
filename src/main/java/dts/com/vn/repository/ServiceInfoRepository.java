@@ -15,9 +15,10 @@ public interface ServiceInfoRepository extends JpaRepository<ServiceInfo, Long> 
   Page<ServiceInfo> findAll(Pageable pageable);
 
   @Query("select si from ServiceInfo si where si.serviceProgram.programId is not null "
-      + "and ((:search is not null and si.infoName like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and si.infoValue like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and si.description like CONCAT('%',upper(:search),'%'))) "
+      + "and ((:search is not null and upper(si.infoName) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(si.infoValue) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(si.description) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(si.serviceProgram.description) like CONCAT('%',upper(:search),'%'))) "
       + "order by si.serviceInfoId desc")
   Page<ServiceInfo> findAll(@Param("search") String search, Pageable pageable);
   

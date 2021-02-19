@@ -18,9 +18,11 @@ public interface NdsTypeParamProgramRepository extends JpaRepository<NdsTypePara
   Page<NdsTypeParamProgram> findAll(Pageable pageable);
   
   @Query("select nds from NdsTypeParamProgram nds where nds.serviceProgram.programId is not null "
-      + "and ((:search is not null and nds.ndsType like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and nds.ndsParam like CONCAT('%',upper(:search),'%')) "
-      + "or (:search is not null and nds.ndsValue like CONCAT('%',upper(:search),'%'))) "
+      + "and ((:search is not null and upper(nds.ndsType) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(nds.ndsParam) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(nds.ndsValue) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(nds.servicePackage.code) like CONCAT('%',upper(:search),'%')) "
+      + "or (:search is not null and upper(nds.serviceProgram.description) like CONCAT('%',upper(:search),'%'))) "
       + "order by nds.ndsTypeParamKey desc")
   Page<NdsTypeParamProgram> findAll(@Param("search") String search, Pageable pageable);
 }

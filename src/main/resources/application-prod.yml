@@ -16,7 +16,7 @@ spring:
 security:
     authentication:
         jwt:
-            secret-key: beeland
+            secret-key: spr-config
             token-validity-in-seconds: 360000000
             token-validity-in-seconds-for-remember-me: 720000000
 

@@ -1,5 +1,6 @@
 package dts.com.vn.controller;
 
+import java.util.Objects;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ServicePackageResponse;
 import dts.com.vn.service.ServicePackageService;
-  
+
 @RestController
 @RequestMapping("/api/service-package")
 public class ServicePackageController {
@@ -30,7 +31,8 @@ public class ServicePackageController {
   private ServicePackageService servicePackageService;
 
   @GetMapping("/find-all")
-  public ResponseEntity<ApiResponse> findAll(@RequestParam(name = "search", required = false) String search, Pageable pageable) {
+  public ResponseEntity<ApiResponse> findAll(
+      @RequestParam(name = "search", required = false) String search, Pageable pageable) {
     ApiResponse response;
     try {
       Page<ServicePackage> page = servicePackageService.findAll(search, pageable);
@@ -90,6 +92,49 @@ public class ServicePackageController {
       ServicePackage page = servicePackageService.update(request);
       ServicePackageResponse responseEntity = new ServicePackageResponse(page);
       response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
+    } catch (RestApiException ex) {
+      response = new ApiResponse(ex);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+    }
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/find-by-code/{code}")
+  public ResponseEntity<ApiResponse> findByCode(
+      @PathVariable(name = "code", required = true) String code) {
+    ApiResponse response;
+    try {
+      ServicePackage servicePackage = servicePackageService.findByCode(code);
+      if (Objects.nonNull(servicePackage)) {
+        ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
+        response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), responseEntity);
+      } else {
+        response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+      }
+    } catch (RestApiException ex) {
+      response = new ApiResponse(ex);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+    }
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/find-by-code-and-ignore-package-id/{code}/{packageId}")
+  public ResponseEntity<ApiResponse> findByCodeIgnoreId(
+      @PathVariable(name = "code", required = true) String code,
+      @PathVariable(name = "packageId", required = true) Long packageId) {
+    ApiResponse response;
+    try {
+      ServicePackage servicePackage = servicePackageService.findByCodeIgnoreId(code, packageId);
+      if (Objects.nonNull(servicePackage)) {
+        ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
+        response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), responseEntity);
+      } else {
+        response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+      }
     } catch (RestApiException ex) {
       response = new ApiResponse(ex);
     } catch (Exception ex) {

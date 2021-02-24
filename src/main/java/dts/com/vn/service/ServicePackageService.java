@@ -46,6 +46,14 @@ public class ServicePackageService {
     return servicePackageRepository.findById(id).get();
   }
 
+  public ServicePackage findByCode(String code) {
+    return servicePackageRepository.findByCode(code).orElse(null);
+  }
+  
+  public ServicePackage findByCodeIgnoreId(String code, Long packageId) {
+    return servicePackageRepository.findByCodeAndPackageIdIgnore(code, packageId).orElse(null);
+  }
+  
   public ServicePackage update(AddServicePackageRequest request) {
     ServicePackage servicePackage = findById(request.getServicePackageId());
     if (Objects.nonNull(servicePackage)) {

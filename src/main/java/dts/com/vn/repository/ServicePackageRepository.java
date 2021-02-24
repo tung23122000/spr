@@ -21,4 +21,7 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
   Page<ServicePackage> findAll(Pageable pageable);
 
   Optional<ServicePackage> findByCode(String code);
+  
+  @Query("select sp from ServicePackage sp where sp.code = :code and sp.packageId != :packageId")
+  Optional<ServicePackage> findByCodeAndPackageIdIgnore(@Param("code") String code, @Param("packageId") Long packageId);
 }

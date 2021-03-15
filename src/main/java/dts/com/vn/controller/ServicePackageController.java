@@ -32,10 +32,11 @@ public class ServicePackageController {
 
   @GetMapping("/find-all")
   public ResponseEntity<ApiResponse> findAll(
-      @RequestParam(name = "search", required = false) String search, Pageable pageable) {
+      @RequestParam(name = "search", required = false) String search, 
+      @RequestParam(name = "serviceTypeId", required = false) Long serviceTypeId, Pageable pageable) {
     ApiResponse response;
     try {
-      Page<ServicePackage> page = servicePackageService.findAll(search, pageable);
+      Page<ServicePackage> page = servicePackageService.findAll(search, serviceTypeId, pageable);
       Page<ServicePackageResponse> pageResponse =
           page.map(new Function<ServicePackage, ServicePackageResponse>() {
             @Override
@@ -135,6 +136,30 @@ public class ServicePackageController {
       } else {
         response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
       }
+    } catch (RestApiException ex) {
+      response = new ApiResponse(ex);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+    }
+    return ResponseEntity.ok().body(response);
+  }
+  
+  @GetMapping("/find-all-by-group-code-and-service-type-id")
+  public ResponseEntity<ApiResponse> findAllByGroupCodeAndServiceTypeId(
+      @RequestParam(name = "groupCode", required = false) String groupCode, 
+      @RequestParam(name = "serviceTypeId", required = false) Long serviceTypeId, Pageable pageable) {
+    ApiResponse response;
+    try {
+      Page<ServicePackage> page = servicePackageService.findAllByGroupCodeAndServiceTypeId(groupCode, serviceTypeId, pageable);
+      Page<ServicePackageResponse> pageResponse =
+          page.map(new Function<ServicePackage, ServicePackageResponse>() {
+            @Override
+            public ServicePackageResponse apply(ServicePackage t) {
+              return new ServicePackageResponse(t);
+            }
+          });
+      response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
     } catch (RestApiException ex) {
       response = new ApiResponse(ex);
     } catch (Exception ex) {

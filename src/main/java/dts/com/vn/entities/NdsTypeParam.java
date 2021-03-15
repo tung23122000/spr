@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import dts.com.vn.request.NdsTypeParamProgramRequest;
+import dts.com.vn.util.DateTimeUtil;
 import lombok.Data;
 
 @Data
@@ -39,4 +41,17 @@ public class NdsTypeParam {
 
   @Column(name = "end_datetime")
   private Instant endDatetime;
+
+  public NdsTypeParam() {}
+
+  public NdsTypeParam(NdsTypeParamProgramRequest request, ServicePackage servicePackage) {
+    this.servicePackage = servicePackage;
+    this.ndsType = request.getNdsType();
+    this.ndsParam = request.getNdsParam();
+    this.ndsValue = request.getNdsValue();
+    this.staDatetime =
+        DateTimeUtil.convertStringToInstant(request.getStaDatetime(), "dd/MM/yyyy HH:mm:ss");
+    this.endDatetime =
+        DateTimeUtil.convertStringToInstant(request.getEndDatetime(), "dd/MM/yyyy HH:mm:ss");
+  }
 }

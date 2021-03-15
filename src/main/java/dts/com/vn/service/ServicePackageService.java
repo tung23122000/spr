@@ -29,10 +29,30 @@ public class ServicePackageService {
   @Autowired
   private ServicesRepository servicesRepository;
 
-  public Page<ServicePackage> findAll(String search, Pageable pageable) {
-    if (StringUtils.hasLength(search))
+  public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
+    if (StringUtils.hasLength(search)) {
+      if (Objects.nonNull(serviceTypeId)) {
+        return servicePackageRepository.findAll(search, serviceTypeId, pageable);
+      }
       return servicePackageRepository.findAll(search, pageable);
+    } else {
+      if (Objects.nonNull(serviceTypeId)) {
+        return servicePackageRepository.findAll(serviceTypeId, pageable);
+      }
+    }
     return servicePackageRepository.findAll(pageable);
+  }
+  
+  public Page<ServicePackage> findAllByGroupCodeAndServiceTypeId(String groupCode, Long serviceTypeId, Pageable pageable) {
+    if (StringUtils.hasLength(groupCode) && Objects.nonNull(serviceTypeId)) {
+      return servicePackageRepository.findAllByGroupCodeAndServiceTypeId(groupCode, serviceTypeId, pageable);
+    } else {
+      if (!StringUtils.hasLength(groupCode)) {
+        return servicePackageRepository.findAllByServiceTypeId(serviceTypeId, pageable);
+      } else {
+        return servicePackageRepository.findAllByGroupCode(groupCode, pageable);
+      }
+    }
   }
 
   public ServicePackage add(AddServicePackageRequest request) {

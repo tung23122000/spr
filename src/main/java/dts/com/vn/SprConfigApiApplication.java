@@ -10,7 +10,6 @@ import org.springframework.web.filter.CorsFilter;
 
 
 @SpringBootApplication
-@ComponentScan
 public class SprConfigApiApplication {
   
   public static void main(String[] args) {

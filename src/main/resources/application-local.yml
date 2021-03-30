@@ -1,0 +1,15 @@
+app:
+  name: extension-spr
+
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spr
+    username: postgres
+    password: talamvua1994
+    driverClassName: org.postgresql.Driver
+
+
+

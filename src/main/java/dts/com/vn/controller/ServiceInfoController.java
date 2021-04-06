@@ -87,11 +87,11 @@ public class ServiceInfoController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping("/find-all-by-packageId")
-	public ResponseEntity<ApiResponse> findAllByPackageId(@RequestParam(name = "packageId") Long packageId) {
+	@GetMapping("/find-all-by-packageId-programId")
+	public ResponseEntity<ApiResponse> findAllByPackageId(@RequestParam(name = "packageId") Long packageId, @RequestParam(name = "programId") Long programId) {
 		ApiResponse response;
 		try {
-			List<ServiceInfo> serviceInfos = serviceInfoService.findAllByPackageId(packageId);
+			List<ServiceInfo> serviceInfos = serviceInfoService.findAllByPackageId(packageId, programId);
 			List<ServiceInfoResponse> data = serviceInfos.stream().map(ServiceInfoResponse::new).collect(Collectors.toList());
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), data);
 		} catch (Exception e) {

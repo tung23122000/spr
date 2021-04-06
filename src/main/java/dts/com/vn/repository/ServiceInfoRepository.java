@@ -27,7 +27,7 @@ public interface ServiceInfoRepository extends JpaRepository<ServiceInfo, Long> 
 	@Query("select si from ServiceInfo si where si.serviceProgram.programId = :programId order by si.serviceInfoId desc")
 	Page<ServiceInfo> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 
-	@Query("SELECT si FROM ServiceInfo si where si.packageId = ?1 ORDER BY si.serviceInfoId desc")
-	List<ServiceInfo> findAllByPackageId(Long packageId);
+	@Query("SELECT si FROM ServiceInfo si where si.packageId = ?1 AND si.serviceProgram.programId=?2 ORDER BY si.serviceInfoId desc")
+	List<ServiceInfo> findAllByPackageId(Long packageId, Long programId);
 
 }

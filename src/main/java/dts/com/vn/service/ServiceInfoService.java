@@ -62,9 +62,8 @@ public class ServiceInfoService {
 				.orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 	}
 
-	public List<ServiceInfo> findAllByPackageId(Long packageId) {
-		return serviceInfoRepository.findAllByPackageId(packageId);
+	public List<ServiceInfo> findAllByPackageId(Long packageId, Long programId) {
+		return serviceInfoRepository.findAllByPackageId(packageId,programId);
 	}
-
 
 }

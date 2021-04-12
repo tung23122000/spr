@@ -6,7 +6,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://ups-fo-spr.mobifone.vn:5432/spr
+    url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/spr
     username: spr
     password: Dts@12345
     driverClassName: org.postgresql.Driver

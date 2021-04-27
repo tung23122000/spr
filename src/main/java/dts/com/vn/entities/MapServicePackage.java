@@ -70,19 +70,15 @@ public class MapServicePackage {
 
   public MapServicePackage() {}
 
-  public MapServicePackage(AddMapServicePackageRequest request, ExternalSystem extSystem,
-      ServiceProgram serviceProgram) {
+  public MapServicePackage(AddMapServicePackageRequest request, ExternalSystem extSystem, ServiceProgram serviceProgram) {
     this.extSystem = extSystem;
     this.serviceProgram = serviceProgram;
-    this.packageId = Objects.nonNull(serviceProgram.getServicePackage())
-        ? serviceProgram.getServicePackage().getPackageId()
-        : null;
-    this.staDate =
-        DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
+    this.packageId = Objects.nonNull(serviceProgram.getServicePackage()) ? serviceProgram.getServicePackage().getPackageId() : null;
+    this.staDate = DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
     this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
     this.promCode = request.getPromCode();
     this.mobType = request.getMobType();
-    this.promDays = request.getPromDays().toString();
+    this.promDays = request.getPromDays();
     this.onOff = request.getOnOff();
     this.regMapCode = request.getRegMapCode();
     this.delMapCode = request.getDelMapCode();

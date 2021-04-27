@@ -25,7 +25,7 @@ public class AddMapServicePackageRequest {
 
   private String mobType; // loại thuê bao
 
-  private Integer promDays; // số ngày khuyến mãi
+  private String promDays; // số ngày khuyến mãi
 
   private String onOff; // Online/Offline
 

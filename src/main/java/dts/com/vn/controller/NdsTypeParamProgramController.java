@@ -30,20 +30,11 @@ public class NdsTypeParamProgramController {
   private NdsTypeParamProgramService ndsTypeParamProgramService;
 
   @GetMapping("/find-all-by-program-id/{programId}")
-  public ResponseEntity<ApiResponse> findAllByProgramId(@PathVariable("programId") Long programId,
-      Pageable pageable) {
+  public ResponseEntity<ApiResponse> findAllByProgramId(@PathVariable("programId") Long programId, Pageable pageable) {
     ApiResponse response;
     try {
-      Page<NdsTypeParamProgram> page =
-          ndsTypeParamProgramService.findAllByProgramId(programId, pageable);
-      Page<NdsTypeParamProgramResponse> entityRes =
-          page.map(new Function<NdsTypeParamProgram, NdsTypeParamProgramResponse>() {
-
-            @Override
-            public NdsTypeParamProgramResponse apply(NdsTypeParamProgram e) {
-              return new NdsTypeParamProgramResponse(e);
-            }
-          });
+      Page<NdsTypeParamProgram> page = ndsTypeParamProgramService.findAllByProgramId(programId, pageable);
+      Page<NdsTypeParamProgramResponse> entityRes = page.map(NdsTypeParamProgramResponse::new);
       response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
     } catch (RestApiException ex) {
       response = new ApiResponse(ex);

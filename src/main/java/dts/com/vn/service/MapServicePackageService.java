@@ -40,8 +40,7 @@ public class MapServicePackageService {
         .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
     ExternalSystem externalSystem = externalSystemRepository.findById(request.getExtSystemId())
         .orElseThrow(() -> new RestApiException(ErrorCode.EXTERNAL_SYSTEM_NOT_FOUND));
-    return mapServicePackageRepository
-        .save(new MapServicePackage(request, externalSystem, serviceProgram));
+    return mapServicePackageRepository.save(new MapServicePackage(request, externalSystem, serviceProgram));
   }
 
   public MapServicePackage update(AddMapServicePackageRequest request) {

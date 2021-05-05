@@ -35,6 +35,8 @@ public class BucketsInfoService {
   }
 
   public BucketsInfo add(AddBucketsInfoRequest request) {
+    if (request.getBundleType() == null)
+      request.setBundleType("0");
     ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getProgramId())
         .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
     return bucketsInfoRepository.save(new BucketsInfo(request, serviceProgram));

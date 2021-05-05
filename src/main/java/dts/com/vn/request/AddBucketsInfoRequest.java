@@ -34,4 +34,6 @@ public class AddBucketsInfoRequest {
   private Long packageId; // service package code
   
   private Long programId; // service program id
+
+  private String accountType; // loại thuê bao
 }

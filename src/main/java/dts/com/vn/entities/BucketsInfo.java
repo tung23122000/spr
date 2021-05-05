@@ -79,6 +79,9 @@ public class BucketsInfo {
   @Column(name = "bundle_type")
   private String bundleType;
 
+  @Column(name = "account_type")
+  private String accountType;
+
   public BucketsInfo() {}
 
   public BucketsInfo(AddBucketsInfoRequest request, ServiceProgram serviceProgram) {
@@ -97,5 +100,6 @@ public class BucketsInfo {
     this.staDate =
         DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
     this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
+    this.accountType = request.getAccountType();
   }
 }

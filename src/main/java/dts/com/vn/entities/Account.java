@@ -1,12 +1,8 @@
 package dts.com.vn.entities;
 
 import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 
 @Data
@@ -33,4 +29,8 @@ public class Account {
 
   @Column(name = "date_of_birth")
   private Instant dateOfBirth;
+
+  @OneToOne
+  @JoinColumn(name = "role")
+  private Role role;
 }

@@ -2,6 +2,7 @@ package dts.com.vn.response;
 
 import java.util.Objects;
 import dts.com.vn.entities.Account;
+import dts.com.vn.entities.Role;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,8 @@ public class AccountResponse {
 
   private String dateOfBirth;
 
+  private Role role;
+
   public AccountResponse() {}
 
   public AccountResponse(Account account) {
@@ -28,5 +31,6 @@ public class AccountResponse {
     this.dateOfBirth = Objects.nonNull(account.getDateOfBirth())
         ? DateTimeUtil.formatInstant(account.getDateOfBirth(), "dd/MM/yyyy HH:mm:ss")
         : "";
+    this.role = account.getRole();
   }
 }

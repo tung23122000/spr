@@ -10,13 +10,13 @@ import java.util.List;
 
 @Service
 public class RoleService {
-    @Autowired
-    private RoleRepository roleRepository;
 
+	@Autowired
+	private RoleRepository roleRepository;
 
-    public RolePermissionResponse getPermissionById(Long id) {
-        List<MapRolePermission> list = roleRepository.getPermissionById(id);
-        RolePermissionResponse rolePermissionResponse = new RolePermissionResponse(id, list);
-        return rolePermissionResponse;
-    }
+	public RolePermissionResponse getPermissionById(Long id) {
+		List<MapRolePermission> list = roleRepository.getPermissionById(id);
+		return new RolePermissionResponse(id, list);
+	}
+
 }

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="LOG_HOME" value="logs-spr-config"/>
+    <property name="LOG_NAME_TRACE" value="log_trace"/>
+    <property name="LOG_NAME_DEBUG" value="log_debug"/>
+    <property name="LOG_NAME_INFO" value="log_info"/>
+    <property name="LOG_NAME_WARNING" value="log_warn"/>
+    <property name="LOG_NAME_ERROR" value="log_error"/>
+    <property name="LOG_NAME_OTHERS" value="log_app"/>
+    <property name="ASYNC" value="async"/>
+    <property name="CONSOLE" value="console"/>
+    <property name="datetimeFormat" value="%d{yyyy-MM-dd HH:mm:ss}"/>
+    <property name="dateFormat" value="%d{yyyy-MM-dd}"/>
+    <property name="maxSize" value="100MB"/>
+
+    <timestamp key="fileNameTimeFormat" datePattern="yyyy-MM-dd"/>
+
+    <!-- Config Console log -->
+    <appender name="${CONSOLE}" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                ${datetimeFormat} %green([%thread]) %highlight(%-5level) %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="${LOG_NAME_TRACE}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_TRACE}.log
+        </File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_TRACE}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="${LOG_NAME_DEBUG}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_DEBUG}.log
+        </File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_DEBUG}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="${LOG_NAME_INFO}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_INFO}.log
+        </File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger: %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_INFO}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+        </rollingPolicy>
+
+    </appender>
+
+    <appender name="${LOG_NAME_WARNING}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_WARNING}.log
+        </File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger: %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_WARNING}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+        </rollingPolicy>
+
+    </appender>
+
+    <appender name="${LOG_NAME_ERROR}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_ERROR}.log
+        </File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger: %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_ERROR}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+            ManagementController
+        </rollingPolicy>
+    </appender>
+
+    <appender name="${LOG_NAME_OTHERS}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>
+            ${LOG_HOME}/${LOG_NAME_OTHERS}.log
+        </File>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${datetimeFormat} [%thread] %-5level %logger: %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archived/${LOG_NAME_OTHERS}.${dateFormat}.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${maxSize}</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="${ASYNC}" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <appender-ref ref="${LOG_NAME_OTHERS}"/>
+    </appender>
+
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.ryantenney" level="WARN"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="io.undertow" level="WARN"/>
+    <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+    <logger name="org.ehcache" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.bson" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="liquibase" level="WARN"/>
+    <logger name="LiquibaseSchemaResolver" level="INFO"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="com.hazelcast" level="INFO"/>
+    <logger name="com.amazonaws" level="DEBUG"/>
+
+    <logger name="dts.com.vn" additivity="false" level="TRACE">
+        <appender-ref ref="${LOG_NAME_TRACE}"/>
+        <appender-ref ref="${LOG_NAME_DEBUG}"/>
+        <appender-ref ref="${LOG_NAME_INFO}"/>
+        <appender-ref ref="${LOG_NAME_WARNING}"/>
+        <appender-ref ref="${LOG_NAME_ERROR}"/>
+        <appender-ref ref="${CONSOLE}"/>
+    </logger>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <logger name="http.wire-log" level="debug" additivity="false">
+        <appender-ref ref="${LOG_NAME_DEBUG}"/>
+        <appender-ref ref="${LOG_NAME_INFO}"/>
+        <appender-ref ref="${LOG_NAME_WARNING}"/>
+        <appender-ref ref="${LOG_NAME_ERROR}"/>
+        <appender-ref ref="${CONSOLE}"/>
+    </logger>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <root level="info">
+        <appender-ref ref="${ASYNC}"/>
+        <appender-ref ref="${LOG_NAME_TRACE}"/>
+        <appender-ref ref="${LOG_NAME_DEBUG}"/>
+        <appender-ref ref="${LOG_NAME_INFO}"/>
+        <appender-ref ref="${LOG_NAME_WARNING}"/>
+        <appender-ref ref="${LOG_NAME_ERROR}"/>
+        <appender-ref ref="${CONSOLE}"/>
+    </root>
+
+</configuration>

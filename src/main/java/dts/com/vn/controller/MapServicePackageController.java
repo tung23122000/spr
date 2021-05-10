@@ -1,6 +1,9 @@
 package dts.com.vn.controller;
 
 import java.util.function.Function;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,70 +29,73 @@ import dts.com.vn.service.MapServicePackageService;
 @RequestMapping("/api/map-service-package")
 public class MapServicePackageController {
 
-  @Autowired
-  private MapServicePackageService mapServicePackageService;
+	private static final Logger logger = LoggerFactory.getLogger(MapServicePackageController.class);
 
-  @GetMapping("/find-all")
-  public ResponseEntity<ApiResponse> findAll(@RequestParam(name = "search", required = false) String search, Pageable pageable) {
-    ApiResponse response;
-    try {
-      Page<MapServicePackage> page = mapServicePackageService.findAll(search, pageable);
-      Page<MapServicePackageResponse> pageResponse =
-          page.map(new Function<MapServicePackage, MapServicePackageResponse>() {
-            @Override
-            public MapServicePackageResponse apply(MapServicePackage service) {
-              return new MapServicePackageResponse(service);
-            }
-          });
-      response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
-    } catch (Exception e) {
-      response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
-    }
-    return ResponseEntity.ok().body(response);
-  }
+	@Autowired
+	private MapServicePackageService mapServicePackageService;
 
-  @PostMapping("/add")
-  public ResponseEntity<ApiResponse> add(@RequestBody AddMapServicePackageRequest request) {
-    ApiResponse response;
-    try {
-      MapServicePackage entity = mapServicePackageService.add(request);
-      MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
-      response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
-    } catch (RestApiException ex) {
-      response = new ApiResponse(ex);
-    } catch (Exception e) {
-      response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
-    }
-    return ResponseEntity.ok().body(response);
-  }
+	@GetMapping("/find-all")
+	public ResponseEntity<ApiResponse> findAll(@RequestParam(name = "search", required = false) String search, Pageable pageable) {
+		ApiResponse response;
+		try {
+			Page<MapServicePackage> page = mapServicePackageService.findAll(search, pageable);
+			Page<MapServicePackageResponse> pageResponse =
+					page.map(new Function<MapServicePackage, MapServicePackageResponse>() {
+						@Override
+						public MapServicePackageResponse apply(MapServicePackage service) {
+							return new MapServicePackageResponse(service);
+						}
+					});
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
 
-  @PutMapping("/update")
-  public ResponseEntity<ApiResponse> update(@RequestBody AddMapServicePackageRequest request) {
-    ApiResponse response;
-    try {
-      MapServicePackage entity = mapServicePackageService.update(request);
-      MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
-      response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
-    } catch (RestApiException ex) {
-      response = new ApiResponse(ex);
-    } catch (Exception e) {
-      response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
-    }
-    return ResponseEntity.ok().body(response);
-  }
+	@PostMapping("/add")
+	public ResponseEntity<ApiResponse> add(@RequestBody AddMapServicePackageRequest request) {
+		ApiResponse response;
+		try {
+			logger.info("Add Billing request: {}", request.toString());
+			MapServicePackage entity = mapServicePackageService.add(request);
+			MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
+			logger.info("AddBilling response: {}", response.toString());
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			logger.trace("Add Billing response: {}", response.toString());
+		}
+		return ResponseEntity.ok().body(response);
+	}
 
-  @GetMapping("/find-by-id/{id}")
-  public ResponseEntity<ApiResponse> findById(@PathVariable("id") Long id) {
-    ApiResponse response;
-    try {
-      MapServicePackage entity = mapServicePackageService.findById(id);
-      MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
-      response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
-    } catch (RestApiException ex) {
-      response = new ApiResponse(ex);
-    } catch (Exception e) {
-      response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
-    }
-    return ResponseEntity.ok().body(response);
-  }
+	@PutMapping("/update")
+	public ResponseEntity<ApiResponse> update(@RequestBody AddMapServicePackageRequest request) {
+		ApiResponse response;
+		try {
+			MapServicePackage entity = mapServicePackageService.update(request);
+			MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-by-id/{id}")
+	public ResponseEntity<ApiResponse> findById(@PathVariable("id") Long id) {
+		ApiResponse response;
+		try {
+			MapServicePackage entity = mapServicePackageService.findById(id);
+			MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
 }

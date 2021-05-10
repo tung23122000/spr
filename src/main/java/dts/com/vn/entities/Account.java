@@ -33,4 +33,5 @@ public class Account {
   @OneToOne
   @JoinColumn(name = "role")
   private Role role;
+
 }

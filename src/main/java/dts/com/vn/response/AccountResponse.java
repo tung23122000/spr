@@ -15,7 +15,12 @@ public class AccountResponse {
 
   private String username;
 
+  private String password;
+
+
   private String fullName;
+
+  private String email;
 
   private String dateOfBirth;
 
@@ -27,7 +32,9 @@ public class AccountResponse {
     super();
     this.accountId = account.getAccountId();
     this.username = account.getUsername();
+    this.password = account.getPassword();
     this.fullName = account.getFullName();
+    this.email = account.getEmail();
     this.dateOfBirth = Objects.nonNull(account.getDateOfBirth())
         ? DateTimeUtil.formatInstant(account.getDateOfBirth(), "dd/MM/yyyy HH:mm:ss")
         : "";

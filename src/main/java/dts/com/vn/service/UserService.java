@@ -47,4 +47,23 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
     }
+
+    public Account update(Long id, Account account) {
+        Account returnAccount = userRepository.findById(id)
+                .orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
+        returnAccount.setRole(account.getRole());
+        returnAccount.setFullName(account.getFullName());
+        returnAccount.setEmail(account.getEmail());
+        returnAccount.setDateOfBirth(account.getDateOfBirth());
+
+        return accountRepository.save(returnAccount);
+    }
+
+
+    public Account delete(Long id) {
+        Account returnAccount = userRepository.findById(id)
+                .orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
+        accountRepository.delete(returnAccount);
+        return returnAccount;
+    }
 }

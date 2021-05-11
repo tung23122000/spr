@@ -66,4 +66,34 @@ public class UserController {
         }
         return ResponseEntity.ok().body(response);
     }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<ApiResponse> add(@PathVariable Long id, @RequestBody Account request) {
+        ApiResponse response;
+        try {
+            Account account = userService.update(id, request);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), account);
+        } catch (RestApiException ex) {
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
+        ApiResponse response;
+        try {
+            Account account = userService.delete(id);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), account);
+        } catch (RestApiException ex) {
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+        }
+        return ResponseEntity.ok().body(response);
+    }
 }

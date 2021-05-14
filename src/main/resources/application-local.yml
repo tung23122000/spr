@@ -10,6 +10,3 @@ spring:
     username: postgres
     password: talamvua1994
     driverClassName: org.postgresql.Driver
-
-
-

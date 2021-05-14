@@ -7,19 +7,19 @@ import lombok.Setter;
 @Setter
 public class NdsTypeParamProgramRequest {
 
-  private Long ndsTypeParamKey;
+	private Long ndsTypeParamKey;
 
-  private Long servicePackageId;
+	private Long servicePackageId;
 
-  private Long serviceProgramId;
+	private Long serviceProgramId;
 
-  private String ndsType;
+	private String ndsType;
 
-  private String ndsParam;
+	private String ndsParam;
 
-  private String ndsValue;
+	private String ndsValue;
 
-  private String staDatetime;
+	private String staDatetime;
 
-  private String endDatetime;
+	private String endDatetime;
 }

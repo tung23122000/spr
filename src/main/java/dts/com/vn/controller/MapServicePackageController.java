@@ -1,21 +1,5 @@
 package dts.com.vn.controller;
 
-import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import dts.com.vn.entities.MapServicePackage;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
@@ -24,6 +8,15 @@ import dts.com.vn.request.AddMapServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.MapServicePackageResponse;
 import dts.com.vn.service.MapServicePackageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.function.Function;
 
 @RestController
 @RequestMapping("/api/map-service-package")

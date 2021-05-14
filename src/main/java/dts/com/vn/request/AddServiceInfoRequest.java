@@ -7,18 +7,18 @@ import lombok.Setter;
 @Setter
 public class AddServiceInfoRequest {
 
-  private Long serviceInfoId;
+	private Long serviceInfoId;
 
-  private String infoName;
+	private String infoName;
 
-  private String infoValue;
+	private String infoValue;
 
-  private String description;
+	private String description;
 
-  private String staDate;
+	private String staDate;
 
-  private String endDate;
+	private String endDate;
 
-  private Long programId;
+	private Long programId;
 
 }

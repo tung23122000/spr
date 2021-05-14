@@ -7,35 +7,30 @@ import lombok.Setter;
 @Setter
 public class CloneServiceProgramRequest {
 
-    private Long serviceProgramId;// id CTKM
+	String isMinusIn;// trừ tiền trên IN (true/false)
+	private Long serviceProgramId;// id CTKM
+	private Long packageId; // id package
+	private String packageCode; //mã gói cước
+	private Long chargePrice; // giá tiền
+	private Long chargeTime;// số ngày hưởng
 
-    private Long packageId; // id package
+	private String autoExtend;// Gia hạn (true/false)
 
-    private String packageCode; //mã gói cước
+	private Long numExtend;// Số lần gia hạn
 
-    private Long chargePrice; // giá tiền
+	private String vnptPckCode;// Mã KM VNPT
 
-    String isMinusIn;// trừ tiền trên IN (true/false)
+	private String staDate;// Ngày hiệu lực
 
-    private Long chargeTime;// số ngày hưởng
+	private String extendEndDate;// Ngày hết hiệu lực
 
-    private String autoExtend;// Gia hạn (true/false)
+	private String description;// Mô tả chương trình
 
-    private Long numExtend;// Số lần gia hạn
+	private String chargeType; // Loại gói cước
 
-    private String vnptPckCode;// Mã KM VNPT
+	private String minusMethod; // Tài khoản trừ
 
-    private String staDate;// Ngày hiệu lực
+	private Long minStepMinus; // số tiền tối thiểu trừ
 
-    private String extendEndDate;// Ngày hết hiệu lực
-
-    private String description;// Mô tả chương trình
-
-    private String chargeType; // Loại gói cước
-
-    private String minusMethod; // Tài khoản trừ
-
-    private Long minStepMinus; // số tiền tối thiểu trừ
-
-    private String checkStepType; // check step type
+	private String checkStepType; // check step type
 }

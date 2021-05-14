@@ -1,13 +1,5 @@
 package dts.com.vn.service;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import dts.com.vn.entities.ServiceInfo;
 import dts.com.vn.entities.ServiceProgram;
 import dts.com.vn.enumeration.ErrorCode;
@@ -16,6 +8,14 @@ import dts.com.vn.repository.ServiceInfoRepository;
 import dts.com.vn.repository.ServiceProgramRepository;
 import dts.com.vn.request.AddServiceInfoRequest;
 import dts.com.vn.util.DateTimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ServiceInfoService {
@@ -63,7 +63,7 @@ public class ServiceInfoService {
 	}
 
 	public List<ServiceInfo> findAllByPackageId(Long packageId, Long programId) {
-		return serviceInfoRepository.findAllByPackageId(packageId,programId);
+		return serviceInfoRepository.findAllByPackageId(packageId, programId);
 	}
 
 }

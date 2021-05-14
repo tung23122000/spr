@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RoleRepository extends JpaRepository<MapRolePermission, Long>  {
-    @Query("SELECT map FROM MapRolePermission map WHERE  map.role.id = :id")
-    List<MapRolePermission> getPermissionById(@Param("id") Long id);
+public interface RoleRepository extends JpaRepository<MapRolePermission, Long> {
+	@Query("SELECT map FROM MapRolePermission map WHERE  map.role.id = :id")
+	List<MapRolePermission> getPermissionById(@Param("id") Long id);
 }

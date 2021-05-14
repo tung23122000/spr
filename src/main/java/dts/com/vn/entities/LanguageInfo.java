@@ -1,32 +1,28 @@
 package dts.com.vn.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "language_info", schema = "public")
 public class LanguageInfo {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "language_id")
-  private Long languageId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "language_id")
+	private Long languageId;
 
-  @Column(name = "language_code")
-  private String languageCode;
+	@Column(name = "language_code")
+	private String languageCode;
 
-  @Column(name = "language_name")
-  private String languageName;
+	@Column(name = "language_name")
+	private String languageName;
 
-  @Column(name = "status")
-  private String status;
+	@Column(name = "status")
+	private String status;
 
-  @Column(name = "language_in")
-  private String languageIn;
+	@Column(name = "language_in")
+	private String languageIn;
 }

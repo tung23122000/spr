@@ -8,25 +8,25 @@ import lombok.Setter;
 @Setter
 public class ExternalSystemResponse {
 
-  private Long extSystemId;
+	private Long extSystemId;
 
-  private String code;
+	private String code;
 
-  private String name;
+	private String name;
 
-  private String status;
+	private String status;
 
-  private String systemType;
+	private String systemType;
 
-  private String systemProgram;
+	private String systemProgram;
 
-  public ExternalSystemResponse(ExternalSystem entity) {
-    this.extSystemId = entity.getExtSystemId();
-    this.code = entity.getCode();
-    this.name = entity.getName();
-    this.status = entity.getStatus();
-    this.systemType = entity.getSystemType();
-    this.systemProgram = entity.getSystemProgram();
-  }
+	public ExternalSystemResponse(ExternalSystem entity) {
+		this.extSystemId = entity.getExtSystemId();
+		this.code = entity.getCode();
+		this.name = entity.getName();
+		this.status = entity.getStatus();
+		this.systemType = entity.getSystemType();
+		this.systemProgram = entity.getSystemProgram();
+	}
 
 }

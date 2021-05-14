@@ -7,33 +7,29 @@ import lombok.Setter;
 @Setter
 public class AddServiceProgramRequest {
 
-  private Long serviceProgramId;// id CTKM
-  
-  private String packageCode; //mã gói cước
-  
-  private Long chargePrice; // giá tiền
-  
-  String isMinusIn;// trừ tiền trên IN (true/false)
-  
-  private Long chargeTime;// số ngày hưởng
+	String isMinusIn;// trừ tiền trên IN (true/false)
+	private Long serviceProgramId;// id CTKM
+	private String packageCode; //mã gói cước
+	private Long chargePrice; // giá tiền
+	private Long chargeTime;// số ngày hưởng
 
-  private String autoExtend;// Gia hạn (true/false)
-  
-  private Long numExtend;// Số lần gia hạn
+	private String autoExtend;// Gia hạn (true/false)
 
-  private String vnptPckCode;// Mã KM VNPT
+	private Long numExtend;// Số lần gia hạn
 
-  private String staDate;// Ngày hiệu lực
+	private String vnptPckCode;// Mã KM VNPT
 
-  private String extendEndDate;// Ngày hết hiệu lực
-  
-  private String description;// Mô tả chương trình
-  
-  private String chargeType; // Loại gói cước
-  
-  private String minusMethod; // Tài khoản trừ
-  
-  private Long minStepMinus; // số tiền tối thiểu trừ
-  
-  private String checkStepType; // check step type
+	private String staDate;// Ngày hiệu lực
+
+	private String extendEndDate;// Ngày hết hiệu lực
+
+	private String description;// Mô tả chương trình
+
+	private String chargeType; // Loại gói cước
+
+	private String minusMethod; // Tài khoản trừ
+
+	private Long minStepMinus; // số tiền tối thiểu trừ
+
+	private String checkStepType; // check step type
 }

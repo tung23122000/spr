@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 
-  private String username;
-  
-  private String password;
-  
-  private Boolean rememberMe;
+	private String username;
+
+	private String password;
+
+	private Boolean rememberMe;
 }

@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AccountPasswordResponse {
-  private String value;
+	private String value;
 
-  private String message;
+	private String message;
 
 }

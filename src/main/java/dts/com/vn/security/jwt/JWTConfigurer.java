@@ -6,19 +6,19 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class JWTConfigurer
-    extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+		extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-  public static final String AUTHORIZATION_HEADER = "Authorization";
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 
-  private TokenProvider tokenProvider;
+	private TokenProvider tokenProvider;
 
-  public JWTConfigurer(TokenProvider tokenProvider) {
-    this.tokenProvider = tokenProvider;
-  }
+	public JWTConfigurer(TokenProvider tokenProvider) {
+		this.tokenProvider = tokenProvider;
+	}
 
-  @Override
-  public void configure(HttpSecurity http) {
-    JWTFilter jwtFilter = new JWTFilter(tokenProvider);
-    http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-  }
+	@Override
+	public void configure(HttpSecurity http) {
+		JWTFilter jwtFilter = new JWTFilter(tokenProvider);
+		http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+	}
 }

@@ -1,36 +1,23 @@
 package dts.com.vn.service;
 
-import java.util.Objects;
-import java.util.function.Function;
+import dts.com.vn.entities.*;
+import dts.com.vn.enumeration.ErrorCode;
+import dts.com.vn.exception.RestApiException;
+import dts.com.vn.repository.*;
+import dts.com.vn.request.AddServiceProgramRequest;
+import dts.com.vn.request.CloneServiceProgramRequest;
+import dts.com.vn.response.*;
+import dts.com.vn.response.service_package_detail.DetailServicePackageResponse;
+import dts.com.vn.response.service_package_detail.DetailServiceProgramResponse;
+import dts.com.vn.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import dts.com.vn.entities.BucketsInfo;
-import dts.com.vn.entities.MapServicePackage;
-import dts.com.vn.entities.NdsTypeParamProgram;
-import dts.com.vn.entities.ServiceInfo;
-import dts.com.vn.entities.ServicePackage;
-import dts.com.vn.entities.ServiceProgram;
-import dts.com.vn.enumeration.ErrorCode;
-import dts.com.vn.exception.RestApiException;
-import dts.com.vn.repository.BucketsInfoRepository;
-import dts.com.vn.repository.MapServicePackageRepository;
-import dts.com.vn.repository.NdsTypeParamProgramRepository;
-import dts.com.vn.repository.ServiceInfoRepository;
-import dts.com.vn.repository.ServicePackageRepository;
-import dts.com.vn.repository.ServiceProgramRepository;
-import dts.com.vn.request.AddServiceProgramRequest;
-import dts.com.vn.response.BucketsInfoResponse;
-import dts.com.vn.response.MapServicePackageResponse;
-import dts.com.vn.response.NdsTypeParamProgramResponse;
-import dts.com.vn.response.ServiceInfoResponse;
-import dts.com.vn.response.ServicePackageResponse;
-import dts.com.vn.response.ServiceProgramResponse;
-import dts.com.vn.response.service_package_detail.DetailServicePackageResponse;
-import dts.com.vn.response.service_package_detail.DetailServiceProgramResponse;
-import dts.com.vn.util.DateTimeUtil;
+
+import java.util.Objects;
+import java.util.function.Function;
 
 @Service
 public class ServiceProgramService {
@@ -63,6 +50,13 @@ public class ServiceProgramService {
     ServicePackage servicePackage =
         servicePackageRepository.findByCode(request.getPackageCode()).get();
     return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
+  }
+
+
+  public ServiceProgram clone(CloneServiceProgramRequest request) {
+      ServicePackage servicePackage =
+                servicePackageRepository.findByPackageId(request.getPackageId());
+      return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
   }
 
 

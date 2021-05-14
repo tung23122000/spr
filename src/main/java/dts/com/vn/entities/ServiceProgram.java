@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import dts.com.vn.request.AddServiceProgramRequest;
+import dts.com.vn.request.CloneServiceProgramRequest;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Data;
 
@@ -135,6 +136,26 @@ public class ServiceProgram {
         DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
     this.endDate =
         DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
+    this.description = request.getDescription();
+    this.chargeType = request.getChargeType();
+    this.minusMethod = request.getMinusMethod();
+    this.minStepMinus = request.getMinStepMinus();
+    this.checkStepType = request.getCheckStepType();
+  }
+
+  public ServiceProgram(CloneServiceProgramRequest request, ServicePackage servicePackage) {
+    this.servicePackage = servicePackage;
+    this.chargePrice = request.getChargePrice();
+    this.isNinusIn = request.getIsMinusIn();
+    this.chargeTime = request.getChargeTime();
+    this.autoExtend = request.getAutoExtend();
+    this.numExtend = request.getNumExtend();
+    this.vnptPckCode = request.getVnptPckCode();
+    this.staDate = DateTimeUtil.convertStringToInstant(request.getStaDate(), "dd/MM/yyyy HH:mm:ss");
+    this.extendEndDate =
+            DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
+    this.endDate =
+            DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
     this.description = request.getDescription();
     this.chargeType = request.getChargeType();
     this.minusMethod = request.getMinusMethod();

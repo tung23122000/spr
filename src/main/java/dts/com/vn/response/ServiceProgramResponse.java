@@ -43,6 +43,8 @@ public class ServiceProgramResponse {
 
 	private String checkStepType; // check step type
 
+	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -68,6 +70,7 @@ public class ServiceProgramResponse {
 				: "";
 		this.minStepMinus = service.getMinStepMinus();
 		this.checkStepType = service.getCheckStepType();
+		this.commandAlias = service.getCommandAlias();
 	}
 
 

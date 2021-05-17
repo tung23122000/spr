@@ -87,6 +87,7 @@ public class ServiceProgramService {
 			servicePr.setDescription(request.getDescription());
 			servicePr.setMinStepMinus(request.getMinStepMinus());
 			servicePr.setCheckStepType(request.getCheckStepType());
+			servicePr.setCommandAlias(request.getCommandAlias());
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);

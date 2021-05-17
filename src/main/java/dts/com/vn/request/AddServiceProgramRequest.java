@@ -32,4 +32,6 @@ public class AddServiceProgramRequest {
 	private Long minStepMinus; // số tiền tối thiểu trừ
 
 	private String checkStepType; // check step type
+
+	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
 }

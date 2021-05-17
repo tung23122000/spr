@@ -115,6 +115,10 @@ public class ServiceProgram {
 	@Column(name = "check_step_type")
 	private String checkStepType;
 
+	// phân biệt chương trình nào ứng với câu lệnh nào
+	@Column(name = "command_alias")
+	private String commandAlias;
+
 	public ServiceProgram() {
 	}
 
@@ -136,6 +140,7 @@ public class ServiceProgram {
 		this.minusMethod = request.getMinusMethod();
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
+		this.commandAlias = request.getCommandAlias();
 	}
 
 	public ServiceProgram(CloneServiceProgramRequest request, ServicePackage servicePackage) {
@@ -156,5 +161,6 @@ public class ServiceProgram {
 		this.minusMethod = request.getMinusMethod();
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
+		this.commandAlias = request.getCommandAlias();
 	}
 }

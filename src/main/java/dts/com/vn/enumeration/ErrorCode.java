@@ -13,6 +13,7 @@ public enum ErrorCode {
 	EXTERNAL_SYSTEM_NOT_FOUND("error.external.system.not.found", ""),
 	MAP_SERVICE_PACKAGE_NOT_FOUND("error.map.service.package.not.found", ""),
 	NOT_FOUND("error.not.found", ""),
+	PACKAGE_PENDING("error.service.package.pending", "Gói cước đang được chỉnh sửa")
 	;
 
 	private String errorCode;

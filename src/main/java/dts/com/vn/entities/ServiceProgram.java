@@ -115,7 +115,7 @@ public class ServiceProgram {
 	@Column(name = "check_step_type")
 	private String checkStepType;
 
-	// phân biệt chương trình nào ứng với câu lệnh nào
+	// phan biet chuong trinh nao ung voi cau lenh nao
 	@Column(name = "command_alias")
 	private String commandAlias;
 

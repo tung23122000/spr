@@ -3,6 +3,7 @@ package dts.com.vn.service;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.entities.ServiceType;
 import dts.com.vn.entities.Services;
+import dts.com.vn.enumeration.Constant;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.ServicePackageRepository;
@@ -65,6 +66,22 @@ public class ServicePackageService {
 
 	public ServicePackage findById(Long id) {
 		return servicePackageRepository.findById(id).get();
+	}
+
+	public ServicePackage pending(Long id) {
+		ServicePackage servicePackage = servicePackageRepository.findById(id).get();
+		if (servicePackage.getStatus().equals(Constant.PENDING)){
+			throw new RestApiException(ErrorCode.PACKAGE_PENDING);
+		}else {
+			servicePackage.setStatus(Constant.PENDING);
+		}
+		return servicePackageRepository.save(servicePackage);
+	}
+
+	public ServicePackage active(Long id) {
+		ServicePackage servicePackage = servicePackageRepository.findById(id).get();
+		servicePackage.setStatus(Constant.ACTIVE);
+		return servicePackageRepository.save(servicePackage);
 	}
 
 	public ServicePackage findByCode(String code) {

@@ -41,6 +41,8 @@ public class ServicePackageResponse {
 
 	private Long minStepMinus;
 
+	private String status;
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -65,5 +67,6 @@ public class ServicePackageResponse {
 				Objects.nonNull(service.getServices()) ? service.getServices().getServiceName() : "";
 		this.serviceId =
 				Objects.nonNull(service.getServices()) ? service.getServices().getServiceId() : null;
+		this.status = service.getStatus();
 	}
 }

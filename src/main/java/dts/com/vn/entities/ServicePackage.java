@@ -1,5 +1,6 @@
 package dts.com.vn.entities;
 
+import dts.com.vn.enumeration.Constant;
 import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Data;
@@ -79,6 +80,9 @@ public class ServicePackage {
 	@Column(name = "extend_relative")
 	private String extendRelative;
 
+	@Column(name = "status")
+	private String status;
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -91,6 +95,7 @@ public class ServicePackage {
 		this.listId = req.getListAccount();
 		this.gprsType = req.getCategoryData();
 		this.services = services;
+		this.status = Constant.ACTIVE;
 	}
 
 	public ServicePackage() {

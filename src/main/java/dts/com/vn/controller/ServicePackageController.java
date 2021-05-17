@@ -80,6 +80,38 @@ public class ServicePackageController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@GetMapping("/pending/{id}")
+	public ResponseEntity<ApiResponse> pending(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
+		try {
+			ServicePackage servicePackage = servicePackageService.pending(id);
+			ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/active/{id}")
+	public ResponseEntity<ApiResponse> active(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
+		try {
+			ServicePackage servicePackage = servicePackageService.active(id);
+			ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
 	@PutMapping("/update")
 	public ResponseEntity<ApiResponse> update(@RequestBody AddServicePackageRequest request) {
 		ApiResponse response;

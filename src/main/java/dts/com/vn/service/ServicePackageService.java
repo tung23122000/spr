@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -70,7 +72,9 @@ public class ServicePackageService {
 
 	public ServicePackage pending(Long id) {
 		ServicePackage servicePackage = servicePackageRepository.findById(id).get();
-		if (servicePackage.getStatus().equals(Constant.PENDING)){
+		Date now = new Date();
+		long diff = (now.getTime() - servicePackage.getUpdateDate().getTime())/1000;
+		if (servicePackage.getStatus().equals(Constant.PENDING) && diff <= Constant.TIME_TO_LIVE_PAGE){
 			throw new RestApiException(ErrorCode.PACKAGE_PENDING);
 		}else {
 			servicePackage.setStatus(Constant.PENDING);
@@ -81,6 +85,7 @@ public class ServicePackageService {
 	public ServicePackage active(Long id) {
 		ServicePackage servicePackage = servicePackageRepository.findById(id).get();
 		servicePackage.setStatus(Constant.ACTIVE);
+		servicePackage.setUpdateDate(new Date());
 		return servicePackageRepository.save(servicePackage);
 	}
 
@@ -109,6 +114,7 @@ public class ServicePackageService {
 					DateTimeUtil.convertStringToInstant(request.getDateStart(), "dd/MM/yyyy HH:mm:ss"));
 			servicePackage.setEndDate(
 					DateTimeUtil.convertStringToInstant(request.getDateEnd(), "dd/MM/yyyy HH:mm:ss"));
+			servicePackage.setUpdateDate(new Date());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

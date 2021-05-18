@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Entity
@@ -83,6 +84,9 @@ public class ServicePackage {
 	@Column(name = "status")
 	private String status;
 
+	@Column(name = "update_date")
+	private Date updateDate;
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -96,6 +100,7 @@ public class ServicePackage {
 		this.gprsType = req.getCategoryData();
 		this.services = services;
 		this.status = Constant.ACTIVE;
+		this.updateDate = new Date();
 	}
 
 	public ServicePackage() {

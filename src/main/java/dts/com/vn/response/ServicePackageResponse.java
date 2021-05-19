@@ -43,6 +43,8 @@ public class ServicePackageResponse {
 
 	private String status;
 
+	private Boolean isConfirm; // Gói cước có được confirm hay không
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -68,5 +70,6 @@ public class ServicePackageResponse {
 		this.serviceId =
 				Objects.nonNull(service.getServices()) ? service.getServices().getServiceId() : null;
 		this.status = service.getStatus();
+		this.isConfirm = service.getIsConfirm();
 	}
 }

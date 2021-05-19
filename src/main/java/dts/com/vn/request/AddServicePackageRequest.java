@@ -26,4 +26,6 @@ public class AddServicePackageRequest {
 	private String dateStart; // Ngày bắt đầu
 
 	private String dateEnd;  //Ngày kết thúc
+
+	private Boolean isConfirm; // Gói cước có được confirm hay không
 }

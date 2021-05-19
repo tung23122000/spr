@@ -87,6 +87,9 @@ public class ServicePackage {
 	@Column(name = "update_date")
 	private Date updateDate;
 
+	@Column(name = "is_confirm")
+	private Boolean isConfirm;
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -101,6 +104,7 @@ public class ServicePackage {
 		this.services = services;
 		this.status = Constant.ACTIVE;
 		this.updateDate = new Date();
+		this.isConfirm = req.getIsConfirm();
 	}
 
 	public ServicePackage() {

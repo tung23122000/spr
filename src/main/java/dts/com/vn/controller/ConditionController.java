@@ -21,12 +21,16 @@ import java.util.List;
 @RequestMapping("/api/condition")
 public class ConditionController {
 
+    private final ConditionService conditionService;
+
     @Autowired
-    private ConditionService conditionService;
+    public ConditionController(ConditionService conditionService) {
+        this.conditionService = conditionService;
+    }
 
     @GetMapping("/find-all")
     public ResponseEntity<?> findAll() {
-        ApiResponse response = null;
+        ApiResponse response;
         try {
             List<Condition> list = conditionService.findAll();
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), list);
@@ -36,12 +40,11 @@ public class ConditionController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,
-            rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @PostMapping("/save-condition")
     public ResponseEntity<?> saveCondition(@RequestBody MapConditionServicePackageRequest mapConditionServicePackageRequest) {
-        ApiResponse response = null;
-        List<ConditionRequest> listInput = null;
+        ApiResponse response;
+        List<ConditionRequest> listInput;
         List<MapConditionServicePackage> listResponse = new ArrayList<>();
         try {
             listInput = mapConditionServicePackageRequest.getListCondition();
@@ -55,4 +58,5 @@ public class ConditionController {
         }
         return ResponseEntity.ok().body(response);
     }
+
 }

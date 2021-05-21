@@ -52,14 +52,6 @@ public class ServiceProgramService {
 		return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
 	}
 
-
-	public ServiceProgram clone(CloneServiceProgramRequest request) {
-		ServicePackage servicePackage =
-				servicePackageRepository.findByPackageId(request.getPackageId());
-		return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
-	}
-
-
 	public ServiceProgram findById(Long id) {
 		return serviceProgramRepository.findById(id).get();
 	}

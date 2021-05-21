@@ -132,20 +132,4 @@ public class ServiceProgramController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@PostMapping("/clone")
-	public ResponseEntity<ApiResponse> clone(@RequestBody CloneServiceProgramRequest request) {
-		ApiResponse response;
-		try {
-			ServiceProgram data = serviceProgramService.clone(request);
-			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
-		} catch (RestApiException ex) {
-			response = new ApiResponse(ex);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
-		}
-		return ResponseEntity.ok().body(response);
-	}
-
 }

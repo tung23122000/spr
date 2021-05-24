@@ -87,9 +87,6 @@ public class ServicePackage {
 	@Column(name = "update_date")
 	private Date updateDate;
 
-	@Column(name = "is_confirm")
-	private Boolean isConfirm;
-
 	@Column(name = "country_code")
 	private String countryCode; // mã CVQT
 
@@ -110,7 +107,6 @@ public class ServicePackage {
 		this.services = services;
 		this.status = Constant.ACTIVE;
 		this.updateDate = new Date();
-		this.isConfirm = req.getIsConfirm();
 		this.countryCode = req.getCountryCode();
 		this.delayTimeCVQT = req.getDelayTimeCVQT();
 	}

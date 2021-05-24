@@ -29,8 +29,6 @@ public class AddServicePackageRequest {
 
 	private String dateEnd;  //Ngày kết thúc
 
-	private Boolean isConfirm; // Gói cước có được confirm hay không
-
 	private String countryCode; // mã CVQT
 
 	private String delayTimeCVQT; // Thời gian delay với CVQT

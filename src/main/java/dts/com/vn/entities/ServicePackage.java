@@ -90,6 +90,12 @@ public class ServicePackage {
 	@Column(name = "is_confirm")
 	private Boolean isConfirm;
 
+	@Column(name = "country_code")
+	private String countryCode; // mã CVQT
+
+	@Column(name = "delay_time")
+	private String delayTimeCVQT; // Thời gian delay với CVQT
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -105,6 +111,8 @@ public class ServicePackage {
 		this.status = Constant.ACTIVE;
 		this.updateDate = new Date();
 		this.isConfirm = req.getIsConfirm();
+		this.countryCode = req.getCountryCode();
+		this.delayTimeCVQT = req.getDelayTimeCVQT();
 	}
 
 	public ServicePackage() {

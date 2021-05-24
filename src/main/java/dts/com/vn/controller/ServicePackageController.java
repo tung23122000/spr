@@ -31,13 +31,7 @@ public class ServicePackageController {
 		ApiResponse response;
 		try {
 			Page<ServicePackage> page = servicePackageService.findAll(search, serviceTypeId, pageable);
-			Page<ServicePackageResponse> pageResponse =
-					page.map(new Function<ServicePackage, ServicePackageResponse>() {
-						@Override
-						public ServicePackageResponse apply(ServicePackage t) {
-							return new ServicePackageResponse(t);
-						}
-					});
+			Page<ServicePackageResponse> pageResponse = page.map(ServicePackageResponse::new);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);

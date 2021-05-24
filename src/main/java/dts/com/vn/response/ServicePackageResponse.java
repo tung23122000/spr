@@ -45,6 +45,10 @@ public class ServicePackageResponse {
 
 	private Boolean isConfirm; // Gói cước có được confirm hay không
 
+	private String countryCode; // mã CVQT
+
+	private String delayTimeCVQT; // Thời gian delay với CVQT
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -71,5 +75,7 @@ public class ServicePackageResponse {
 				Objects.nonNull(service.getServices()) ? service.getServices().getServiceId() : null;
 		this.status = service.getStatus();
 		this.isConfirm = service.getIsConfirm();
+		this.countryCode = service.getCountryCode();
+		this.delayTimeCVQT = service.getDelayTimeCVQT();
 	}
 }

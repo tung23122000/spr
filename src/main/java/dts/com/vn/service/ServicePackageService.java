@@ -115,6 +115,7 @@ public class ServicePackageService {
 			servicePackage.setEndDate(
 					DateTimeUtil.convertStringToInstant(request.getDateEnd(), "dd/MM/yyyy HH:mm:ss"));
 			servicePackage.setUpdateDate(new Date());
+			servicePackage.setCountryCode(request.getCountryCode());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

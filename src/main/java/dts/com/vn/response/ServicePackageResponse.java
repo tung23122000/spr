@@ -47,6 +47,14 @@ public class ServicePackageResponse {
 
 	private String delayTimeCVQT; // Thời gian delay với CVQT
 
+	private String inputKey; // input key
+
+	private String inputValue; // input value
+
+	private String excludePackageList; // exclude package list
+
+	private String expectResult; // expect result
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -74,5 +82,9 @@ public class ServicePackageResponse {
 		this.status = service.getStatus();
 		this.countryCode = service.getCountryCode();
 		this.delayTimeCVQT = service.getDelayTimeCVQT();
+		this.inputKey = service.getInputKey();
+		this.inputValue = service.getInputValue();
+		this.excludePackageList = service.getExcludePackageList();
+		this.expectResult = service.getExpectResult();
 	}
 }

@@ -87,6 +87,18 @@ public class ServicePackage {
 	@Column(name = "update_date")
 	private Date updateDate;
 
+	@Column(name = "input_key")
+	private String inputKey;
+
+	@Column(name = "input_value")
+	private String inputValue;
+
+	@Column(name = "exclude_package_list")
+	private String excludePackageList;
+
+	@Column(name = "expect_result")
+	private String expectResult;
+
 	@Column(name = "country_code")
 	private String countryCode; // mã CVQT
 
@@ -107,6 +119,10 @@ public class ServicePackage {
 		this.services = services;
 		this.status = Constant.ACTIVE;
 		this.updateDate = new Date();
+		this.inputKey = req.getInputKey();
+		this.inputValue = req.getInputValue();
+		this.excludePackageList = req.getExcludePackageList();
+		this.expectResult = req.getExpectResult();
 		this.countryCode = req.getCountryCode();
 		this.delayTimeCVQT = req.getDelayTimeCVQT();
 	}

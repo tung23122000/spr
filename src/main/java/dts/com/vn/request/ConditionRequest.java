@@ -14,5 +14,5 @@ public class ConditionRequest {
 
     private Boolean isConfirm;
 
-    private String messageMT;
+    private String messageMt;
 }

@@ -29,6 +29,14 @@ public class AddServicePackageRequest {
 
 	private String dateEnd;  //Ngày kết thúc
 
+	private String inputKey; // input key
+
+	private String inputValue; // input value
+
+	private String excludePackageList; // exclude package list
+
+	private String expectResult; // expect result
+
 	private String countryCode; // mã CVQT
 
 	private String delayTimeCVQT; // Thời gian delay với CVQT

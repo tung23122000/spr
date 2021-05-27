@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -116,6 +115,7 @@ public class ServicePackageService {
 					DateTimeUtil.convertStringToInstant(request.getDateEnd(), "dd/MM/yyyy HH:mm:ss"));
 			servicePackage.setUpdateDate(new Date());
 			servicePackage.setCountryCode(request.getCountryCode());
+			servicePackage.setDelayTimeCVQT(request.getDelayTimeCVQT());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

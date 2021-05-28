@@ -7,6 +7,7 @@ import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.request.ConditionRequest;
 import dts.com.vn.request.MapConditionServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.response.MapConditionServicePackageResponse;
 import dts.com.vn.service.ConditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,11 +48,25 @@ public class ConditionController {
         List<ConditionRequest> listInput;
         List<MapConditionServicePackage> listResponse = new ArrayList<>();
         try {
+            conditionService.deleteAllMap(mapConditionServicePackageRequest.getPackageId(), mapConditionServicePackageRequest.getProgramId());
             listInput = mapConditionServicePackageRequest.getListCondition();
             for(ConditionRequest input : listInput) {
                 MapConditionServicePackage item = conditionService.saveCondition(input, mapConditionServicePackageRequest.getPackageId(), mapConditionServicePackageRequest.getProgramId());
                 listResponse.add(item);
             }
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), ApiResponseStatus.SUCCESS.getValue());
+        } catch (Exception e) {
+            response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/get-condition")
+    public ResponseEntity<?> getCondition(@RequestParam(name = "packageId") Long packageId, @RequestParam(name = "programId") Long programId) {
+        ApiResponse response;
+        List<MapConditionServicePackage> listResponse = new ArrayList<>();
+        try {
+            listResponse = conditionService.getCondition(packageId, programId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listResponse);
         } catch (Exception e) {
             response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);

@@ -5,7 +5,9 @@ import dts.com.vn.entities.MapConditionServicePackage;
 import dts.com.vn.repository.ConditionRepository;
 import dts.com.vn.repository.MapConditionServicePackageRepository;
 import dts.com.vn.request.ConditionRequest;
+import dts.com.vn.response.MapConditionServicePackageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,24 +15,38 @@ import java.util.List;
 @Service
 public class ConditionService {
 
-    @Autowired
-    private ConditionRepository conditionRepository;
+    private final ConditionRepository conditionRepository;
+
+    private final MapConditionServicePackageRepository mapConditionServicePackageRepository;
 
     @Autowired
-    private MapConditionServicePackageRepository mapConditionServicePackageRepository;
-
-    public List<Condition> findAll() {
-        return conditionRepository.findAll();
+    public ConditionService(ConditionRepository conditionRepository, MapConditionServicePackageRepository mapConditionServicePackageRepository) {
+        this.conditionRepository = conditionRepository;
+        this.mapConditionServicePackageRepository = mapConditionServicePackageRepository;
     }
 
+    public List<Condition> findAll() {
+        return conditionRepository.findAll(Sort.by(Sort.Direction.ASC, "conditionId"));
+    }
 
     public MapConditionServicePackage saveCondition(ConditionRequest input, Long packageId, Long programId){
         MapConditionServicePackage mapConditionServicePackage = new MapConditionServicePackage();
         mapConditionServicePackage.setPackageId(packageId);
         mapConditionServicePackage.setProgramId(programId);
-        mapConditionServicePackage.setConditionId(input.getConditionId());
+        mapConditionServicePackage.setCondition(conditionRepository.getOne(input.getConditionId()));
         mapConditionServicePackage.setIsConfirm(input.getIsConfirm());
-        mapConditionServicePackage.setMessageMt(input.getMessageMT());
+        mapConditionServicePackage.setMessageMt(input.getMessageMt());
         return mapConditionServicePackageRepository.save(mapConditionServicePackage);
+    }
+
+    public List<MapConditionServicePackage> getCondition(Long packageId, Long programId) {
+        return mapConditionServicePackageRepository.getCondition(packageId, programId);
+    }
+
+    public void deleteAllMap(Long packageId, Long programId) {
+        List<MapConditionServicePackage> list = mapConditionServicePackageRepository.getCondition(packageId, programId);
+        for (MapConditionServicePackage item : list) {
+            mapConditionServicePackageRepository.delete(item);
+        }
     }
 }

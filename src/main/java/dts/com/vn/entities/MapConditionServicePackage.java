@@ -19,8 +19,12 @@ public class MapConditionServicePackage {
     @Column(name = "program_id")
     private Long programId;
 
-    @Column(name = "condition_id")
-    private Long conditionId;
+    @ManyToOne
+    @JoinColumn(name = "condition_id")
+    private Condition condition;
+//
+//    @Column(name = "condition_id")
+//    private Long conditionId;
 
     @Column(name = "is_confirm")
     private Boolean isConfirm;

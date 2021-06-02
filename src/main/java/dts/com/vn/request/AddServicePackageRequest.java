@@ -1,5 +1,6 @@
 package dts.com.vn.request;
 
+import dts.com.vn.entities.FlowGroup;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,4 +41,6 @@ public class AddServicePackageRequest {
 	private String countryCode; // mã CVQT
 
 	private String delayTimeCVQT; // Thời gian delay với CVQT
+
+	private FlowGroup flowGroupId; // Flow Group ID
 }

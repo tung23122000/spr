@@ -3,6 +3,8 @@ package dts.com.vn.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class AddServiceProgramRequest {
@@ -34,4 +36,10 @@ public class AddServiceProgramRequest {
 	private String checkStepType; // check step type
 
 	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
+
+	private String fileName; // file import isdn
+
+	private List<String> listIsdn; // list isdn
+
+	private Long servicePackageId; // PackageID
 }

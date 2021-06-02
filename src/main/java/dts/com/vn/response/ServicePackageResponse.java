@@ -1,5 +1,6 @@
 package dts.com.vn.response;
 
+import dts.com.vn.entities.FlowGroup;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Getter;
@@ -55,6 +56,8 @@ public class ServicePackageResponse {
 
 	private String expectResult; // expect result
 
+	private FlowGroup flowGroupId; // Flow Group ID
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -86,5 +89,6 @@ public class ServicePackageResponse {
 		this.inputValue = service.getInputValue();
 		this.excludePackageList = service.getExcludePackageList();
 		this.expectResult = service.getExpectResult();
+		this.flowGroupId = service.getFlowGroupId();
 	}
 }

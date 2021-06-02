@@ -32,4 +32,13 @@ public class ServicePackageList {
 
 	@Column(name = "msg_respond")
 	private String msgRespond;
+
+	public ServicePackageList(Long packageId, Long isdnListId, Instant staDate, Instant endDate, Long programId, String msgRespond) {
+		this.packageId = packageId;
+		this.isdnListId = isdnListId;
+		this.staDate = staDate;
+		this.endDate = endDate;
+		this.programId = programId;
+		this.msgRespond = msgRespond;
+	}
 }

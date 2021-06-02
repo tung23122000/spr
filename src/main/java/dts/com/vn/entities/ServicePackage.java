@@ -105,6 +105,10 @@ public class ServicePackage {
 	@Column(name = "delay_time")
 	private String delayTimeCVQT; // Thời gian delay với CVQT
 
+	@ManyToOne
+	@JoinColumn(name = "flow_group_id")
+	private FlowGroup flowGroupId;
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -125,6 +129,7 @@ public class ServicePackage {
 		this.expectResult = req.getExpectResult();
 		this.countryCode = req.getCountryCode();
 		this.delayTimeCVQT = req.getDelayTimeCVQT();
+		this.flowGroupId = req.getFlowGroupId();
 	}
 
 	public ServicePackage() {

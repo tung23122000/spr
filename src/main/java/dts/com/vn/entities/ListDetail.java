@@ -11,6 +11,9 @@ public class ListDetail {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "list_detail_id")
+	private Long listDetailId;
+
 	@Column(name = "isdn_list_id")
 	private Long isdnListId;
 
@@ -25,4 +28,16 @@ public class ListDetail {
 
 	@Column(name = "prefix_info_id")
 	private Integer prefixInfoId;
+
+	public ListDetail() {
+	}
+
+	public ListDetail(Long listDetailId, Long isdnListId, String isdn, String status, Long countUsed, Integer prefixInfoId) {
+		this.listDetailId = listDetailId;
+		this.isdnListId = isdnListId;
+		this.isdn = isdn;
+		this.status = status;
+		this.countUsed = countUsed;
+		this.prefixInfoId = prefixInfoId;
+	}
 }

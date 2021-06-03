@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Entity
@@ -33,4 +34,13 @@ public class IsdnList {
 	@Column(name = "list_type")
 	private String listType;
 
+	public IsdnList(Long isdnListId, String name, Instant createDate, String cvCodeList, String isDisplay, Instant endDate, String listType) {
+		this.isdnListId = isdnListId;
+		this.name = name;
+		this.createDate = createDate;
+		this.cvCodeList = cvCodeList;
+		this.isDisplay = isDisplay;
+		this.endDate = endDate;
+		this.listType = listType;
+	}
 }

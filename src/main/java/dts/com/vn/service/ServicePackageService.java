@@ -6,6 +6,7 @@ import dts.com.vn.entities.Services;
 import dts.com.vn.enumeration.Constant;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
+import dts.com.vn.repository.FlowGroupRepository;
 import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceTypeRepository;
 import dts.com.vn.repository.ServicesRepository;
@@ -31,6 +32,10 @@ public class ServicePackageService {
 
 	@Autowired
 	private ServicesRepository servicesRepository;
+
+	@Autowired
+	private FlowGroupRepository flowGroupRepository;
+
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -116,6 +121,7 @@ public class ServicePackageService {
 			servicePackage.setUpdateDate(new Date());
 			servicePackage.setCountryCode(request.getCountryCode());
 			servicePackage.setDelayTimeCVQT(request.getDelayTimeCVQT());
+			servicePackage.setFlowGroupId(request.getFlowGroupId());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

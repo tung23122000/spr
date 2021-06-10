@@ -1,13 +1,11 @@
 package dts.com.vn.controller;
 
-import dts.com.vn.entities.IsdnList;
-import dts.com.vn.entities.ListDetail;
-import dts.com.vn.entities.ServicePackageList;
-import dts.com.vn.entities.ServiceProgram;
+import dts.com.vn.entities.*;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.IsdnListRepository;
+import dts.com.vn.repository.ListDetailNewRepository;
 import dts.com.vn.request.AddServiceProgramRequest;
 import dts.com.vn.request.CloneServiceProgramRequest;
 import dts.com.vn.response.ApiResponse;
@@ -48,12 +46,16 @@ public class ServiceProgramController {
 
 	private final ServicePackageListService servicePackageListService;
 
+	private final ListDetailNewRepository listDetailNewRepository;
 
-	public ServiceProgramController(ServiceProgramService serviceProgramService, IsdnListService isdnListService, ListDetailService listDetailService, ServicePackageListService servicePackageListService) {
+
+	public ServiceProgramController(ServiceProgramService serviceProgramService, IsdnListService isdnListService, ListDetailService listDetailService,
+									ServicePackageListService servicePackageListService, ListDetailNewRepository listDetailNewRepository) {
 		this.serviceProgramService = serviceProgramService;
 		this.isdnListService = isdnListService;
 		this.listDetailService = listDetailService;
 		this.servicePackageListService = servicePackageListService;
+		this.listDetailNewRepository = listDetailNewRepository;
 	}
 
 	@GetMapping("/find-all")
@@ -92,39 +94,39 @@ public class ServiceProgramController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse> update(@RequestBody AddServiceProgramRequest request) {
-		ApiResponse response;
-		try {
-			if (request.getFileName() != null && request.getListIsdn().size()>0){
-				logger.info("Import isdn list: {}", request.getFileName(), request.getListIsdn());
-				//			Create isdn_list
-				IsdnList isdnListRequest = new IsdnList(null, request.getFileName(), Instant.now(), null, "1", null, "0");
-				IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
-				//			Create List_detail
-				Long isdnListId = isdnListResponse.getIsdnListId();
-				List<String> listDetailInput = request.getListIsdn();
-				for (String input : listDetailInput) {
-					ListDetail listDetail = new ListDetail(null, isdnListResponse.getIsdnListId(), input.trim(), "0", 0L, 91);
-					listDetailService.save(listDetail);
-				}
-				//			Create ServicePackageList
-				ServicePackageList servicePackageList = new ServicePackageList(request.getServicePackageId(), isdnListResponse.getIsdnListId(), Instant.now(), null, request.getServiceProgramId(), null);
-				servicePackageListService.save(servicePackageList);
-			}
-
-			ServiceProgram data = serviceProgramService.update(request);
-			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
-		} catch (RestApiException ex) {
-			response = new ApiResponse(ex);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
-		}
-		return ResponseEntity.ok().body(response);
-	}
+//	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+//	@PutMapping("/update")
+//	public ResponseEntity<ApiResponse> update(@RequestBody AddServiceProgramRequest request) {
+//		ApiResponse response;
+//		try {
+//			if (request.getFileName() != null && request.getListIsdn().size()>0){
+//				logger.info("Import isdn list: {}", request.getFileName(), request.getListIsdn());
+//				//			Create isdn_list
+//				IsdnList isdnListRequest = new IsdnList(null, request.getFileName(), Instant.now(), null, "1", null, "0");
+//				IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
+//				//			Create List_detail
+//				Long isdnListId = isdnListResponse.getIsdnListId();
+//				List<String> listDetailInput = request.getListIsdn();
+//				for (String input : listDetailInput) {
+//					ListDetail listDetail = new ListDetail(null, isdnListResponse.getIsdnListId(), input.trim(), "0", 0L, 91);
+//					listDetailService.save(listDetail);
+//				}
+//				//			Create ServicePackageList
+//				ServicePackageList servicePackageList = new ServicePackageList(request.getServicePackageId(), isdnListResponse.getIsdnListId(), Instant.now(), null, request.getServiceProgramId(), null);
+//				servicePackageListService.save(servicePackageList);
+//			}
+//
+//			ServiceProgram data = serviceProgramService.update(request);
+//			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
+//			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
+//		} catch (RestApiException ex) {
+//			response = new ApiResponse(ex);
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+//		}
+//		return ResponseEntity.ok().body(response);
+//	}
 
 	@GetMapping("/find-by-id/{id}")
 	public ResponseEntity<ApiResponse> findById(@PathVariable(name = "id", required = true) Long id) {
@@ -170,6 +172,63 @@ public class ServiceProgramController {
 			DetailServiceProgramResponse entity = serviceProgramService.detailServiceProgram(programId,
 					pageableIN, pageableBILLING, pageablePCRF, pageServiceInfo);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entity);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping("/addData")
+	public void addData(@RequestBody ListDetailNew tableData) {
+
+		try {
+			listDetailNewRepository.save(tableData);
+
+		} catch (RestApiException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@GetMapping("/getData")
+	public Iterable<ListDetailNew> getData() {
+
+		try {
+			return listDetailNewRepository.findAll();
+		} catch (RestApiException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@PutMapping("/update")
+	public ResponseEntity<ApiResponse> update(@RequestBody AddServiceProgramRequest request) {
+		ApiResponse response;
+		try {
+			if (request.getFileName() != null && request.getListIsdn().size()>0){
+				logger.info("Import isdn list: {}", request.getFileName(), request.getListIsdn());
+				//			Create isdn_list
+				IsdnList isdnListRequest = new IsdnList(null, request.getFileName(), Instant.now(), null, "1", null, "0");
+				IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
+				//			Create List_detail
+				ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), request.getListIsdn());
+				listDetailNewRepository.save(listDetailNew);
+
+				//			Create ServicePackageList
+				ServicePackageList servicePackageList = new ServicePackageList(request.getServicePackageId(), isdnListResponse.getIsdnListId(), Instant.now(), null, request.getServiceProgramId(), null);
+				servicePackageListService.save(servicePackageList);
+			}
+
+			ServiceProgram data = serviceProgramService.update(request);
+			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {

@@ -1,5 +1,6 @@
 package dts.com.vn.request;
 
+import dts.com.vn.entities.JsonIsdn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,7 +40,10 @@ public class AddServiceProgramRequest {
 
 	private String fileName; // file import isdn
 
-	private List<String> listIsdn; // list isdn
+//	private List<String> listIsdn; // list isdn
+
+
+	private List<JsonIsdn> listIsdn; // list isdn
 
 	private Long servicePackageId; // PackageID
 }

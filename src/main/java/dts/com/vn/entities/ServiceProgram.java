@@ -1,7 +1,6 @@
 package dts.com.vn.entities;
 
 import dts.com.vn.request.AddServiceProgramRequest;
-import dts.com.vn.request.CloneServiceProgramRequest;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Data;
 
@@ -119,6 +118,15 @@ public class ServiceProgram {
 	@Column(name = "command_alias")
 	private String commandAlias;
 
+	// CCSP
+	@Column(name = "ccsp_service_code")
+	private String ccspServiceCode;
+
+	@Column(name = "ccsp_result_code")
+	private String ccspResultCode;
+
+
+
 	public ServiceProgram() {
 	}
 
@@ -141,26 +149,25 @@ public class ServiceProgram {
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
 		this.commandAlias = request.getCommandAlias();
+		if (request.getAllowIsdnStatus()){
+			this.allowIsdnStatus = "1";
+		}else{
+			this.allowIsdnStatus = "0";
+		}
+		this.ccspServiceCode = this.convertToCcspDesign(request.getCcspServiceCode());
+		this.ccspResultCode = this.convertToCcspDesign(request.getCcspResultCode());
 	}
 
-	public ServiceProgram(CloneServiceProgramRequest request, ServicePackage servicePackage) {
-		this.servicePackage = servicePackage;
-		this.chargePrice = request.getChargePrice();
-		this.isNinusIn = request.getIsMinusIn();
-		this.chargeTime = request.getChargeTime();
-		this.autoExtend = request.getAutoExtend();
-		this.numExtend = request.getNumExtend();
-		this.vnptPckCode = request.getVnptPckCode();
-		this.staDate = DateTimeUtil.convertStringToInstant(request.getStaDate(), "dd/MM/yyyy HH:mm:ss");
-		this.extendEndDate =
-				DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
-		this.endDate =
-				DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss");
-		this.description = request.getDescription();
-		this.chargeType = request.getChargeType();
-		this.minusMethod = request.getMinusMethod();
-		this.minStepMinus = request.getMinStepMinus();
-		this.checkStepType = request.getCheckStepType();
-		this.commandAlias = request.getCommandAlias();
+//	Convert A#B#C
+	public String convertToCcspDesign(String str){
+		String returnStr = "";
+		if (str.indexOf(",") > 0){
+			returnStr = str.replaceAll(",", "#").toUpperCase();
+		}else if (str.indexOf(" ") > 0){
+			returnStr = str.replaceAll(" ", "#").toUpperCase();
+		}else if (str.indexOf("#") > 0){
+			returnStr = str.toUpperCase();
+		}
+		return returnStr;
 	}
 }

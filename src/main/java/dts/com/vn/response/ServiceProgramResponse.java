@@ -45,6 +45,13 @@ public class ServiceProgramResponse {
 
 	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
 
+	private Boolean allowIsdnStatus; //Thông tin đấu nối
+
+	// CCSP
+	private String ccspServiceCode;
+
+	private String ccspResultCode;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -71,6 +78,14 @@ public class ServiceProgramResponse {
 		this.minStepMinus = service.getMinStepMinus();
 		this.checkStepType = service.getCheckStepType();
 		this.commandAlias = service.getCommandAlias();
+		if (service.getAllowIsdnStatus().equals("1")){
+			this.allowIsdnStatus = true;
+		}else {
+			this.allowIsdnStatus = false;
+		}
+		this.ccspServiceCode = service.getCcspServiceCode();
+		this.ccspResultCode = service.getCcspResultCode();
+
 	}
 
 

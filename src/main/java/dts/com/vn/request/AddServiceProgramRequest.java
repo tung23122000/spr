@@ -42,4 +42,11 @@ public class AddServiceProgramRequest {
 	private List<String> listIsdn; // list isdn
 
 	private Long servicePackageId; // PackageID
+
+	private Boolean allowIsdnStatus; //Thông tin đấu nối
+
+	// CCSP
+	private String ccspServiceCode;
+
+	private String ccspResultCode;
 }

@@ -5,7 +5,6 @@ import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServiceProgramRequest;
-import dts.com.vn.request.CloneServiceProgramRequest;
 import dts.com.vn.response.*;
 import dts.com.vn.response.service_package_detail.DetailServicePackageResponse;
 import dts.com.vn.response.service_package_detail.DetailServiceProgramResponse;
@@ -18,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 @Service
 public class ServiceProgramService {
@@ -49,6 +49,17 @@ public class ServiceProgramService {
 	public ServiceProgram add(AddServiceProgramRequest request) {
 		ServicePackage servicePackage =
 				servicePackageRepository.findByCode(request.getPackageCode()).get();
+		String pattern1 = "([a-z0-9]+(,*[a-z0-9]+)*)";
+		String pattern2 = "([a-z0-9]+(\\s*[a-z0-9]+)*)";
+		String pattern3 = "([a-z0-9]+(#*[a-z0-9]+)*)";
+		if (Pattern.matches(pattern1, request.getCcspServiceCode()) || Pattern.matches(pattern2, request.getCcspServiceCode())
+			|| Pattern.matches(pattern3, request.getCcspServiceCode())){
+			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		}
+		if (Pattern.matches(pattern1, request.getCcspResultCode()) || Pattern.matches(pattern2, request.getCcspResultCode())
+				|| Pattern.matches(pattern3, request.getCcspResultCode())){
+			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		}
 		return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
 	}
 
@@ -58,6 +69,17 @@ public class ServiceProgramService {
 
 	public ServiceProgram update(AddServiceProgramRequest request) {
 		ServiceProgram servicePr = findById(request.getServiceProgramId());
+		String pattern1 = "([a-z0-9]+(,*[a-z0-9]+)*)";
+		String pattern2 = "([a-z0-9]+(\\s*[a-z0-9]+)*)";
+		String pattern3 = "([a-z0-9]+(#*[a-z0-9]+)*)";
+		if (Pattern.matches(pattern1, request.getCcspServiceCode()) || Pattern.matches(pattern2, request.getCcspServiceCode())
+				|| Pattern.matches(pattern3, request.getCcspServiceCode())){
+			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		}
+		if (Pattern.matches(pattern1, request.getCcspResultCode()) || Pattern.matches(pattern2, request.getCcspResultCode())
+				|| Pattern.matches(pattern3, request.getCcspResultCode())){
+			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		}
 		if (Objects.nonNull(servicePr)) {
 			ServicePackage servicePackage =
 					servicePackageRepository.findByCode(request.getPackageCode()).get();
@@ -80,6 +102,13 @@ public class ServiceProgramService {
 			servicePr.setMinStepMinus(request.getMinStepMinus());
 			servicePr.setCheckStepType(request.getCheckStepType());
 			servicePr.setCommandAlias(request.getCommandAlias());
+			if (request.getAllowIsdnStatus()){
+				servicePr.setAllowIsdnStatus("1");
+			}else{
+				servicePr.setAllowIsdnStatus("0");
+			}
+			servicePr.setCcspServiceCode(this.convertToCcspDesign(request.getCcspServiceCode()));
+			servicePr.setCcspResultCode(this.convertToCcspDesign(request.getCcspResultCode()));
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);
@@ -143,5 +172,18 @@ public class ServiceProgramService {
 				});
 		return new DetailServiceProgramResponse(serviceProgramResponse, pageInRes, pageBillingRes,
 				pagePCRFRes, pageServiceRes);
+	}
+
+	//	Convert A#B#C
+	public String convertToCcspDesign(String str){
+		String returnStr = "";
+		if (str.indexOf(",") > 0){
+			returnStr = str.replaceAll(",", "#").toUpperCase();
+		}else if (str.indexOf(" ") > 0){
+			returnStr = str.replaceAll(" ", "#").toUpperCase();
+		}else if (str.indexOf("#") > 0){
+			returnStr = str.toUpperCase();
+		}
+		return returnStr;
 	}
 }

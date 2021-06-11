@@ -49,15 +49,15 @@ public class ServiceProgramService {
 	public ServiceProgram add(AddServiceProgramRequest request) {
 		ServicePackage servicePackage =
 				servicePackageRepository.findByCode(request.getPackageCode()).get();
-		String pattern1 = "([a-z0-9]+(,*[a-z0-9]+)*)";
-		String pattern2 = "([a-z0-9]+(\\s*[a-z0-9]+)*)";
-		String pattern3 = "([a-z0-9]+(#*[a-z0-9]+)*)";
-		if (Pattern.matches(pattern1, request.getCcspServiceCode()) || Pattern.matches(pattern2, request.getCcspServiceCode())
-			|| Pattern.matches(pattern3, request.getCcspServiceCode())){
+		String pattern1 = "([A-Za-z0-9]+(,*[A-Za-z0-9]+)*)";
+		String pattern2 = "([A-Za-z0-9]+(\\s*[A-Za-z0-9]+)*)";
+		String pattern3 = "([A-Za-z0-9]+(#*[A-Za-z0-9]+)*)";
+		if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
+				&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
 			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
 		}
-		if (Pattern.matches(pattern1, request.getCcspResultCode()) || Pattern.matches(pattern2, request.getCcspResultCode())
-				|| Pattern.matches(pattern3, request.getCcspResultCode())){
+		if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
+				&& !Pattern.matches(pattern3, request.getCcspResultCode())){
 			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
 		}
 		return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
@@ -69,15 +69,16 @@ public class ServiceProgramService {
 
 	public ServiceProgram update(AddServiceProgramRequest request) {
 		ServiceProgram servicePr = findById(request.getServiceProgramId());
-		String pattern1 = "([a-z0-9]+(,*[a-z0-9]+)*)";
-		String pattern2 = "([a-z0-9]+(\\s*[a-z0-9]+)*)";
-		String pattern3 = "([a-z0-9]+(#*[a-z0-9]+)*)";
-		if (Pattern.matches(pattern1, request.getCcspServiceCode()) || Pattern.matches(pattern2, request.getCcspServiceCode())
-				|| Pattern.matches(pattern3, request.getCcspServiceCode())){
+		String pattern1 = "([A-Za-z0-9]+(,*[A-Za-z0-9]+)*)";
+		String pattern2 = "([A-Za-z0-9]+(\\s*[A-Za-z0-9]+)*)";
+		String pattern3 = "([A-Za-z0-9]+(#*[A-Za-z0-9]+)*)";
+		if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
+				&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
 			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
 		}
-		if (Pattern.matches(pattern1, request.getCcspResultCode()) || Pattern.matches(pattern2, request.getCcspResultCode())
-				|| Pattern.matches(pattern3, request.getCcspResultCode())){
+
+		if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
+				&& !Pattern.matches(pattern3, request.getCcspResultCode())){
 			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
 		}
 		if (Objects.nonNull(servicePr)) {

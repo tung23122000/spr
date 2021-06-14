@@ -1,6 +1,3 @@
-app:
-  name: extension-spr
-
 server:
   port: 8083
 

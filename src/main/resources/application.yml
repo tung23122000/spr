@@ -3,7 +3,7 @@ app:
 
 spring:
   profiles:
-    active: testbed
+    active: prod
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -25,5 +25,10 @@ cors:
   exposed-headers: "Authorization,Link,X-Total-Count"
   allow-credentials: true
   max-age: 1800
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 

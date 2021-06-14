@@ -154,20 +154,28 @@ public class ServiceProgram {
 		}else{
 			this.allowIsdnStatus = "0";
 		}
-		this.ccspServiceCode = this.convertToCcspDesign(request.getCcspServiceCode());
-		this.ccspResultCode = this.convertToCcspDesign(request.getCcspResultCode());
+		if (request.getCcspServiceCode() != null){
+			this.ccspServiceCode = this.convertToCcspDesign(request.getCcspServiceCode());
+		}
+		if (request.getCcspResultCode() != null){
+			this.ccspResultCode = this.convertToCcspDesign(request.getCcspResultCode());
+		}
 	}
 
 //	Convert A#B#C
 	public String convertToCcspDesign(String str){
-		String returnStr = "";
-		if (str.indexOf(",") > 0){
-			returnStr = str.replaceAll(",", "#").toUpperCase();
-		}else if (str.indexOf(" ") > 0){
-			returnStr = str.replaceAll(" ", "#").toUpperCase();
-		}else if (str.indexOf("#") > 0){
-			returnStr = str.toUpperCase();
+		if (str.equals(null)){
+			return null;
+		}else{
+			String returnStr = "";
+			if (str.indexOf(",") > 0){
+				returnStr = str.replaceAll(",", "#").toUpperCase();
+			}else if (str.indexOf(" ") > 0){
+				returnStr = str.replaceAll(" ", "#").toUpperCase();
+			}else if (str.indexOf("#") > 0){
+				returnStr = str.toUpperCase();
+			}
+			return returnStr;
 		}
-		return returnStr;
 	}
 }

@@ -52,13 +52,17 @@ public class ServiceProgramService {
 		String pattern1 = "([A-Za-z0-9]+(,*[A-Za-z0-9]+)*)";
 		String pattern2 = "([A-Za-z0-9]+(\\s*[A-Za-z0-9]+)*)";
 		String pattern3 = "([A-Za-z0-9]+(#*[A-Za-z0-9]+)*)";
-		if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
-				&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
-			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		if (request.getCcspServiceCode() != null){
+			if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
+					&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
+				throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+			}
 		}
-		if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
-				&& !Pattern.matches(pattern3, request.getCcspResultCode())){
-			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		if (request.getCcspResultCode() != null){
+			if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
+					&& !Pattern.matches(pattern3, request.getCcspResultCode())){
+				throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+			}
 		}
 		return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
 	}
@@ -72,14 +76,17 @@ public class ServiceProgramService {
 		String pattern1 = "([A-Za-z0-9]+(,*[A-Za-z0-9]+)*)";
 		String pattern2 = "([A-Za-z0-9]+(\\s*[A-Za-z0-9]+)*)";
 		String pattern3 = "([A-Za-z0-9]+(#*[A-Za-z0-9]+)*)";
-		if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
-				&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
-			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		if (request.getCcspServiceCode() != null){
+			if (!Pattern.matches(pattern1, request.getCcspServiceCode()) && !Pattern.matches(pattern2, request.getCcspServiceCode())
+					&& !Pattern.matches(pattern3, request.getCcspServiceCode())){
+				throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+			}
 		}
-
-		if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
-				&& !Pattern.matches(pattern3, request.getCcspResultCode())){
-			throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+		if (request.getCcspResultCode() != null){
+			if (!Pattern.matches(pattern1, request.getCcspResultCode()) && !Pattern.matches(pattern2, request.getCcspResultCode())
+					&& !Pattern.matches(pattern3, request.getCcspResultCode())){
+				throw new RestApiException(ErrorCode.VALIDATE_FAIL);
+			}
 		}
 		if (Objects.nonNull(servicePr)) {
 			ServicePackage servicePackage =
@@ -108,8 +115,12 @@ public class ServiceProgramService {
 			}else{
 				servicePr.setAllowIsdnStatus("0");
 			}
-			servicePr.setCcspServiceCode(this.convertToCcspDesign(request.getCcspServiceCode()));
-			servicePr.setCcspResultCode(this.convertToCcspDesign(request.getCcspResultCode()));
+			if (request.getCcspServiceCode() != null){
+				servicePr.setCcspServiceCode(this.convertToCcspDesign(request.getCcspServiceCode()));
+			}
+			if (request.getCcspResultCode() != null){
+				servicePr.setCcspResultCode(this.convertToCcspDesign(request.getCcspResultCode()));
+			}
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);
@@ -120,13 +131,7 @@ public class ServiceProgramService {
 				.orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND));
 		ServicePackageResponse response = new ServicePackageResponse(entity);
 		Page<ServiceProgram> listPage = serviceProgramRepository.findByPackageId(packageId, pageable);
-		Page<ServiceProgramResponse> pageResponse =
-				listPage.map(new Function<ServiceProgram, ServiceProgramResponse>() {
-					@Override
-					public ServiceProgramResponse apply(ServiceProgram service) {
-						return new ServiceProgramResponse(service);
-					}
-				});
+		Page<ServiceProgramResponse> pageResponse = listPage.map(ServiceProgramResponse::new);
 		return new DetailServicePackageResponse(response, pageResponse);
 	}
 

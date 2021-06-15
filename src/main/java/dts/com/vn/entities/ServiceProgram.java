@@ -184,6 +184,8 @@ public class ServiceProgram {
 				returnStr = str.replaceAll(" ", "#").toUpperCase();
 			}else if (str.indexOf("#") > 0){
 				returnStr = str.toUpperCase();
+			}else {
+				returnStr = str;
 			}
 			return returnStr;
 		}

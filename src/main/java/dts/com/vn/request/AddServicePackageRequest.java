@@ -43,4 +43,6 @@ public class AddServicePackageRequest {
 	private String delayTimeCVQT; // Thời gian delay với CVQT
 
 	private FlowGroup flowGroupId; // Flow Group ID
+
+	private Integer extendStatus; // EXTEND STATUS
 }

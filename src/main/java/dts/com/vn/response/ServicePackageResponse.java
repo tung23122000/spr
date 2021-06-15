@@ -58,6 +58,8 @@ public class ServicePackageResponse {
 
 	private FlowGroup flowGroupId; // Flow Group ID
 
+	private Integer extendStatus; // EXTEND STATUS
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -90,5 +92,6 @@ public class ServicePackageResponse {
 		this.excludePackageList = service.getExcludePackageList();
 		this.expectResult = service.getExpectResult();
 		this.flowGroupId = service.getFlowGroupId();
+		this.extendStatus = service.getExtendStatus();
 	}
 }

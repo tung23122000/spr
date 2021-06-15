@@ -52,6 +52,10 @@ public class ServiceProgramResponse {
 
 	private String ccspResultCode;
 
+	private Long number1; // MAX DATE
+
+	private Long number2; // MAX REGISTER ON MAX DATE
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -85,7 +89,8 @@ public class ServiceProgramResponse {
 		}
 		this.ccspServiceCode = service.getCcspServiceCode();
 		this.ccspResultCode = service.getCcspResultCode();
-
+		this.number1 = service.getNumber1();
+		this.number2 = service.getNumber2();
 	}
 
 

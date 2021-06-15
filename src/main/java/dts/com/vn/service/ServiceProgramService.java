@@ -121,6 +121,8 @@ public class ServiceProgramService {
 			if (request.getCcspResultCode() != null){
 				servicePr.setCcspResultCode(this.convertToCcspDesign(request.getCcspResultCode()));
 			}
+			servicePr.setNumber1(request.getNumber1());
+			servicePr.setNumber2(request.getNumber2());
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);

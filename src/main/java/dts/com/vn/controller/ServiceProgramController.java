@@ -1,9 +1,6 @@
 package dts.com.vn.controller;
 
-import dts.com.vn.entities.IsdnList;
-import dts.com.vn.entities.ListDetail;
-import dts.com.vn.entities.ServicePackageList;
-import dts.com.vn.entities.ServiceProgram;
+import dts.com.vn.entities.*;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
@@ -178,4 +175,18 @@ public class ServiceProgramController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@GetMapping("/get-all-actioncode-mapping")
+	public ResponseEntity<ApiResponse> getAllActioncodeMapping() {
+		ApiResponse response;
+		try {
+			List<ActioncodeMapping> list = serviceProgramService.getAllActioncodeMapping();
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), list);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
 }

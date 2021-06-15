@@ -53,4 +53,6 @@ public class AddServiceProgramRequest {
 	private Long number1; // MAX DATE
 
 	private Long number2; // MAX REGISTER ON MAX DATE
+
+	private String transCode; // ACTIONCODE_MAPPING
 }

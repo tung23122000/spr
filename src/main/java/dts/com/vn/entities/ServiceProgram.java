@@ -131,6 +131,9 @@ public class ServiceProgram {
 	@Column(name = "number2")
 	private Long number2; // MAX REGISTER ON MAX DATE
 
+	@Column(name = "trans_code")
+	private String transCode; // ACTIONCODE_MAPPING
+
 	public ServiceProgram() {
 	}
 
@@ -166,6 +169,7 @@ public class ServiceProgram {
 		}
 		this.number1 = request.getNumber1();
 		this.number2 = request.getNumber2();
+		this.transCode = request.getTransCode();
 	}
 
 //	Convert A#B#C
@@ -180,6 +184,8 @@ public class ServiceProgram {
 				returnStr = str.replaceAll(" ", "#").toUpperCase();
 			}else if (str.indexOf("#") > 0){
 				returnStr = str.toUpperCase();
+			}else {
+				returnStr = str;
 			}
 			return returnStr;
 		}

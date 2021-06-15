@@ -49,4 +49,8 @@ public class AddServiceProgramRequest {
 	private String ccspServiceCode;
 
 	private String ccspResultCode;
+
+	private Long number1; // MAX DATE
+
+	private Long number2; // MAX REGISTER ON MAX DATE
 }

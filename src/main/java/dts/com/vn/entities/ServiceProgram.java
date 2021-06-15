@@ -125,7 +125,11 @@ public class ServiceProgram {
 	@Column(name = "ccsp_result_code")
 	private String ccspResultCode;
 
+	@Column(name = "number1")
+	private Long number1; // MAX DATE
 
+	@Column(name = "number2")
+	private Long number2; // MAX REGISTER ON MAX DATE
 
 	public ServiceProgram() {
 	}
@@ -160,6 +164,8 @@ public class ServiceProgram {
 		if (request.getCcspResultCode() != null){
 			this.ccspResultCode = this.convertToCcspDesign(request.getCcspResultCode());
 		}
+		this.number1 = request.getNumber1();
+		this.number2 = request.getNumber2();
 	}
 
 //	Convert A#B#C

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -39,6 +40,9 @@ public class ServiceProgramService {
 
 	@Autowired
 	private ServiceInfoRepository serviceInfoRepository;
+
+	@Autowired
+	private ActioncodeMappingRepository actioncodeMappingRepository;
 
 	public Page<ServiceProgram> findAll(String search, Pageable pageable) {
 		if (StringUtils.hasLength(search))
@@ -123,6 +127,7 @@ public class ServiceProgramService {
 			}
 			servicePr.setNumber1(request.getNumber1());
 			servicePr.setNumber2(request.getNumber2());
+			servicePr.setTransCode(request.getTransCode());
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);
@@ -180,6 +185,11 @@ public class ServiceProgramService {
 				});
 		return new DetailServiceProgramResponse(serviceProgramResponse, pageInRes, pageBillingRes,
 				pagePCRFRes, pageServiceRes);
+	}
+
+
+	public List<ActioncodeMapping> getAllActioncodeMapping() {
+		return actioncodeMappingRepository.findAll();
 	}
 
 	//	Convert A#B#C

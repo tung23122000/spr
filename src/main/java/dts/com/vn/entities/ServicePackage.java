@@ -109,6 +109,9 @@ public class ServicePackage {
 	@JoinColumn(name = "flow_group_id")
 	private FlowGroup flowGroupId;
 
+	@Column(name = "extend_status")
+	private Integer extendStatus; // EXTEND STATUS
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -130,6 +133,7 @@ public class ServicePackage {
 		this.countryCode = req.getCountryCode();
 		this.delayTimeCVQT = req.getDelayTimeCVQT();
 		this.flowGroupId = req.getFlowGroupId();
+		this.extendStatus = req.getExtendStatus();
 	}
 
 	public ServicePackage() {

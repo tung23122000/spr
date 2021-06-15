@@ -122,6 +122,7 @@ public class ServicePackageService {
 			servicePackage.setCountryCode(request.getCountryCode());
 			servicePackage.setDelayTimeCVQT(request.getDelayTimeCVQT());
 			servicePackage.setFlowGroupId(request.getFlowGroupId());
+			servicePackage.setExtendStatus(request.getExtendStatus());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

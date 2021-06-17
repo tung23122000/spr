@@ -128,6 +128,7 @@ public class ServiceProgramService {
 			servicePr.setNumber1(request.getNumber1());
 			servicePr.setNumber2(request.getNumber2());
 			servicePr.setTransCode(request.getTransCode());
+			servicePr.setTotalUnit(request.getTotalUnit());
 			return serviceProgramRepository.save(servicePr);
 		}
 		throw new RestApiException(ErrorCode.UPDATE_FAILURE);

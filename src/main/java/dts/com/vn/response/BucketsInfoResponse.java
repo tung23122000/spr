@@ -45,6 +45,8 @@ public class BucketsInfoResponse {
 
 	private String accountType; // Loại tài khoản trên IN bundle / sub
 
+	private String serviceIn; // Tên Service IN
+
 	public BucketsInfoResponse(BucketsInfo bucketsInfo) {
 		this.bucketsId = bucketsInfo.getBucketsId();
 		this.bucType = bucketsInfo.getBucType();
@@ -71,6 +73,7 @@ public class BucketsInfoResponse {
 				? bucketsInfo.getServiceProgram().getDescription()
 				: "";
 		this.accountType = bucketsInfo.getAccountType();
+		this.serviceIn = bucketsInfo.getServiceIn();
 	}
 
 }

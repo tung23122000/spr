@@ -36,4 +36,6 @@ public class AddBucketsInfoRequest {
 	private Long programId; // service program id
 
 	private String accountType; // loại thuê bao
+
+	private String serviceIn; // Tên Service IN
 }

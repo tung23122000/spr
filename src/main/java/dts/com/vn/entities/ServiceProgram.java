@@ -134,6 +134,9 @@ public class ServiceProgram {
 	@Column(name = "trans_code")
 	private String transCode; // ACTIONCODE_MAPPING
 
+	@Column(name = "total_unit")
+	private Integer totalUnit; // Total Unit Flex Flow
+
 	public ServiceProgram() {
 	}
 
@@ -170,6 +173,7 @@ public class ServiceProgram {
 		this.number1 = request.getNumber1();
 		this.number2 = request.getNumber2();
 		this.transCode = request.getTransCode();
+		this.totalUnit = request.getTotalUnit();
 	}
 
 //	Convert A#B#C

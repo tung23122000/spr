@@ -76,6 +76,10 @@ public class BucketsInfo {
 	@Column(name = "account_type")
 	private String accountType;
 
+	@Column(name = "service_in")
+	private String serviceIn;
+
+
 	public BucketsInfo() {
 	}
 
@@ -96,5 +100,6 @@ public class BucketsInfo {
 				DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
 		this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
 		this.accountType = request.getAccountType();
+		this.serviceIn = request.getServiceIn();
 	}
 }

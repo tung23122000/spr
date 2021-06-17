@@ -58,6 +58,8 @@ public class ServiceProgramResponse {
 
 	private String transCode; // ACTIONCODE_MAPPING
 
+	private Integer totalUnit; // Total Unit Flex Flow
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -94,6 +96,7 @@ public class ServiceProgramResponse {
 		this.number1 = service.getNumber1();
 		this.number2 = service.getNumber2();
 		this.transCode = service.getTransCode();
+		this.totalUnit = service.getTotalUnit();
 	}
 
 

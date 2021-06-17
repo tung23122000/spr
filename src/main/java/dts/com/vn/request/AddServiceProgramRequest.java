@@ -55,4 +55,6 @@ public class AddServiceProgramRequest {
 	private Long number2; // MAX REGISTER ON MAX DATE
 
 	private String transCode; // ACTIONCODE_MAPPING
+
+	private Integer totalUnit; // Total Unit Flex Flow
 }

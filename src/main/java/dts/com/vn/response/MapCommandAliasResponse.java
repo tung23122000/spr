@@ -8,28 +8,29 @@ import java.util.Objects;
 
 @Data
 public class MapCommandAliasResponse {
-    private Long mapCommandAliasId;
+    private Long cmdAliasId;
 
     private Long servicePackageId;
 
     private Long serviceProgramId;
 
-    private String transCode;
+    private String cmdTransCode;
 
-    private String commandAlias;
+    private String cmdAliasName;
 
-    private Boolean isActive;
+    private String cmdStatus;
+
 
     public MapCommandAliasResponse(MapCommandAlias entity) {
-        this.mapCommandAliasId = entity.getMapCommandAliasId();
+        this.cmdAliasId = entity.getCmdAliasId();
         this.servicePackageId =
                 Objects.nonNull(entity.getServicePackage()) ? entity.getServicePackage().getPackageId()
                         : null;
         this.serviceProgramId =
                 Objects.nonNull(entity.getServiceProgram()) ? entity.getServiceProgram().getProgramId()
                         : null;
-        this.transCode = entity.getTransCode();
-        this.commandAlias = entity.getCommandAlias();
-        this.isActive = entity.getIsActive();
+        this.cmdTransCode = entity.getCmdTransCode();
+        this.cmdAliasName = entity.getCmdAliasName();
+        this.cmdStatus = entity.getCmdStatus();
     }
 }

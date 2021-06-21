@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MapCommandAliasRepository extends JpaRepository<MapCommandAlias, Long> {
-    @Query("select mca from MapCommandAlias mca where mca.serviceProgram.programId = :programId order by mca.mapCommandAliasId desc")
+    @Query("select mca from MapCommandAlias mca where mca.serviceProgram.programId = :programId order by mca.cmdAliasId desc")
     Page<MapCommandAlias> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 }

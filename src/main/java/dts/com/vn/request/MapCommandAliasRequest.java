@@ -1,18 +1,21 @@
 package dts.com.vn.request;
 
+import dts.com.vn.entities.ServicePackage;
+import dts.com.vn.entities.ServiceProgram;
 import lombok.Data;
+
 
 @Data
 public class MapCommandAliasRequest {
-    private Long mapCommandAliasId;
+    private Long cmdAliasId;
 
     private Long servicePackage;
 
     private Long serviceProgram;
 
-    private String transCode;
+    private String cmdTransCode;
 
-    private String commandAlias;
+    private String cmdAliasName;
 
-    private Boolean isActive;
+    private Boolean cmdStatus;
 }

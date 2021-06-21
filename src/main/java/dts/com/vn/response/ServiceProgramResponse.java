@@ -43,7 +43,7 @@ public class ServiceProgramResponse {
 
 	private String checkStepType; // check step type
 
-	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
+	private String programCode; // Mã chương trình
 
 	private Boolean allowIsdnStatus; //Thông tin đấu nối
 
@@ -85,7 +85,7 @@ public class ServiceProgramResponse {
 				: "";
 		this.minStepMinus = service.getMinStepMinus();
 		this.checkStepType = service.getCheckStepType();
-		this.commandAlias = service.getCommandAlias();
+		this.programCode = service.getProgramCode();
 		if (service.getAllowIsdnStatus().equals("1")){
 			this.allowIsdnStatus = true;
 		}else {

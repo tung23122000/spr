@@ -114,9 +114,9 @@ public class ServiceProgram {
 	@Column(name = "check_step_type")
 	private String checkStepType;
 
-	// phan biet chuong trinh nao ung voi cau lenh nao
-	@Column(name = "command_alias")
-	private String commandAlias;
+	// Mã chương trình
+	@Column(name = "program_code")
+	private String programCode;
 
 	// CCSP
 	@Column(name = "ccsp_service_code")
@@ -158,7 +158,7 @@ public class ServiceProgram {
 		this.minusMethod = request.getMinusMethod();
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
-		this.commandAlias = request.getCommandAlias();
+		this.programCode = request.getProgramCode();
 		if (request.getAllowIsdnStatus()){
 			this.allowIsdnStatus = "1";
 		}else{

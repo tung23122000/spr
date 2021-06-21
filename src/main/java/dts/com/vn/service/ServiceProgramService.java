@@ -44,6 +44,9 @@ public class ServiceProgramService {
 	@Autowired
 	private ActioncodeMappingRepository actioncodeMappingRepository;
 
+	@Autowired
+	private MapCommandAliasRepository mapCommandAliasRepository;
+
 	public Page<ServiceProgram> findAll(String search, Pageable pageable) {
 		if (StringUtils.hasLength(search))
 			return serviceProgramRepository.findAll(search, pageable);
@@ -113,7 +116,7 @@ public class ServiceProgramService {
 			servicePr.setDescription(request.getDescription());
 			servicePr.setMinStepMinus(request.getMinStepMinus());
 			servicePr.setCheckStepType(request.getCheckStepType());
-			servicePr.setCommandAlias(request.getCommandAlias());
+			servicePr.setProgramCode(request.getProgramCode());
 			if (request.getAllowIsdnStatus()){
 				servicePr.setAllowIsdnStatus("1");
 			}else{
@@ -144,7 +147,7 @@ public class ServiceProgramService {
 	}
 
 	public DetailServiceProgramResponse detailServiceProgram(Long programId, Pageable pageableIN,
-	                                                         Pageable pageableBILLING, Pageable pageablePCRF, Pageable pageServiceInfo) {
+				 Pageable pageableBILLING, Pageable pageablePCRF, Pageable pageableTransaction, Pageable pageServiceInfo) {
 		ServiceProgram serviceProgram = findById(programId);
 		ServiceProgramResponse serviceProgramResponse = new ServiceProgramResponse(serviceProgram);
 		Page<BucketsInfo> pageIn = bucketsInfoRepository.findAllByProgramId(programId, pageableIN);
@@ -175,6 +178,15 @@ public class ServiceProgramService {
 						return new NdsTypeParamProgramResponse(t);
 					}
 				});
+		Page<MapCommandAlias> pageTransaction = mapCommandAliasRepository.findAllByProgramId(programId, pageableTransaction);
+		Page<MapCommandAliasResponse> pageTransactionRes =
+				pageTransaction.map(new Function<MapCommandAlias, MapCommandAliasResponse>() {
+
+					@Override
+					public MapCommandAliasResponse apply(MapCommandAlias t) {
+						return new MapCommandAliasResponse(t);
+					}
+				});
 		Page<ServiceInfo> pageService =
 				serviceInfoRepository.findAllByProgramId(programId, pageServiceInfo);
 		Page<ServiceInfoResponse> pageServiceRes =
@@ -185,7 +197,7 @@ public class ServiceProgramService {
 					}
 				});
 		return new DetailServiceProgramResponse(serviceProgramResponse, pageInRes, pageBillingRes,
-				pagePCRFRes, pageServiceRes);
+				pagePCRFRes, pageTransactionRes, pageServiceRes);
 	}
 
 

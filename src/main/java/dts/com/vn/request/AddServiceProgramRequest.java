@@ -35,7 +35,7 @@ public class AddServiceProgramRequest {
 
 	private String checkStepType; // check step type
 
-	private String commandAlias; // phân biệt chương trình nào ứng với câu lệnh nào
+	private String programCode; // Mã chương trình
 
 	private String fileName; // file import isdn
 

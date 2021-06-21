@@ -37,13 +37,17 @@ public class MapCommandAliasService {
     }
 
     public MapCommandAlias update(MapCommandAliasRequest request) {
-        MapCommandAlias entity = findById(request.getMapCommandAliasId());
+        MapCommandAlias entity = findById(request.getCmdAliasId());
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
-        entity.setIsActive(request.getIsActive());
-        entity.setCommandAlias(request.getCommandAlias());
-        entity.setTransCode(request.getTransCode());
-        return mapCommandAliasRepository.save(new MapCommandAlias(request, serviceProgram));
+        if (request.getCmdStatus()){
+            entity.setCmdStatus("1");
+        }else{
+            entity.setCmdStatus("0");
+        }
+        entity.setCmdAliasName(request.getCmdAliasName());
+        entity.setCmdTransCode(request.getCmdTransCode());
+        return mapCommandAliasRepository.save(entity);
     }
 
     public MapCommandAlias findById(Long mcaId) {

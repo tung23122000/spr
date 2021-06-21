@@ -12,8 +12,8 @@ import javax.persistence.*;
 public class MapCommandAlias {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "map_command_alias_id")
-    private Long mapCommandAliasId;
+    @Column(name = "cmd_alias_id")
+    private Long cmdAliasId;
 
     @ManyToOne
     @JoinColumn(name = "package_id")
@@ -23,14 +23,14 @@ public class MapCommandAlias {
     @JoinColumn(name = "program_id")
     private ServiceProgram serviceProgram;
 
-    @Column(name = "trans_code")
-    private String transCode;
+    @Column(name = "cmd_trans_code")
+    private String cmdTransCode;
 
-    @Column(name = "command_alias")
-    private String commandAlias;
+    @Column(name = "cmd_alias_name")
+    private String cmdAliasName;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "cmd_status")
+    private String cmdStatus;
 
     public MapCommandAlias() {
     }
@@ -38,8 +38,12 @@ public class MapCommandAlias {
     public MapCommandAlias(MapCommandAliasRequest request, ServiceProgram serviceProgram) {
         this.serviceProgram = serviceProgram;
         this.servicePackage = serviceProgram.getServicePackage();
-        this.transCode = request.getTransCode();
-        this.commandAlias = request.getCommandAlias();
-        this.isActive = request.getIsActive();
+        this.cmdTransCode = request.getCmdTransCode();
+        this.cmdAliasName = request.getCmdAliasName();
+        if (request.getCmdStatus()){
+            this.cmdStatus = "1";
+        }else{
+            this.cmdStatus = "0";
+        }
     }
 }

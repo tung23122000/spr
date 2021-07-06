@@ -36,7 +36,7 @@ public class ApiResponse {
 		super();
 		this.status = ApiResponseStatus.FAILED.getValue();
 		this.errorCode = ex.getErrorCode();
-		this.message = ex.getMessage();
+		this.message = ex.getDefaultMessage();
 		this.data = ex.getData();
 	}
 
@@ -44,7 +44,7 @@ public class ApiResponse {
 		super();
 		this.status = ApiResponseStatus.FAILED.getValue();
 		this.errorCode = errorCode.getErrorCode();
-		this.message = ex.getMessage();
+		this.message = errorCode.getMessage();
 	}
 
 }

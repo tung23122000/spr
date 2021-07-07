@@ -8,6 +8,8 @@ import dts.com.vn.request.AddBucketsInfoRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.BucketsInfoResponse;
 import dts.com.vn.service.BucketsInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,8 @@ public class BucketsInfoController {
 	@Autowired
 	private BucketsInfoService bucketsInfoService;
 
+	private static final Logger logger = LoggerFactory.getLogger(BucketsInfoController.class);
+
 	@GetMapping("/find-all")
 	public ResponseEntity<ApiResponse> findAll(@RequestParam(name = "search", required = false) String search, Pageable pageable) {
 		ApiResponse response = null;
@@ -37,7 +41,9 @@ public class BucketsInfoController {
 					});
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			e.printStackTrace();
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -54,6 +60,7 @@ public class BucketsInfoController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("ADD_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -70,6 +77,7 @@ public class BucketsInfoController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("UPDATE_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

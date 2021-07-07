@@ -35,7 +35,7 @@ public class NdsTypeParamProgramService {
 
 	public NdsTypeParamProgram findById(Long ndsId) {
 		return ndsTypeParamProgramRepository.findById(ndsId)
-				.orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+				.orElseThrow(() -> new RestApiException(ErrorCode.NDS_TYPE_PARAM_PROGRAM_NOT_FOUND));
 	}
 
 	public NdsTypeParamProgram update(NdsTypeParamProgramRequest request) {

@@ -8,6 +8,8 @@ import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ServicePackageResponse;
 import dts.com.vn.service.ServicePackageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,8 @@ public class ServicePackageController {
 	@Autowired
 	private ServicePackageService servicePackageService;
 
+	private static final Logger logger = LoggerFactory.getLogger(ServicePackageController.class);
+
 	@GetMapping("/find-all")
 	public ResponseEntity<ApiResponse> findAll(
 			@RequestParam(name = "search", required = false) String search,
@@ -37,7 +41,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -53,7 +58,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -69,7 +75,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -85,7 +92,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("PENDING_SERVICE_PACKAGE", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -101,7 +109,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("ACTIVE_SERVICE_PACKAGE", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -117,7 +126,8 @@ public class ServicePackageController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("UPDATE_SERVICE_PACKAGE", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

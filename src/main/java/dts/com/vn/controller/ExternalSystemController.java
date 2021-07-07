@@ -6,6 +6,8 @@ import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ExternalSystemResponse;
 import dts.com.vn.service.ExternalSystemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,8 @@ public class ExternalSystemController {
 	@Autowired
 	private ExternalSystemService externalSystemService;
 
+	private static final Logger logger = LoggerFactory.getLogger(ExternalSystemController.class);
+
 	@GetMapping("/get-all-active")
 	public ResponseEntity<ApiResponse> getAll() {
 		ApiResponse response;
@@ -31,7 +35,8 @@ public class ExternalSystemController {
 					list.stream().map((e) -> new ExternalSystemResponse(e)).collect(Collectors.toList());
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listEntity);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("CONVERT_DATA_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

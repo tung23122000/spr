@@ -134,7 +134,7 @@ public class ServiceProgramService {
 			servicePr.setTotalUnit(request.getTotalUnit());
 			return serviceProgramRepository.save(servicePr);
 		}
-		throw new RestApiException(ErrorCode.UPDATE_FAILURE);
+		throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);
 	}
 
 	public DetailServicePackageResponse findByPackageId(Long packageId, Pageable pageable) {

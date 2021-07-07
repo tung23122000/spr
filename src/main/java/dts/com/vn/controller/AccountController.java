@@ -32,10 +32,8 @@ public class AccountController {
 			Map<String, Object> data = loginService.login(loginReq, httpRequest);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), data);
 		} catch (RestApiException ex) {
-			response = new ApiResponse(ex);
-		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -50,7 +48,7 @@ public class AccountController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.LOGOUT_FAILED);
 		}
 		return ResponseEntity.ok().body(response);
 	}

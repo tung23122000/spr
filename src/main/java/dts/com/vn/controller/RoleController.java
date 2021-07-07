@@ -2,10 +2,11 @@ package dts.com.vn.controller;
 
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
-import dts.com.vn.exception.RestApiException;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.RolePermissionResponse;
 import dts.com.vn.service.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ public class RoleController {
 
 	private final RoleService roleService;
 
+	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
+
 	@Autowired
 	public RoleController(RoleService roleService) {
 		this.roleService = roleService;
@@ -30,11 +33,10 @@ public class RoleController {
 		try {
 			RolePermissionResponse list = roleService.getPermissionById(id);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), list);
-		} catch (RestApiException ex) {
-			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.GET_PERMISSION_FAILED);
+			logger.error("GET_PERMISSION_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

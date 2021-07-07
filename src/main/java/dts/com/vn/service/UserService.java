@@ -33,22 +33,23 @@ public class UserService {
 
 	public Account add(Account request) {
 		Account account = accountRepository.getAccountByUsername(request.getUsername());
-		if (account == null) {
+		if (account != null){
+			throw new RestApiException(ErrorCode.EXIST_USER);
+		}else{
 			this.passwordEncoder = new BCryptPasswordEncoder();
 			request.setPassword(this.passwordEncoder.encode(request.getPassword()));
 			return accountRepository.save(request);
 		}
-		return null;
 	}
 
 	public Account findById(Long id) {
 		return userRepository.findById(id)
-				.orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
+				.orElseThrow(() -> new RestApiException(ErrorCode.USER_NOT_FOUND));
 	}
 
 	public Account update(Long id, Account account) {
 		Account returnAccount = userRepository.findById(id)
-				.orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
+				.orElseThrow(() -> new RestApiException(ErrorCode.USER_NOT_FOUND));
 		returnAccount.setRole(account.getRole());
 		returnAccount.setFullName(account.getFullName());
 		returnAccount.setEmail(account.getEmail());
@@ -60,7 +61,7 @@ public class UserService {
 
 	public Account delete(Long id) {
 		Account returnAccount = userRepository.findById(id)
-				.orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
+				.orElseThrow(() -> new RestApiException(ErrorCode.USER_NOT_FOUND));
 		accountRepository.delete(returnAccount);
 		return returnAccount;
 	}

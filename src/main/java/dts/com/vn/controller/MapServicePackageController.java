@@ -41,7 +41,8 @@ public class MapServicePackageController {
 					});
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("FIND_ALL_MAP_SERVICE_PACKAGE_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -55,9 +56,13 @@ public class MapServicePackageController {
 			MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
 			logger.info("AddBilling response: {}", response.toString());
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+			logger.error("ADD_MAP_SERVICE_PACKAGE_FAILED", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);;
 			logger.trace("Add Billing response: {}", response.toString());
+			logger.error("ADD_MAP_SERVICE_PACKAGE_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -71,8 +76,10 @@ public class MapServicePackageController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("UPDATE_MAP_SERVICE_PACKAGE_FAILED", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);;
+			logger.error("UPDATE_MAP_SERVICE_PACKAGE_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -86,8 +93,10 @@ public class MapServicePackageController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("FIND_BY_ID_MAP_SERVICE_PACKAGE_FAILED", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);;
+			logger.error("UPDATE_MAP_SERVICE_PACKAGE_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

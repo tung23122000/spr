@@ -8,6 +8,8 @@ import dts.com.vn.request.NdsTypeParamProgramRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.NdsTypeParamProgramResponse;
 import dts.com.vn.service.NdsTypeParamProgramService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,8 @@ public class NdsTypeParamProgramController {
 	@Autowired
 	private NdsTypeParamProgramService ndsTypeParamProgramService;
 
+	private static final Logger logger = LoggerFactory.getLogger(NdsTypeParamProgramController.class);
+
 	@GetMapping("/find-all-by-program-id/{programId}")
 	public ResponseEntity<ApiResponse> findAllByProgramId(@PathVariable("programId") Long programId, Pageable pageable) {
 		ApiResponse response;
@@ -30,10 +34,9 @@ public class NdsTypeParamProgramController {
 			Page<NdsTypeParamProgram> page = ndsTypeParamProgramService.findAllByProgramId(programId, pageable);
 			Page<NdsTypeParamProgramResponse> entityRes = page.map(NdsTypeParamProgramResponse::new);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
-		} catch (RestApiException ex) {
-			response = new ApiResponse(ex);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_PCRF_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -55,7 +58,8 @@ public class NdsTypeParamProgramController {
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_PCRF_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -69,8 +73,10 @@ public class NdsTypeParamProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("SERVICE_PROGRAM_NOT_FOUND", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_PCRF_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -84,8 +90,10 @@ public class NdsTypeParamProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("SERVICE_PROGRAM_NOT_FOUND", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_PCRF_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -99,8 +107,10 @@ public class NdsTypeParamProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("NDS_TYPE_PARAM_PROGRAM_NOT_FOUND", response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_PCRF_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

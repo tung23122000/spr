@@ -31,12 +31,8 @@ public class FlowGroupController {
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse> findAll() {
         ApiResponse response = null;
-        try {
-            List<FlowGroup> page = flowGroupService.findAll();
-            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), page);
-        } catch (Exception e) {
-            response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
-        }
+        List<FlowGroup> page = flowGroupService.findAll();
+        response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), page);
         return ResponseEntity.ok().body(response);
     }
 }

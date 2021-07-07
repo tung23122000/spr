@@ -67,7 +67,8 @@ public class ServiceProgramController {
 					});
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("DATA_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -84,6 +85,7 @@ public class ServiceProgramController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("ADD_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -115,9 +117,11 @@ public class ServiceProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("UPDATE_SERVICE_PROGRAM_FAILED", response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("UPDATE_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -134,6 +138,7 @@ public class ServiceProgramController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("FIND_BY_ID_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -147,9 +152,11 @@ public class ServiceProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
+			logger.error("SERVICE_PACKAGE_NOT_FOUND", response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("FIND_BY_PACKAGE_ID_NOT_FOUND", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -172,6 +179,7 @@ public class ServiceProgramController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("DETAIL_SERVICE_PROGRAM", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -187,6 +195,7 @@ public class ServiceProgramController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("GET_ALL_ACTION_CODE_MAPPING", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

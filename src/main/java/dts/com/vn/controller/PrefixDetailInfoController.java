@@ -1,7 +1,6 @@
 package dts.com.vn.controller;
 
 import dts.com.vn.entities.PrefixDetailInfo;
-import dts.com.vn.entities.PrefixInfo;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.response.ApiResponse;

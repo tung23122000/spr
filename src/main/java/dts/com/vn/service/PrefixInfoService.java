@@ -1,6 +1,5 @@
 package dts.com.vn.service;
 
-import dts.com.vn.entities.Account;
 import dts.com.vn.entities.PrefixInfo;
 import dts.com.vn.repository.PrefixInfoRepository;
 import org.springframework.data.domain.Sort;

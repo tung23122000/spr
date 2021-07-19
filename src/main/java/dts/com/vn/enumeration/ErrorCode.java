@@ -26,6 +26,10 @@ public enum ErrorCode {
 	NDS_TYPE_PARAM_PROGRAM_NOT_FOUND("error.nds.type.param.program", "Không tìm thấy thông tin cấu hình PCRF"),
 	UPDATE_SERVICE_PROGRAM_FAILED("error.update.failure", "Cập nhật chương trình lỗi"),
 	VALIDATE_FAIL("error.service.validate.fail", "Lỗi sai định dạng"),
+	GET_ALL_PREFIX_FAILED("error.get.all.prefix", "Lỗi khi tải đầu số"),
+	UPDATE_PREFIX_FAILED("error.update.prefix", "Lỗi khi cập nhật đầu số"),
+	GET_PREFIX_DETAIL_BY_ID("error.get.prefix.detail", "Lỗi khi tải thông tin chi tiết"),
+	ADD_PREFIX_DETAIL_FAILED("error.add.prefix.detail", "Lỗi khi thêm mới chi tiết"),
 
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 

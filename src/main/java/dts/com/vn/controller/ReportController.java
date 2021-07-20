@@ -25,12 +25,11 @@ public class ReportController {
 	@GetMapping("/dailyReport")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> dailyReport(@RequestParam Long serviceTypeId,
-	                                               @RequestParam String startDate,
-	                                               @RequestParam String endDate) {
+	                                               @RequestParam String date) {
 		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
 		ApiResponse response;
 		try {
-			response = reportService.dailyReport(serviceTypeId, startDate, endDate);
+			response = reportService.dailyReport(serviceTypeId, date);
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex);

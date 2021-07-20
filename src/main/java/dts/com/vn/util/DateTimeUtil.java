@@ -102,7 +102,7 @@ public class DateTimeUtil {
 				zone = ZoneId.of(timezone);
 			}
 			ZoneOffset offset = zone.getRules().getOffset(dateUTC);
-			long offsetSecond = (long) offset.getTotalSeconds();
+			long offsetSecond = offset.getTotalSeconds();
 			if (reverse) {
 				offsetSecond = -1 * offsetSecond;
 			}
@@ -118,6 +118,13 @@ public class DateTimeUtil {
 		DateTimeFormatter formatter =
 				DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_mm_ss).withLocale(locale).withZone(zoneId);
 		return formatter.format(startDate);
+	}
+
+	public static String formatDate(String date) {
+		if (date == null)
+			return "";
+		String[] dateArr = date.split("-");
+		return dateArr[2] + '/' + dateArr[1] + '/' + dateArr[0];
 	}
 
 }

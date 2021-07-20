@@ -32,17 +32,19 @@ public class ReportService {
 		this.registerRepository = registerRepository;
 	}
 
-	public ApiResponse dailyReport(Long serviceTypeId, String startDate, String endDate) {
+	public ApiResponse dailyReport(Long serviceTypeId, String date) {
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
 		List<Object> result = new ArrayList<>();
+		// Format date
+		String dateFormat = DateTimeUtil.formatDate(date);
 		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
 		optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));
 		List<ServicePackage> listAllPackageSameGroup = servicePackageRepository.findAllByServiceTypeId(serviceTypeId);
 		if (listAllPackageSameGroup.size() > 0) {
 			for (ServicePackage servicePackage : listAllPackageSameGroup) {
-				Instant start = DateTimeUtil.convertStringToInstant(startDate, DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
-				Instant end = DateTimeUtil.convertStringToInstant(endDate, DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
+				Instant start = DateTimeUtil.convertStringToInstant(dateFormat + " " + "00:00:00", DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
+				Instant end = DateTimeUtil.convertStringToInstant(dateFormat + " " + "23:59:59", DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
 				Integer numberRecord = registerRepository.findAllByPackageIdAndRegDate(servicePackage.getPackageId(), start, end);
 				Map<String, String> object = new HashMap<>();
 				object.put("packageName", servicePackage.getName());

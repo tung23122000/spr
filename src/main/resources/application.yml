@@ -3,7 +3,7 @@ app:
 
 spring:
   profiles:
-    active: prod
+    active: testbed
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:

@@ -5,9 +5,11 @@ import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
 public class ApiResponse {
 
 	private Integer status;

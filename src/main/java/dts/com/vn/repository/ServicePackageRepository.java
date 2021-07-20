@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -49,5 +50,7 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query("select sp from ServicePackage sp where sp.code = :code and sp.packageId != :packageId")
 	Optional<ServicePackage> findByCodeAndPackageIdIgnore(@Param("code") String code, @Param("packageId") Long packageId);
 
+	@Query("SELECT sp FROM ServicePackage sp WHERE sp.serviceType.serviceTypeId = :serviceTypeId ORDER BY sp.packageId desc")
+	List<ServicePackage> findAllByServiceTypeId(Long serviceTypeId);
 
 }

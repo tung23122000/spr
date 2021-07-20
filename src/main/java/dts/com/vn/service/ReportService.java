@@ -47,12 +47,13 @@ public class ReportService {
 				Instant end = DateTimeUtil.convertStringToInstant(dateFormat + " " + "23:59:59", DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
 				Integer numberRecord = registerRepository.findAllByPackageIdAndRegDate(servicePackage.getPackageId(), start, end);
 				Map<String, String> object = new HashMap<>();
+				object.put("packageCode", servicePackage.getCode());
 				object.put("packageName", servicePackage.getName());
 				object.put("numberRecord", numberRecord.toString());
 				result.add(object);
 			}
+			data.setListPackage(result);
 		}
-		data.setListPackage(result);
 		response.setStatus(200);
 		response.setData(data);
 		return response;

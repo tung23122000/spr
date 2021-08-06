@@ -75,9 +75,11 @@ public class MapServicePackageController {
 			MapServicePackageResponse entityResponse = new MapServicePackageResponse(entity);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityResponse);
 		} catch (RestApiException ex) {
+			ex.printStackTrace();
 			response = new ApiResponse(ex);
 			logger.error("UPDATE_MAP_SERVICE_PACKAGE_FAILED", response);
 		} catch (Exception e) {
+			e.printStackTrace();
 			response = new ApiResponse(e, ErrorCode.DATA_FAILED);;
 			logger.error("UPDATE_MAP_SERVICE_PACKAGE_FAILED", response);
 		}

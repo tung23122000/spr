@@ -58,7 +58,7 @@ public class MapServicePackageService {
 				DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
 		entity.setPromCode(request.getPromCode());
 		entity.setMobType(request.getMobType());
-		entity.setPromDays(request.getPromDays().toString());
+		entity.setPromDays(request.getPromDays());
 		entity.setOnOff(request.getOnOff());
 		entity.setRegMapCode(request.getRegMapCode());
 		entity.setDelMapCode(request.getDelMapCode());

@@ -66,11 +66,13 @@ public class ServicePackageController {
 			ServicePackage page = servicePackageService.add(request);
 			//		CREATE SUB_SERVICE_PACKAGE
 			List<SubServicePackageRequest> listBlock = request.getSubServicePackage();
-			for (SubServicePackageRequest block: listBlock) {
-				SubServicePackage subServicePackage = new SubServicePackage();
-				subServicePackage.setPackageId(page.getPackageId());
-				subServicePackage.setSubPackageId(block.getPackageId());
-				subServicePackageRepository.save(subServicePackage);
+			if (listBlock.size()>0){
+				for (SubServicePackageRequest block: listBlock) {
+					SubServicePackage subServicePackage = new SubServicePackage();
+					subServicePackage.setPackageId(page.getPackageId());
+					subServicePackage.setSubPackageId(block.getPackageId());
+					subServicePackageRepository.save(subServicePackage);
+				}
 			}
 			ServicePackageResponse responseEntity = new ServicePackageResponse(page);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);

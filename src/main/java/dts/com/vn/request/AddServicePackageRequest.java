@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +46,7 @@ public class AddServicePackageRequest {
 	private FlowGroup flowGroupId; // Flow Group ID
 
 	private Integer extendStatus; // EXTEND STATUS
+
+	private List<SubServicePackageRequest> subServicePackage; // List BlockPackage
+
 }

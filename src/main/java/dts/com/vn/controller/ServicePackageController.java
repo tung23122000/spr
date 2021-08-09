@@ -1,10 +1,15 @@
 package dts.com.vn.controller;
 
+import dts.com.vn.entities.BucketsInfo;
+import dts.com.vn.entities.NdsTypeParamProgram;
 import dts.com.vn.entities.ServicePackage;
+import dts.com.vn.entities.SubServicePackage;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
+import dts.com.vn.repository.SubServicePackageRepository;
 import dts.com.vn.request.AddServicePackageRequest;
+import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ServicePackageResponse;
 import dts.com.vn.service.ServicePackageService;
@@ -14,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -25,6 +33,9 @@ public class ServicePackageController {
 
 	@Autowired
 	private ServicePackageService servicePackageService;
+
+	@Autowired
+	private SubServicePackageRepository subServicePackageRepository;
 
 	private static final Logger logger = LoggerFactory.getLogger(ServicePackageController.class);
 
@@ -47,11 +58,20 @@ public class ServicePackageController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@Transactional
 	@PostMapping("/add")
 	public ResponseEntity<ApiResponse> add(@RequestBody AddServicePackageRequest request) {
 		ApiResponse response;
 		try {
 			ServicePackage page = servicePackageService.add(request);
+			//		CREATE SUB_SERVICE_PACKAGE
+			List<SubServicePackageRequest> listBlock = request.getSubServicePackage();
+			for (SubServicePackageRequest block: listBlock) {
+				SubServicePackage subServicePackage = new SubServicePackage();
+				subServicePackage.setPackageId(page.getPackageId());
+				subServicePackage.setSubPackageId(block.getPackageId());
+				subServicePackageRepository.save(subServicePackage);
+			}
 			ServicePackageResponse responseEntity = new ServicePackageResponse(page);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
@@ -195,6 +215,66 @@ public class ServicePackageController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-block-in/{id}")
+	public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id){
+		ApiResponse response ;
+		List<ServicePackage> returnList = new ArrayList<>();
+		try {
+//			SEARCH IN CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
+			List<BucketsInfo> listBucketsInfo = servicePackageService.findBucketsInfo(id);
+//			SEARCH LIST BLOCK BY BUCKETS INFO
+			for (BucketsInfo bucketInfo: listBucketsInfo) {
+				List<ServicePackage> listBlockIN = servicePackageService.findBlockIN(id, bucketInfo);
+				returnList.addAll(listBlockIN);
+			}
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-block-pcrf/{id}")
+	public ResponseEntity<ApiResponse> findBlockPCRF(@PathVariable(name = "id", required = true) Long id){
+		ApiResponse response ;
+		List<ServicePackage> returnList = new ArrayList<>();
+		try {
+//			SEARCH PCRF CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
+			List<NdsTypeParamProgram> listNdsTypeParamProgram = servicePackageService.findNdsTypeParamProgram(id);
+//			SEARCH LIST BLOCK BY NDS_TYPE_PARAM_PROGRAM
+			for (NdsTypeParamProgram ndsTypeParamProgram: listNdsTypeParamProgram) {
+				List<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id, ndsTypeParamProgram);
+				returnList.addAll(listBlockPCRF);
+			}
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/get-all-without-pageable")
+	public ResponseEntity<ApiResponse> getAllWithoutPageable() {
+		ApiResponse response;
+		try {
+			List<ServicePackage> list = servicePackageService.getAllWithoutPageable();
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), list);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

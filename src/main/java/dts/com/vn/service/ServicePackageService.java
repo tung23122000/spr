@@ -1,8 +1,6 @@
 package dts.com.vn.service;
 
-import dts.com.vn.entities.ServicePackage;
-import dts.com.vn.entities.ServiceType;
-import dts.com.vn.entities.Services;
+import dts.com.vn.entities.*;
 import dts.com.vn.enumeration.Constant;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
@@ -11,6 +9,7 @@ import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceTypeRepository;
 import dts.com.vn.repository.ServicesRepository;
 import dts.com.vn.request.AddServicePackageRequest;
+import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -126,5 +126,25 @@ public class ServicePackageService {
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);
+	}
+
+	public List<BucketsInfo> findBucketsInfo(Long id){
+		return servicePackageRepository.findBucketsInfo(id);
+	}
+
+	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo){
+		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getAccountType(), bucketsInfo.getBucType(), bucketsInfo.getBucName());
+	}
+
+	public List<NdsTypeParamProgram> findNdsTypeParamProgram(Long id){
+		return servicePackageRepository.findNdsTypeParamProgram(id);
+	}
+
+	public List<ServicePackage> findBlockPCRF(Long packageId, NdsTypeParamProgram ndsTypeParamProgram){
+		return servicePackageRepository.findBlockPCRF(packageId, ndsTypeParamProgram.getNdsType(), ndsTypeParamProgram.getNdsParam());
+	}
+
+	public List<ServicePackage> getAllWithoutPageable() {
+		return servicePackageRepository.findAll();
 	}
 }

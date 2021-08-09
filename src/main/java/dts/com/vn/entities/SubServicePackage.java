@@ -14,11 +14,9 @@ public class SubServicePackage {
 	@Column(name = "sub_service_package_id")
 	private Long subServicePackageId;
 
-	@ManyToOne
-	@JoinColumn(name = "packageId")
-	private ServicePackage servicePackage;
+	@Column(name = "package_id")
+	private Long packageId;
 
-	@ManyToOne
-	@JoinColumn(name = "sub_package_id")
-	private ServicePackage subServicePackage;
+	@Column(name = "sub_package_id")
+	private Long subPackageId;
 }

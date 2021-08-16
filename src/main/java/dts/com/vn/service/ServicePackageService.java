@@ -122,6 +122,7 @@ public class ServicePackageService {
 			servicePackage.setCountryCode(request.getCountryCode());
 			servicePackage.setDelayTimeCVQT(request.getDelayTimeCVQT());
 			servicePackage.setFlowGroupId(request.getFlowGroupId());
+			servicePackage.setPcrfGroup(request.getPcrfGroup());
 			servicePackage.setExtendStatus(request.getExtendStatus());
 			return servicePackageRepository.save(servicePackage);
 		}
@@ -133,15 +134,11 @@ public class ServicePackageService {
 	}
 
 	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo){
-		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getAccountType(), bucketsInfo.getBucType(), bucketsInfo.getBucName());
+		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getBucType(), bucketsInfo.getBucName());
 	}
-
-	public List<NdsTypeParamProgram> findNdsTypeParamProgram(Long id){
-		return servicePackageRepository.findNdsTypeParamProgram(id);
-	}
-
-	public List<ServicePackage> findBlockPCRF(Long packageId, NdsTypeParamProgram ndsTypeParamProgram){
-		return servicePackageRepository.findBlockPCRF(packageId, ndsTypeParamProgram.getNdsType(), ndsTypeParamProgram.getNdsParam());
+	public List<ServicePackage> findBlockPCRF(Long packageId){
+		ServicePackage servicePackage = findById(packageId);
+		return servicePackageRepository.findBlockPCRF(packageId, servicePackage.getPcrfGroup().getPcrfGroupId());
 	}
 
 	public List<ServicePackage> getAllWithoutPageable() {

@@ -65,20 +65,11 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
 			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
 			" WHERE spr.programCode = spa.code AND spa.packageId <> :packageId " +
-			" AND bi.accountType = :accountType AND (bi.bucName = :bucName OR bi.bucType = :bucType)")
-	List<ServicePackage> findBlockIN(Long packageId, String accountType, String bucType, String bucName);
-
-	@Query("SELECT ntpp FROM ServicePackage spa " +
-			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
-			" INNER JOIN NdsTypeParamProgram ntpp ON ntpp.serviceProgram.programId = spr.programId " +
-			" WHERE spr.programCode = spa.code AND spr.servicePackage.packageId = :id")
-	List<NdsTypeParamProgram> findNdsTypeParamProgram(Long id);
+			" AND ((bi.accountType = 'SUBS' AND bi.bucName = :bucName) OR (bi.accountType = 'BUNDLE' AND bi.bucType = :bucType))")
+	List<ServicePackage> findBlockIN(Long packageId, String bucType, String bucName);
 
 	@Query("SELECT spa FROM ServicePackage spa " +
-			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
-			" INNER JOIN NdsTypeParamProgram ntpp ON ntpp.serviceProgram.programId = spr.programId " +
-			" WHERE spr.programCode = spa.code AND spa.packageId <> :packageId " +
-			" AND ntpp.ndsType = :ndsType AND ntpp.ndsParam = :ndsParam")
-	List<ServicePackage> findBlockPCRF(Long packageId, String ndsType, String ndsParam);
+			" WHERE spa.pcrfGroup.pcrfGroupId = :pcrfGroupId AND spa.packageId <> :packageId ")
+	List<ServicePackage> findBlockPCRF(Long packageId, Long pcrfGroupId);
 
 }

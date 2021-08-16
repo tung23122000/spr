@@ -1,6 +1,7 @@
 package dts.com.vn.request;
 
 import dts.com.vn.entities.FlowGroup;
+import dts.com.vn.entities.PCRFGroup;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,5 +49,7 @@ public class AddServicePackageRequest {
 	private Integer extendStatus; // EXTEND STATUS
 
 	private List<SubServicePackageRequest> subServicePackage; // List BlockPackage
+
+	private PCRFGroup pcrfGroup; // Nhóm PCRF
 
 }

@@ -248,14 +248,8 @@ public class ServicePackageController {
 		ApiResponse response ;
 		List<ServicePackage> returnList = new ArrayList<>();
 		try {
-//			SEARCH PCRF CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
-			List<NdsTypeParamProgram> listNdsTypeParamProgram = servicePackageService.findNdsTypeParamProgram(id);
-//			SEARCH LIST BLOCK BY NDS_TYPE_PARAM_PROGRAM
-			for (NdsTypeParamProgram ndsTypeParamProgram: listNdsTypeParamProgram) {
-				List<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id, ndsTypeParamProgram);
-				returnList.addAll(listBlockPCRF);
-			}
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
+			List<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listBlockPCRF);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {

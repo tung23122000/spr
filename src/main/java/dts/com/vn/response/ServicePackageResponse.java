@@ -1,6 +1,7 @@
 package dts.com.vn.response;
 
 import dts.com.vn.entities.FlowGroup;
+import dts.com.vn.entities.PCRFGroup;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Getter;
@@ -60,6 +61,8 @@ public class ServicePackageResponse {
 
 	private Integer extendStatus; // EXTEND STATUS
 
+	private PCRFGroup pcrfGroup; // Nhóm PCRF
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -93,5 +96,6 @@ public class ServicePackageResponse {
 		this.expectResult = service.getExpectResult();
 		this.flowGroupId = service.getFlowGroupId();
 		this.extendStatus = service.getExtendStatus();
+		this.pcrfGroup = service.getPcrfGroup();
 	}
 }

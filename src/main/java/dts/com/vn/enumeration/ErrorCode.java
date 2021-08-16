@@ -30,6 +30,9 @@ public enum ErrorCode {
 	UPDATE_PREFIX_FAILED("error.update.prefix", "Lỗi khi cập nhật đầu số"),
 	GET_PREFIX_DETAIL_BY_ID("error.get.prefix.detail", "Lỗi khi tải thông tin chi tiết"),
 	ADD_PREFIX_DETAIL_FAILED("error.add.prefix.detail", "Lỗi khi thêm mới chi tiết"),
+	GET_ALL_PCRF_GROUP_FAILED("error.get.all.pcrf.group", "Lỗi khi tải nhóm PCRF"),
+	ADD_PCRF_GROUP_FAILED("error.add.pcrf.group", "Lỗi khi thêm mới nhóm PCRF"),
+
 
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 

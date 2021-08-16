@@ -112,6 +112,10 @@ public class ServicePackage {
 	@Column(name = "extend_status")
 	private Integer extendStatus; // EXTEND STATUS
 
+	@OneToOne
+	@JoinColumn(name = "pcrf_group_id")
+	private PCRFGroup pcrfGroup;
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -134,6 +138,7 @@ public class ServicePackage {
 		this.delayTimeCVQT = req.getDelayTimeCVQT();
 		this.flowGroupId = req.getFlowGroupId();
 		this.extendStatus = req.getExtendStatus();
+		this.pcrfGroup = req.getPcrfGroup();
 	}
 
 	public ServicePackage() {

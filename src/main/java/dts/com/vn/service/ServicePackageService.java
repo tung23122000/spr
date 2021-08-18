@@ -138,6 +138,9 @@ public class ServicePackageService {
 	}
 	public List<ServicePackage> findBlockPCRF(Long packageId){
 		ServicePackage servicePackage = findById(packageId);
+		if (servicePackage.getPcrfGroup() == null){
+			return null;
+		}
 		return servicePackageRepository.findBlockPCRF(packageId, servicePackage.getPcrfGroup().getPcrfGroupId());
 	}
 

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +35,20 @@ public class SubServicePackageController {
     public ResponseEntity<ApiResponse> findByPackageId(@PathVariable(name = "packageId", required = true) Long packageId) {
         ApiResponse response;
         try {
-            List<SubServicePackage> listSubServicePackage = subServicePackageService.findById(packageId);
+            List<Object[]> listObject = subServicePackageService.findById(packageId);
             List<SubServicePackageResponse> returnList = new ArrayList<>();
-            for (SubServicePackage subServicePackage: listSubServicePackage) {
+            for (Object[] object : listObject) {
+                Long firstResult = ((BigInteger) object[0]).longValue();
+                Long secondResult = ((BigInteger) object[1]).longValue();
                 SubServicePackageResponse subServicePackageResponse = new SubServicePackageResponse();
-                subServicePackageResponse.setPackageId(subServicePackage.getSubPackageId());
-                subServicePackageResponse.setName(servicePackageService.findById(subServicePackage.getSubPackageId()).getName());
+                if (firstResult.equals(packageId)) {
+                    subServicePackageResponse.setPackageId(secondResult);
+                    subServicePackageResponse.setName(servicePackageService.findById(secondResult).getName());
+                }
+                if (secondResult.equals(packageId)) {
+                    subServicePackageResponse.setPackageId(firstResult);
+                    subServicePackageResponse.setName(servicePackageService.findById(firstResult).getName());
+                }
                 returnList.add(subServicePackageResponse);
             }
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
@@ -59,16 +68,16 @@ public class SubServicePackageController {
                                                              @RequestBody List<SubServicePackageRequest> listSubServicePackage) {
         ApiResponse response;
         try {
-            List<SubServicePackage> listCurrentSubServicePackage = subServicePackageService.findById(packageId);
-            if (listCurrentSubServicePackage.size() > 0){
-                subServicePackageService.deleteAll(listCurrentSubServicePackage);
-            }
-            for (SubServicePackageRequest request: listSubServicePackage) {
+            List<Object[]> listCurrentSubServicePackage = subServicePackageService.findById(packageId);
+            subServicePackageService.deActiveAll(listCurrentSubServicePackage);
+            for (SubServicePackageRequest request : listSubServicePackage) {
                 SubServicePackage subServicePackage = new SubServicePackage();
                 subServicePackage.setPackageId(packageId);
                 subServicePackage.setSubPackageId(request.getPackageId());
-                if (subServicePackageService.checkExist(subServicePackage) == null){
+                if (subServicePackageService.checkExist(subServicePackage).size() == 0) {
                     subServicePackageService.save(subServicePackage);
+                } else {
+                    subServicePackageService.update(subServicePackage);
                 }
             }
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);

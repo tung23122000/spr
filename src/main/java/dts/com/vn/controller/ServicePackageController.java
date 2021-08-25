@@ -71,6 +71,7 @@ public class ServicePackageController {
 					SubServicePackage subServicePackage = new SubServicePackage();
 					subServicePackage.setPackageId(page.getPackageId());
 					subServicePackage.setSubPackageId(block.getPackageId());
+					subServicePackage.setIsActive("1");
 					subServicePackageRepository.save(subServicePackage);
 				}
 			}

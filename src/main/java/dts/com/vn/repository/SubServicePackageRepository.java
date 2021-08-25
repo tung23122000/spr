@@ -20,9 +20,8 @@ public class SubServicePackageRepository {
     public List<Object[]> findGroupByPackageId(Long packageId) {
         Query query = this.entityManager.createNativeQuery("SELECT package_id as packageId, sub_package_id as subPackageId FROM sub_service_package ssp " +
                 " WHERE (ssp.package_id = " + packageId + " OR ssp.sub_package_id = " + packageId + ") " +
-                " AND ssp.is_active <> '0'" +
+                " AND (ssp.is_active = '1' OR ssp.is_active is null)" +
                 " GROUP BY ssp.package_id, ssp.sub_package_id");
-
         List<Object[]> list = query.getResultList();
         return list;
     }
@@ -43,6 +42,7 @@ public class SubServicePackageRepository {
         this.entityManager.createNativeQuery("UPDATE sub_service_package ssp SET is_active = '" + subServicePackage.getIsActive() + "' " +
                 " WHERE ssp.package_id = " + subServicePackage.getPackageId() +
                 " AND ssp.sub_package_id = " + subServicePackage.getSubPackageId()).executeUpdate();
+
     }
 
 

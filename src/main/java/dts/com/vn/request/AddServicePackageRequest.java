@@ -5,12 +5,13 @@ import dts.com.vn.entities.PCRFGroup;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.util.List;
 
 @Getter
 @Setter
 public class AddServicePackageRequest {
+
+	private Long oldServicePackageId;
 
 	private Long servicePackageId;
 

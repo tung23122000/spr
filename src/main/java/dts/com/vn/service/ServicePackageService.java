@@ -1,15 +1,13 @@
 package dts.com.vn.service;
 
 import dts.com.vn.entities.*;
+import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.Constant;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
-import dts.com.vn.repository.FlowGroupRepository;
-import dts.com.vn.repository.ServicePackageRepository;
-import dts.com.vn.repository.ServiceTypeRepository;
-import dts.com.vn.repository.ServicesRepository;
+import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServicePackageRequest;
-import dts.com.vn.request.SubServicePackageRequest;
+import dts.com.vn.response.ApiResponse;
 import dts.com.vn.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +34,11 @@ public class ServicePackageService {
 	@Autowired
 	private FlowGroupRepository flowGroupRepository;
 
+	@Autowired
+	private ServiceProgramRepository serviceProgramRepository;
+
+	@Autowired
+	private BucketsInfoRepository bucketsInfoRepository;
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -77,10 +80,10 @@ public class ServicePackageService {
 	public ServicePackage pending(Long id) {
 		ServicePackage servicePackage = servicePackageRepository.findById(id).get();
 		Date now = new Date();
-		long diff = (now.getTime() - servicePackage.getUpdateDate().getTime())/1000;
-		if (servicePackage.getStatus().equals(Constant.PENDING) && diff <= Constant.TIME_TO_LIVE_PAGE){
+		long diff = (now.getTime() - servicePackage.getUpdateDate().getTime()) / 1000;
+		if (servicePackage.getStatus().equals(Constant.PENDING) && diff <= Constant.TIME_TO_LIVE_PAGE) {
 			throw new RestApiException(ErrorCode.PACKAGE_PENDING);
-		}else {
+		} else {
 			servicePackage.setStatus(Constant.PENDING);
 		}
 		return servicePackageRepository.save(servicePackage);
@@ -129,16 +132,17 @@ public class ServicePackageService {
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);
 	}
 
-	public List<BucketsInfo> findBucketsInfo(Long id){
+	public List<BucketsInfo> findBucketsInfo(Long id) {
 		return servicePackageRepository.findBucketsInfo(id);
 	}
 
-	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo){
+	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo) {
 		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getBucType(), bucketsInfo.getBucName());
 	}
-	public List<ServicePackage> findBlockPCRF(Long packageId){
+
+	public List<ServicePackage> findBlockPCRF(Long packageId) {
 		ServicePackage servicePackage = findById(packageId);
-		if (servicePackage.getPcrfGroup() == null){
+		if (servicePackage.getPcrfGroup() == null) {
 			return null;
 		}
 		return servicePackageRepository.findBlockPCRF(packageId, servicePackage.getPcrfGroup().getPcrfGroupId());
@@ -147,4 +151,44 @@ public class ServicePackageService {
 	public List<ServicePackage> getAllWithoutPageable() {
 		return servicePackageRepository.findAll();
 	}
+
+	/**
+	 * Description - Hàm clone tất cả thông tin gói cước
+	 *
+	 * @param request as AddServicePackageRequest
+	 * @return any
+	 * @author - giangdh
+	 * @created - 8/26/2021
+	 */
+	public ApiResponse cloneServicePackage(AddServicePackageRequest request) {
+		// 1. Kiểm tra xem có ID của gói cước cũ không
+		ApiResponse response = new ApiResponse();
+		if (request.getOldServicePackageId() == null) {
+			return new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
+					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getErrorCode(),
+					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getMessage());
+		} else {
+			// 1. Lưu bản ghi clone để lấy ID gói cước mới
+			Services services = servicesRepository.findById(5L).orElse(null);
+			ServiceType serviceType = serviceTypeRepository.findById(request.getServiceTypeId()).orElse(null);
+			if (services == null || serviceType == null) {
+				return new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
+						ErrorCode.CLONE_REQUEST_DATA_FAIL.getErrorCode(),
+						ErrorCode.CLONE_REQUEST_DATA_FAIL.getMessage());
+			}
+			ServicePackage service = new ServicePackage(request, serviceType, services);
+			Long packageId = servicePackageRepository.save(service).getPackageId();
+			// 2.1 Tìm những chương trình của gói cước cũ
+			List<ServiceProgram> listProgram = serviceProgramRepository.findAllByPackageId(request.getOldServicePackageId());
+			if (listProgram.size() > 0) {
+				// 2.2 Lưu những bản ghi chương trình của gói cước cũ với ID gói cước mới
+				for (ServiceProgram item : listProgram) {
+					item.setServicePackage(servicePackageRepository.findByPackageId(packageId));
+				}
+				serviceProgramRepository.saveAll(listProgram);
+			}
+		}
+		return response;
+	}
+
 }

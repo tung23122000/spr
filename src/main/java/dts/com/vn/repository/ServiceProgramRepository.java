@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, Long> {
 
@@ -21,4 +23,8 @@ public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, 
 
 	@Query("select sp from ServiceProgram sp where sp.servicePackage.packageId = :packageId order by sp.programId desc")
 	Page<ServiceProgram> findByPackageId(@Param("packageId") Long packageId, Pageable pageable);
+
+	@Query("SELECT sp FROM ServiceProgram sp WHERE sp.servicePackage.packageId = ?1")
+	List<ServiceProgram> findAllByPackageId(Long packageId);
+
 }

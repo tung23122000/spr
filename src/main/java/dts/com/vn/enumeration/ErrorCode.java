@@ -40,14 +40,17 @@ public enum ErrorCode {
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),
-	NOT_FOUND("error.not.found", "")
-	;
+	NOT_FOUND("error.not.found", ""),
+
+	// Giang add
+	SERVICE_PACKAGE_ID_REQUIRED("error.null.servicePackageId", "ID gói cước cần clone không được bỏ trống."),
+	CLONE_REQUEST_DATA_FAIL("error.data", "Dữ liệu service hoặc serviceType truyền lên không đúng.");
 
 	private String errorCode;
 
 	private String message;
 
-	private ErrorCode(String errorCode, String message) {
+	ErrorCode(String errorCode, String message) {
 		this.errorCode = errorCode;
 		this.message = message;
 	}

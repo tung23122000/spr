@@ -1,7 +1,6 @@
 package dts.com.vn.controller;
 
 import dts.com.vn.entities.BucketsInfo;
-import dts.com.vn.entities.NdsTypeParamProgram;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.entities.SubServicePackage;
 import dts.com.vn.enumeration.ApiResponseStatus;
@@ -275,4 +274,18 @@ public class ServicePackageController {
 		}
 		return ResponseEntity.ok().body(response);
 	}
+
+	@GetMapping("/clone-service-package")
+	public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
+		ApiResponse response;
+		try {
+			response = servicePackageService.cloneServicePackage(request);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
 }
+

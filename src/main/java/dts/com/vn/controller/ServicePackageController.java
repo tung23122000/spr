@@ -65,8 +65,8 @@ public class ServicePackageController {
 			ServicePackage page = servicePackageService.add(request);
 			//		CREATE SUB_SERVICE_PACKAGE
 			List<SubServicePackageRequest> listBlock = request.getSubServicePackage();
-			if (listBlock.size()>0){
-				for (SubServicePackageRequest block: listBlock) {
+			if (listBlock.size() > 0) {
+				for (SubServicePackageRequest block : listBlock) {
 					SubServicePackage subServicePackage = new SubServicePackage();
 					subServicePackage.setPackageId(page.getPackageId());
 					subServicePackage.setSubPackageId(block.getPackageId());
@@ -222,14 +222,14 @@ public class ServicePackageController {
 	}
 
 	@GetMapping("/find-block-in/{id}")
-	public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id){
-		ApiResponse response ;
+	public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
 		List<ServicePackage> returnList = new ArrayList<>();
 		try {
 //			SEARCH IN CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
 			List<BucketsInfo> listBucketsInfo = servicePackageService.findBucketsInfo(id);
 //			SEARCH LIST BLOCK BY BUCKETS INFO
-			for (BucketsInfo bucketInfo: listBucketsInfo) {
+			for (BucketsInfo bucketInfo : listBucketsInfo) {
 				List<ServicePackage> listBlockIN = servicePackageService.findBlockIN(id, bucketInfo);
 				returnList.addAll(listBlockIN);
 			}
@@ -244,8 +244,8 @@ public class ServicePackageController {
 	}
 
 	@GetMapping("/find-block-pcrf/{id}")
-	public ResponseEntity<ApiResponse> findBlockPCRF(@PathVariable(name = "id", required = true) Long id){
-		ApiResponse response ;
+	public ResponseEntity<ApiResponse> findBlockPCRF(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
 		List<ServicePackage> returnList = new ArrayList<>();
 		try {
 			List<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id);
@@ -275,14 +275,16 @@ public class ServicePackageController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping("/clone-service-package")
+	@PostMapping("/clone-service-package")
 	public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
 		ApiResponse response;
 		try {
 			response = servicePackageService.cloneServicePackage(request);
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
+					ErrorCode.DATA_FAILED.getErrorCode(),
+					ErrorCode.DATA_FAILED.getMessage());
 			return ResponseEntity.badRequest().body(response);
 		}
 	}

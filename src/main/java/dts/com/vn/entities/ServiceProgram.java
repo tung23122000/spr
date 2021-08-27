@@ -10,7 +10,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "service_program", schema = "public")
-public class ServiceProgram {
+public class ServiceProgram implements Cloneable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -159,15 +159,15 @@ public class ServiceProgram {
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
 		this.programCode = request.getProgramCode();
-		if (request.getAllowIsdnStatus()){
+		if (request.getAllowIsdnStatus()) {
 			this.allowIsdnStatus = "1";
-		}else{
+		} else {
 			this.allowIsdnStatus = "0";
 		}
-		if (request.getCcspServiceCode() != null){
+		if (request.getCcspServiceCode() != null) {
 			this.ccspServiceCode = this.convertToCcspDesign(request.getCcspServiceCode());
 		}
-		if (request.getCcspResultCode() != null){
+		if (request.getCcspResultCode() != null) {
 			this.ccspResultCode = this.convertToCcspDesign(request.getCcspResultCode());
 		}
 		this.number1 = request.getNumber1();
@@ -176,22 +176,28 @@ public class ServiceProgram {
 		this.totalUnit = request.getTotalUnit();
 	}
 
-//	Convert A#B#C
-	public String convertToCcspDesign(String str){
-		if (str.equals(null)){
+	//	Convert A#B#C
+	public String convertToCcspDesign(String str) {
+		if (str.equals(null)) {
 			return null;
-		}else{
+		} else {
 			String returnStr = "";
-			if (str.indexOf(",") > 0){
+			if (str.indexOf(",") > 0) {
 				returnStr = str.replaceAll(",", "#").toUpperCase();
-			}else if (str.indexOf(" ") > 0){
+			} else if (str.indexOf(" ") > 0) {
 				returnStr = str.replaceAll(" ", "#").toUpperCase();
-			}else if (str.indexOf("#") > 0){
+			} else if (str.indexOf("#") > 0) {
 				returnStr = str.toUpperCase();
-			}else {
+			} else {
 				returnStr = str;
 			}
 			return returnStr;
 		}
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }

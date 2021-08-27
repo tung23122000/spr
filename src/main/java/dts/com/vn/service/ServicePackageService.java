@@ -9,15 +9,18 @@ import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.util.DateTimeUtil;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ServicePackageService {
@@ -39,6 +42,12 @@ public class ServicePackageService {
 
 	@Autowired
 	private BucketsInfoRepository bucketsInfoRepository;
+
+	@Autowired
+	private MapServicePackageRepository mapServicePackageRepository;
+
+	@Autowired
+	private NdsTypeParamProgramRepository ndsTypeParamProgramRepository;
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -160,10 +169,12 @@ public class ServicePackageService {
 	 * @author - giangdh
 	 * @created - 8/26/2021
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	public ApiResponse cloneServicePackage(AddServicePackageRequest request) {
+		Long oldPackageId = request.getOldServicePackageId();
 		// 1. Kiểm tra xem có ID của gói cước cũ không
 		ApiResponse response = new ApiResponse();
-		if (request.getOldServicePackageId() == null) {
+		if (oldPackageId == null) {
 			return new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
 					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getErrorCode(),
 					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getMessage());
@@ -177,18 +188,73 @@ public class ServicePackageService {
 						ErrorCode.CLONE_REQUEST_DATA_FAIL.getMessage());
 			}
 			ServicePackage service = new ServicePackage(request, serviceType, services);
-			Long packageId = servicePackageRepository.save(service).getPackageId();
-			// 2.1 Tìm những chương trình của gói cước cũ
-			List<ServiceProgram> listProgram = serviceProgramRepository.findAllByPackageId(request.getOldServicePackageId());
-			if (listProgram.size() > 0) {
-				// 2.2 Lưu những bản ghi chương trình của gói cước cũ với ID gói cước mới
-				for (ServiceProgram item : listProgram) {
-					item.setServicePackage(servicePackageRepository.findByPackageId(packageId));
+			Long newPackageId = servicePackageRepository.save(service).getPackageId();
+			// 2. Tìm những chương trình của gói cước cũ để clone
+			List<ServiceProgram> listOldServiceProgram = serviceProgramRepository.findAllByPackageId(oldPackageId);
+			// 3. Thực hiện clone với từng chương trình
+			for (ServiceProgram oldProgram : listOldServiceProgram) {
+				// 3.1 Clone chương trình
+				ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
+				// 3.1 Tìm những thông tin đấu nối IN của gói cước và chương trình cũ
+				List<BucketsInfo> lstOldBucketInfos = bucketsInfoRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				if (lstOldBucketInfos.size() > 0) {
+					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
+					for (BucketsInfo bi : lstOldBucketInfos) {
+						cloneBucketInfo(bi, newPackageId, newProgram.getProgramId());
+					}
 				}
-				serviceProgramRepository.saveAll(listProgram);
+				// 3.2 Tìm những thông tin đấu nối BILLING của các
+				List<MapServicePackage> lstOldMapServicePackage = mapServicePackageRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				// 3.3 Tìm những thông tin đấu nối PCRF
+				List<NdsTypeParamProgram> lstNdsTpp = ndsTypeParamProgramRepository.getListClone(oldPackageId, oldProgram.getProgramId());
 			}
+			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+			response.setMessage("Clone thông tin gói cước thành công");
+			return response;
 		}
-		return response;
+	}
+
+	/**
+	 * Description - Hàm clone serviceProgram
+	 *
+	 * @param oldProgram danh sách những chương trình cần clone
+	 * @param newId      ID của gói cước mới
+	 * @author - giangdh
+	 * @created - 8/27/2021
+	 */
+	@SneakyThrows(CloneNotSupportedException.class)
+	private ServiceProgram cloneServiceProgram(ServiceProgram oldProgram, Long newId) {
+		ServiceProgram serviceProgram = (ServiceProgram) oldProgram.clone();
+		serviceProgram.setProgramId(null);
+		serviceProgram.setServicePackage(servicePackageRepository.findByPackageId(newId));
+		serviceProgram.setProgramCode(oldProgram.getProgramCode() + "_copy_" + System.currentTimeMillis());
+		serviceProgramRepository.saveAndFlush(serviceProgram);
+		return serviceProgram;
+	}
+
+	/**
+	 * Description - Hàm clone BucketsInfo
+	 *
+	 * @param bi           is Obj
+	 * @param newPackageId is Long
+	 * @param newProgramId is Long
+	 * @author - giangdh
+	 * @created - 8/27/2021
+	 */
+	@SneakyThrows(CloneNotSupportedException.class)
+	private void cloneBucketInfo(BucketsInfo bi, Long newPackageId, Long newProgramId) {
+		BucketsInfo bucketsInfo = (BucketsInfo) bi.clone();
+		bucketsInfo.setBucketsId(null);
+		bucketsInfo.setPackageId(newPackageId);
+		Optional<ServiceProgram> optServiceProgram = serviceProgramRepository.findById(newProgramId);
+		if (optServiceProgram.isPresent()) {
+			ServiceProgram serviceProgram = optServiceProgram.get();
+			bucketsInfo.setServiceProgram(serviceProgram);
+		} else {
+			throw new RestApiException(ApiResponseStatus.FAILED.getValue(), null,
+					ErrorCode.SERVICE_PROGRAM_NOT_FOUND.getErrorCode(),
+					ErrorCode.SERVICE_PROGRAM_NOT_FOUND.getMessage());
+		}
 	}
 
 }

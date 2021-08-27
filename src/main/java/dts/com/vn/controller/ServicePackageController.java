@@ -206,11 +206,11 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/find-block-in/{id}")
-    public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id) {
-        ApiResponse response;
-        List<ServicePackage> returnList = new ArrayList<>();
-        try {
+	@GetMapping("/find-block-in/{id}")
+	public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
+		List<ServicePackage> returnList = new ArrayList<>();
+		try {
 //			SEARCH IN CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
             List<BucketsInfo> listBucketsInfo = servicePackageService.findBucketsInfo(id);
 //			SEARCH LIST BLOCK BY BUCKETS INFO
@@ -260,19 +260,19 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/clone-service-package")
-    public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
-        ApiResponse response;
-        try {
-            response = servicePackageService.cloneServicePackage(request);
-            return ResponseEntity.ok().body(response);
-        } catch (Exception e) {
-            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
-                    ErrorCode.DATA_FAILED.getErrorCode(),
-                    ErrorCode.DATA_FAILED.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
+	@PostMapping("/clone-service-package")
+	public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
+		ApiResponse response;
+		try {
+			response = servicePackageService.cloneServicePackage(request);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception e) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
+					ErrorCode.DATA_FAILED.getErrorCode(),
+					ErrorCode.DATA_FAILED.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
 
 }
 

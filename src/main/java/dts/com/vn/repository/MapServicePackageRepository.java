@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MapServicePackageRepository extends JpaRepository<MapServicePackage, Long> {
 
@@ -25,4 +27,8 @@ public interface MapServicePackageRepository extends JpaRepository<MapServicePac
 
 	@Query("select m from MapServicePackage m where m.serviceProgram.programId = :programId order by m.mapId desc")
 	Page<MapServicePackage> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
+
+	@Query("SELECT msp FROM MapServicePackage msp WHERE msp.packageId = ?1 AND msp.serviceProgram.programId = ?2")
+	List<MapServicePackage> getListClone(Long packageId, Long programId);
+
 }

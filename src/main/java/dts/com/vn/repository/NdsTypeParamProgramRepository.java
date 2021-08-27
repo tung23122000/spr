@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface NdsTypeParamProgramRepository extends JpaRepository<NdsTypeParamProgram, Long> {
 
@@ -25,4 +27,8 @@ public interface NdsTypeParamProgramRepository extends JpaRepository<NdsTypePara
 			+ "or (:search is not null and upper(nds.serviceProgram.description) like CONCAT('%',upper(:search),'%'))) "
 			+ "order by nds.ndsTypeParamKey desc")
 	Page<NdsTypeParamProgram> findAll(@Param("search") String search, Pageable pageable);
+
+	@Query("SELECT nds FROM NdsTypeParamProgram nds WHERE nds.servicePackage.packageId = ?1 AND nds.serviceProgram.programId = ?2")
+	List<NdsTypeParamProgram> getListClone(Long packageId, Long programId);
+
 }

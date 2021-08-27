@@ -33,8 +33,10 @@ public enum ErrorCode {
 	GET_ALL_PCRF_GROUP_FAILED("error.get.all.pcrf.group", "Lỗi khi tải nhóm PCRF"),
 	ADD_PCRF_GROUP_FAILED("error.add.pcrf.group", "Lỗi khi thêm mới nhóm PCRF"),
 	ADD_MINUS_MONEY_FAILED("error.add.minus.money", "Lỗi khi thêm mới trừ tiền bậc thang"),
+	DELETE_MINUS_MONEY_FAILED("error.delete.minus.money", "Lỗi khi xóa trừ tiền bậc thang"),
+	DELETE_MAP_COMMAND_ALIAS_FAILED("error.delete.map.command.alias", "Lỗi khi xóa Command Alias"),
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),
-
+	FIND_LOG_ACTION_FAILED("error.find.log.action", "Lỗi khi tải Log Action"),
 
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 

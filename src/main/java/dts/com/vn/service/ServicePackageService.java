@@ -7,6 +7,7 @@ import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServicePackageRequest;
+import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ServicePackageService {
 
 	@Autowired
 	private BucketsInfoRepository bucketsInfoRepository;
+
+	@Autowired
+	private SubServicePackageRepository subServicePackageRepository;
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -150,6 +154,18 @@ public class ServicePackageService {
 
 	public List<ServicePackage> getAllWithoutPageable() {
 		return servicePackageRepository.findAll();
+	}
+
+	public void saveSubServicePackge(List<SubServicePackageRequest> listBlock, Long packageId){
+		if (listBlock.size()>0){
+			for (SubServicePackageRequest block: listBlock) {
+				SubServicePackage subServicePackage = new SubServicePackage();
+				subServicePackage.setPackageId(packageId);
+				subServicePackage.setSubPackageId(block.getPackageId());
+				subServicePackage.setIsActive("1");
+				subServicePackageRepository.save(subServicePackage);
+			}
+		}
 	}
 
 	/**

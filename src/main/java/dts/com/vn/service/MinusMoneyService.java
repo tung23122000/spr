@@ -10,6 +10,7 @@ import dts.com.vn.repository.MinusMoneyRepository;
 import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceProgramRepository;
 import dts.com.vn.request.MinusMoneyRequest;
+import dts.com.vn.response.ApiResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +47,9 @@ public class MinusMoneyService {
 
     public List<MinusMoney> getAll(Long packageId, Long programId){
         return minusMoneyRepository.getAll(packageId, programId);
+    }
+
+    public void delete(Long minusMoneyLadderId){
+        minusMoneyRepository.deleteById(minusMoneyLadderId);
     }
 }

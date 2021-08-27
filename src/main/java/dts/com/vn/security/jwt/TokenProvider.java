@@ -30,6 +30,8 @@ public class TokenProvider {
 
 	private static final String AUTHORITIES_KEY = "auth";
 
+	public static Account account;
+
 	@Autowired
 	private JwtProperties jwtProperties;
 
@@ -79,6 +81,7 @@ public class TokenProvider {
 			UserDetails userDetails = new AccountPrincipal(nhanVien, token);
 			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,
 					SecurityUtils.getCurrentUserJWT(), userDetails.getAuthorities());
+			account = nhanVien;
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		} catch (Exception e) {
 		}

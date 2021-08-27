@@ -58,4 +58,8 @@ public class MapCommandAliasService {
     public Page<MapCommandAlias> findAll(Long programId, Pageable pageable) {
         return mapCommandAliasRepository.findAllByProgramId(programId, pageable);
     }
+
+    public void delete(Long cmdAliasId){
+        mapCommandAliasRepository.deleteById(cmdAliasId);
+    }
 }

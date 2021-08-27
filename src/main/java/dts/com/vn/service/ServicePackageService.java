@@ -204,9 +204,21 @@ public class ServicePackageService {
 					}
 				}
 				// 3.2 Tìm những thông tin đấu nối BILLING của các
-				List<MapServicePackage> lstOldMapServicePackage = mapServicePackageRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				List<MapServicePackage> lstOldMapServicePackages = mapServicePackageRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				if (lstOldBucketInfos.size() > 0) {
+					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
+					for (MapServicePackage msp : lstOldMapServicePackages) {
+						cloneMapServicePackage(msp, newPackageId, newProgram.getProgramId());
+					}
+				}
 				// 3.3 Tìm những thông tin đấu nối PCRF
-				List<NdsTypeParamProgram> lstNdsTpp = ndsTypeParamProgramRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				List<NdsTypeParamProgram> lstOldNdsTypeParamPrograms = ndsTypeParamProgramRepository.getListClone(oldPackageId, oldProgram.getProgramId());
+				// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
+				if (lstOldNdsTypeParamPrograms.size() > 0) {
+					for (NdsTypeParamProgram ntpp : lstOldNdsTypeParamPrograms) {
+						cloneNdsTypeParamProgram(ntpp, newPackageId, newProgram.getProgramId());
+					}
+				}
 			}
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setMessage("Clone thông tin gói cước thành công");
@@ -256,5 +268,32 @@ public class ServicePackageService {
 					ErrorCode.SERVICE_PROGRAM_NOT_FOUND.getMessage());
 		}
 	}
+
+	/**
+	 * Description - Hàm clone MapServicePackage
+	 *
+	 * @param msp          is Obj
+	 * @param newPackageId is Long
+	 * @param newProgramId is Long
+	 * @author - giangdh
+	 * @created - 8/27/2021
+	 */
+	@SneakyThrows(CloneNotSupportedException.class)
+	private void cloneMapServicePackage(MapServicePackage msp, Long newPackageId, Long newProgramId) {
+	}
+
+	/**
+	 * Description - Hàm clone MapServicePackage
+	 *
+	 * @param ntpp         is Obj
+	 * @param newPackageId is Long
+	 * @param newProgramId is Long
+	 * @author - giangdh
+	 * @created - 8/27/2021
+	 */
+	@SneakyThrows(CloneNotSupportedException.class)
+	private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, Long newPackageId, Long newProgramId) {
+	}
+
 
 }

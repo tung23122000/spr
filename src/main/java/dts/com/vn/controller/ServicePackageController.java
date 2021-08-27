@@ -260,14 +260,16 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/clone-service-package")
+    @PostMapping("/clone-service-package")
     public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
         ApiResponse response;
         try {
             response = servicePackageService.cloneServicePackage(request);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
+                    ErrorCode.DATA_FAILED.getErrorCode(),
+                    ErrorCode.DATA_FAILED.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }

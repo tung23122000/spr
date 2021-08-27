@@ -20,7 +20,6 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class ServicePackageService {
@@ -200,7 +199,7 @@ public class ServicePackageService {
 				if (lstOldBucketInfos.size() > 0) {
 					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
 					for (BucketsInfo bi : lstOldBucketInfos) {
-						cloneBucketInfo(bi, newPackageId, newProgram.getProgramId());
+						cloneBucketInfo(bi, newPackageId, newProgram);
 					}
 				}
 				// 3.2 Tìm những thông tin đấu nối BILLING của các
@@ -208,7 +207,7 @@ public class ServicePackageService {
 				if (lstOldBucketInfos.size() > 0) {
 					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
 					for (MapServicePackage msp : lstOldMapServicePackages) {
-						cloneMapServicePackage(msp, newPackageId, newProgram.getProgramId());
+						cloneMapServicePackage(msp, newPackageId, newProgram);
 					}
 				}
 				// 3.3 Tìm những thông tin đấu nối PCRF
@@ -216,7 +215,7 @@ public class ServicePackageService {
 				// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
 				if (lstOldNdsTypeParamPrograms.size() > 0) {
 					for (NdsTypeParamProgram ntpp : lstOldNdsTypeParamPrograms) {
-						cloneNdsTypeParamProgram(ntpp, newPackageId, newProgram.getProgramId());
+						cloneNdsTypeParamProgram(ntpp, service, newProgram);
 					}
 				}
 			}
@@ -249,24 +248,17 @@ public class ServicePackageService {
 	 *
 	 * @param bi           is Obj
 	 * @param newPackageId is Long
-	 * @param newProgramId is Long
+	 * @param newProgram   is Obj
 	 * @author - giangdh
 	 * @created - 8/27/2021
 	 */
 	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneBucketInfo(BucketsInfo bi, Long newPackageId, Long newProgramId) {
+	private void cloneBucketInfo(BucketsInfo bi, Long newPackageId, ServiceProgram newProgram) {
 		BucketsInfo bucketsInfo = (BucketsInfo) bi.clone();
 		bucketsInfo.setBucketsId(null);
 		bucketsInfo.setPackageId(newPackageId);
-		Optional<ServiceProgram> optServiceProgram = serviceProgramRepository.findById(newProgramId);
-		if (optServiceProgram.isPresent()) {
-			ServiceProgram serviceProgram = optServiceProgram.get();
-			bucketsInfo.setServiceProgram(serviceProgram);
-		} else {
-			throw new RestApiException(ApiResponseStatus.FAILED.getValue(), null,
-					ErrorCode.SERVICE_PROGRAM_NOT_FOUND.getErrorCode(),
-					ErrorCode.SERVICE_PROGRAM_NOT_FOUND.getMessage());
-		}
+		bucketsInfo.setServiceProgram(newProgram);
+		bucketsInfoRepository.saveAndFlush(bucketsInfo);
 	}
 
 	/**
@@ -274,26 +266,35 @@ public class ServicePackageService {
 	 *
 	 * @param msp          is Obj
 	 * @param newPackageId is Long
-	 * @param newProgramId is Long
+	 * @param newProgram   is Obj
 	 * @author - giangdh
 	 * @created - 8/27/2021
 	 */
 	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneMapServicePackage(MapServicePackage msp, Long newPackageId, Long newProgramId) {
+	private void cloneMapServicePackage(MapServicePackage msp, Long newPackageId, ServiceProgram newProgram) {
+		MapServicePackage mapServicePackage = (MapServicePackage) msp.clone();
+		mapServicePackage.setMapId(null);
+		mapServicePackage.setPackageId(newPackageId);
+		mapServicePackage.setServiceProgram(newProgram);
+		mapServicePackageRepository.saveAndFlush(mapServicePackage);
 	}
 
 	/**
-	 * Description - Hàm clone MapServicePackage
+	 * Description - Hàm clone NdsTypeParamProgram
 	 *
-	 * @param ntpp         is Obj
-	 * @param newPackageId is Long
-	 * @param newProgramId is Long
+	 * @param ntpp       is Obj
+	 * @param newPackage is Obj
+	 * @param newProgram is Obj
 	 * @author - giangdh
 	 * @created - 8/27/2021
 	 */
 	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, Long newPackageId, Long newProgramId) {
+	private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, ServicePackage newPackage, ServiceProgram newProgram) {
+		NdsTypeParamProgram ndsTypeParamProgram = (NdsTypeParamProgram) ntpp.clone();
+		ndsTypeParamProgram.setNdsTypeParamKey(null);
+		ndsTypeParamProgram.setServicePackage(newPackage);
+		ndsTypeParamProgram.setServiceProgram(newProgram);
+		ndsTypeParamProgramRepository.saveAndFlush(ndsTypeParamProgram);
 	}
-
 
 }

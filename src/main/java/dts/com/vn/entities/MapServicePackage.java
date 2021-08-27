@@ -11,7 +11,7 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "map_service_package", schema = "public")
-public class MapServicePackage {
+public class MapServicePackage implements Cloneable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +63,11 @@ public class MapServicePackage {
 	private String onOff;
 
 	public MapServicePackage() {
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public MapServicePackage(AddMapServicePackageRequest request, ExternalSystem extSystem, ServiceProgram serviceProgram) {

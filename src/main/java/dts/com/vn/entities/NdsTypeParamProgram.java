@@ -10,7 +10,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "nds_type_param_program", schema = "public")
-public class NdsTypeParamProgram {
+public class NdsTypeParamProgram implements Cloneable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +55,9 @@ public class NdsTypeParamProgram {
 				DateTimeUtil.convertStringToInstant(request.getEndDatetime(), "dd/MM/yyyy HH:mm:ss");
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

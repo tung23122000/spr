@@ -8,6 +8,8 @@ public enum ErrorCode {
 	LOGOUT_FAILED("error.logout.failed", "Có lỗi xảy ra khi đăng xuất"),
 
 	DATA_FAILED("error.data.failed", "Có lỗi với dữ liệu"),
+	CLONE_SERVICE_PACKAGE_FAILED("error.clone.service.package", "Sao chép gói cước không thành công"),
+	CLONE_SERVICE_PROGRAM_FAILED("error.clone.service.program", "Sao chép chương trình không thành công"),
 	SERVICE_PROGRAM_NOT_FOUND("error.service.program.not.found", "Mã chương trình không tồn tại"),
 	SERVICE_PACKAGE_NOT_FOUND("error.service.package.not.found", "Mã gói cước không tồn tại"),
 	CONDITION_NOT_LOADED("error.condition.loaded", "Không tải được điều kiện"),
@@ -35,9 +37,16 @@ public enum ErrorCode {
 	ADD_MINUS_MONEY_FAILED("error.add.minus.money", "Lỗi khi thêm mới trừ tiền bậc thang"),
 	DELETE_MINUS_MONEY_FAILED("error.delete.minus.money", "Lỗi khi xóa trừ tiền bậc thang"),
 	DELETE_MAP_COMMAND_ALIAS_FAILED("error.delete.map.command.alias", "Lỗi khi xóa Command Alias"),
+	DELETE_BUCKETS_INFO_FAILED("error.delete.buckets.info", "Lỗi khi xóa cấu hình IN"),
+	DELETE_MAP_SERVICE_PACKAGE_FAILED("error.delete.map.service.package", "Lỗi khi xóa cấu hình Billing"),
+	DELETE_SERVICE_PACKAGE_FAILED("error.delete.service.package", "Lỗi khi xóa gói cước"),
+	DELETE_NDS_TYPE_PARAM_PROGRAM_FAILED("error.delete.nds.type.param.program", "Lỗi khi xóa cấu hình PCRF"),
+	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
+
+	UPDATE_BUCKETS_INFO_FAILED("error.update.buckets.info", "Lỗi khi chỉnh sửa cấu hình IN"),
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),
 	FIND_LOG_ACTION_FAILED("error.find.log.action", "Lỗi khi tải Log Action"),
-
+	ADD_BUCKETS_INFO_FAILED("error.add.buckets.info", "Lỗi khi thêm cấu hình IN"),
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),

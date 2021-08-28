@@ -70,4 +70,8 @@ public class MapServicePackageService {
 		return mapServicePackageRepository.findById(id)
 				.orElseThrow(() -> new RestApiException(ErrorCode.MAP_SERVICE_PACKAGE_NOT_FOUND));
 	}
+
+	public void delete(Long mapId){
+		mapServicePackageRepository.deleteById(mapId);
+	}
 }

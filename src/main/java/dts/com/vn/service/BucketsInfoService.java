@@ -69,4 +69,8 @@ public class BucketsInfoService {
 		return bucketsInfoRepository.findById(id)
 				.orElseThrow(() -> new RestApiException(ErrorCode.API_FAILED_UNKNOWN));
 	}
+
+	public void delete(Long bucketsId){
+		bucketsInfoRepository.deleteById(bucketsId);
+	}
 }

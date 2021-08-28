@@ -1,5 +1,6 @@
 package dts.com.vn.repository;
 
+import dts.com.vn.entities.MinusMoney;
 import dts.com.vn.entities.ServiceInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,8 @@ public interface ServiceInfoRepository extends JpaRepository<ServiceInfo, Long> 
 
 	@Query("SELECT si FROM ServiceInfo si where si.packageId = ?1 AND si.serviceProgram.programId=?2 ORDER BY si.serviceInfoId desc")
 	List<ServiceInfo> findAllByPackageId(Long packageId, Long programId);
+
+	@Query("SELECT si FROM ServiceInfo si WHERE si.packageId = ?1 AND si.serviceProgram.programId = ?2")
+	List<ServiceInfo> findByPackageIdAndProgramId(Long packageId, Long programId);
 
 }

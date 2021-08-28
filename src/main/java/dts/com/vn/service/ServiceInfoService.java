@@ -66,4 +66,7 @@ public class ServiceInfoService {
 		return serviceInfoRepository.findAllByPackageId(packageId, programId);
 	}
 
+	public void delete(Long serviceInfoId){
+		serviceInfoRepository.deleteById(serviceInfoId);
+	}
 }

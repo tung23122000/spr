@@ -1,9 +1,12 @@
 package dts.com.vn.response.service_package_detail;
 
+import dts.com.vn.entities.MinusMoney;
 import dts.com.vn.response.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +26,9 @@ public class DetailServiceProgramResponse {
 	// TRANSACTION
 	private Page<MapCommandAliasResponse> pageTransaction;
 
+	// MinusMoney
+	private List<MinusMoney> listMinusMoney;
+
 	private Page<ServiceInfoResponse> pageServiceInfoResponse;
 
 	public DetailServiceProgramResponse(ServiceProgramResponse serviceProgramResponse,
@@ -30,7 +36,8 @@ public class DetailServiceProgramResponse {
 	                                    Page<MapServicePackageResponse> pageMapServicePackage,
 	                                    Page<NdsTypeParamProgramResponse> pageNdsTypeParamProgram,
 										Page<MapCommandAliasResponse> pageTransaction,
-	                                    Page<ServiceInfoResponse> pageServiceInfoResponse
+	                                    Page<ServiceInfoResponse> pageServiceInfoResponse,
+										List<MinusMoney> listMinusMoney
 	) {
 		this.serviceProgramResponse = serviceProgramResponse;
 		this.pageBucketsInfo = pageBucketsInfo;
@@ -38,5 +45,6 @@ public class DetailServiceProgramResponse {
 		this.pageNdsTypeParamProgram = pageNdsTypeParamProgram;
 		this.pageTransaction = pageTransaction;
 		this.pageServiceInfoResponse = pageServiceInfoResponse;
+		this.listMinusMoney = listMinusMoney;
 	}
 }

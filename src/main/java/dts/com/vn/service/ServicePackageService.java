@@ -9,6 +9,7 @@ import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.security.jwt.TokenProvider;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,23 +36,19 @@ public class ServicePackageService {
 	private ServicesRepository servicesRepository;
 
 	@Autowired
-	private FlowGroupRepository flowGroupRepository;
-
-	@Autowired
 	private ServiceProgramRepository serviceProgramRepository;
 
 	@Autowired
-	private BucketsInfoRepository bucketsInfoRepository;
-
-	@Autowired
-<<<<<<< HEAD
 	private SubServicePackageRepository subServicePackageRepository;
-=======
-	private MapServicePackageRepository mapServicePackageRepository;
 
 	@Autowired
-	private NdsTypeParamProgramRepository ndsTypeParamProgramRepository;
->>>>>>> clone-package
+	private ServiceProgramService serviceProgramService;
+
+	@Autowired
+	private LogActionService logActionService;
+
+	@Autowired
+	private TokenProvider tokenProvider;
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -204,114 +201,43 @@ public class ServicePackageService {
 						ErrorCode.CLONE_REQUEST_DATA_FAIL.getMessage());
 			}
 			ServicePackage service = new ServicePackage(request, serviceType, services);
-			Long newPackageId = servicePackageRepository.save(service).getPackageId();
+			ServicePackage servicePackage = servicePackageRepository.save(service);
+			Long newPackageId = servicePackage.getPackageId();
+
+
 			// 2. Tìm những chương trình của gói cước cũ để clone
 			List<ServiceProgram> listOldServiceProgram = serviceProgramRepository.findAllByPackageId(oldPackageId);
 			// 3. Thực hiện clone với từng chương trình
 			for (ServiceProgram oldProgram : listOldServiceProgram) {
-				// 3.1 Clone chương trình
-				ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
-				// 3.1 Tìm những thông tin đấu nối IN của gói cước và chương trình cũ
-				List<BucketsInfo> lstOldBucketInfos = bucketsInfoRepository.getListClone(oldPackageId, oldProgram.getProgramId());
-				if (lstOldBucketInfos.size() > 0) {
-					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
-					for (BucketsInfo bi : lstOldBucketInfos) {
-						cloneBucketInfo(bi, newPackageId, newProgram);
-					}
-				}
-				// 3.2 Tìm những thông tin đấu nối BILLING của các
-				List<MapServicePackage> lstOldMapServicePackages = mapServicePackageRepository.getListClone(oldPackageId, oldProgram.getProgramId());
-				if (lstOldBucketInfos.size() > 0) {
-					// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
-					for (MapServicePackage msp : lstOldMapServicePackages) {
-						cloneMapServicePackage(msp, newPackageId, newProgram);
-					}
-				}
-				// 3.3 Tìm những thông tin đấu nối PCRF
-				List<NdsTypeParamProgram> lstOldNdsTypeParamPrograms = ndsTypeParamProgramRepository.getListClone(oldPackageId, oldProgram.getProgramId());
-				// 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
-				if (lstOldNdsTypeParamPrograms.size() > 0) {
-					for (NdsTypeParamProgram ntpp : lstOldNdsTypeParamPrograms) {
-						cloneNdsTypeParamProgram(ntpp, service, newProgram);
-					}
-				}
+				serviceProgramService.cloneOneServiceProgram(newPackageId, oldPackageId, service, oldProgram);
 			}
+			// 4. Thực hiện chặn gói cước
+			saveSubServicePackge(request.getSubServicePackage(), servicePackage.getPackageId());
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+			response.setData(servicePackage);
 			response.setMessage("Clone thông tin gói cước thành công");
 			return response;
 		}
 	}
 
-	/**
-	 * Description - Hàm clone serviceProgram
-	 *
-	 * @param oldProgram danh sách những chương trình cần clone
-	 * @param newId      ID của gói cước mới
-	 * @author - giangdh
-	 * @created - 8/27/2021
-	 */
-	@SneakyThrows(CloneNotSupportedException.class)
-	private ServiceProgram cloneServiceProgram(ServiceProgram oldProgram, Long newId) {
-		ServiceProgram serviceProgram = (ServiceProgram) oldProgram.clone();
-		serviceProgram.setProgramId(null);
-		serviceProgram.setServicePackage(servicePackageRepository.findByPackageId(newId));
-		serviceProgram.setProgramCode(oldProgram.getProgramCode() + "_copy_" + System.currentTimeMillis());
-		serviceProgramRepository.saveAndFlush(serviceProgram);
-		return serviceProgram;
+	public void delete(ServicePackage servicePackage) {
+		ApiResponse response = new ApiResponse();
+		// Tạo Log Action
+		LogAction logAction = new LogAction();
+		logAction.setTableAction("service_package");
+		logAction.setAccount(tokenProvider.account);
+		logAction.setAction("DELETE");
+		logAction.setOldValue(servicePackage.toString());
+		logAction.setNewValue(null);
+		logAction.setTimeAction(new Date());
+		logAction.setIdAction(servicePackage.getPackageId());
+		logActionService.add(logAction);
+		List<ServiceProgram> listServiceProgram = serviceProgramService.findAllByPackageId(servicePackage.getPackageId());
+		for (ServiceProgram serviceProgram: listServiceProgram) {
+			serviceProgramService.delete(serviceProgram);
+		}
+		servicePackageRepository.delete(servicePackage);
 	}
 
-	/**
-	 * Description - Hàm clone BucketsInfo
-	 *
-	 * @param bi           is Obj
-	 * @param newPackageId is Long
-	 * @param newProgram   is Obj
-	 * @author - giangdh
-	 * @created - 8/27/2021
-	 */
-	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneBucketInfo(BucketsInfo bi, Long newPackageId, ServiceProgram newProgram) {
-		BucketsInfo bucketsInfo = (BucketsInfo) bi.clone();
-		bucketsInfo.setBucketsId(null);
-		bucketsInfo.setPackageId(newPackageId);
-		bucketsInfo.setServiceProgram(newProgram);
-		bucketsInfoRepository.saveAndFlush(bucketsInfo);
-	}
-
-	/**
-	 * Description - Hàm clone MapServicePackage
-	 *
-	 * @param msp          is Obj
-	 * @param newPackageId is Long
-	 * @param newProgram   is Obj
-	 * @author - giangdh
-	 * @created - 8/27/2021
-	 */
-	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneMapServicePackage(MapServicePackage msp, Long newPackageId, ServiceProgram newProgram) {
-		MapServicePackage mapServicePackage = (MapServicePackage) msp.clone();
-		mapServicePackage.setMapId(null);
-		mapServicePackage.setPackageId(newPackageId);
-		mapServicePackage.setServiceProgram(newProgram);
-		mapServicePackageRepository.saveAndFlush(mapServicePackage);
-	}
-
-	/**
-	 * Description - Hàm clone NdsTypeParamProgram
-	 *
-	 * @param ntpp       is Obj
-	 * @param newPackage is Obj
-	 * @param newProgram is Obj
-	 * @author - giangdh
-	 * @created - 8/27/2021
-	 */
-	@SneakyThrows(CloneNotSupportedException.class)
-	private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, ServicePackage newPackage, ServiceProgram newProgram) {
-		NdsTypeParamProgram ndsTypeParamProgram = (NdsTypeParamProgram) ntpp.clone();
-		ndsTypeParamProgram.setNdsTypeParamKey(null);
-		ndsTypeParamProgram.setServicePackage(newPackage);
-		ndsTypeParamProgram.setServiceProgram(newProgram);
-		ndsTypeParamProgramRepository.saveAndFlush(ndsTypeParamProgram);
-	}
 
 }

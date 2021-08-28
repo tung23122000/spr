@@ -60,4 +60,8 @@ public class NdsTypeParamProgramService {
 		}
 		return ndsTypeParamProgramRepository.findAll(pageable);
 	}
+
+	public void delete(Long ndsTypeParamKey){
+		ndsTypeParamProgramRepository.deleteById(ndsTypeParamKey);
+	}
 }

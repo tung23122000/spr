@@ -29,6 +29,6 @@ public interface NdsTypeParamProgramRepository extends JpaRepository<NdsTypePara
 	Page<NdsTypeParamProgram> findAll(@Param("search") String search, Pageable pageable);
 
 	@Query("SELECT nds FROM NdsTypeParamProgram nds WHERE nds.servicePackage.packageId = ?1 AND nds.serviceProgram.programId = ?2")
-	List<NdsTypeParamProgram> getListClone(Long packageId, Long programId);
+	List<NdsTypeParamProgram> findByPackageIdAndProgramId(Long packageId, Long programId);
 
 }

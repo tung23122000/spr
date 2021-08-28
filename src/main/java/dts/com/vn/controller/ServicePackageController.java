@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -260,6 +261,7 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Transactional
 	@PostMapping("/clone-service-package")
 	public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
 		ApiResponse response;
@@ -268,11 +270,28 @@ public class ServicePackageController {
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
-					ErrorCode.DATA_FAILED.getErrorCode(),
-					ErrorCode.DATA_FAILED.getMessage());
+					ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getErrorCode(),
+					ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getMessage());
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
 
+    @Transactional
+    @PostMapping("/delete-service-package")
+    public ResponseEntity<ApiResponse> deleteServicePackage(@RequestBody AddServicePackageRequest request){
+        ApiResponse response;
+        try {
+            ServicePackage servicePackage = servicePackageService.findById(request.getServicePackageId());
+            servicePackageService.delete(servicePackage);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+        } catch (RestApiException ex) {
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.DELETE_SERVICE_PACKAGE_FAILED);
+            logger.error("DELETE_SERVICE_PACKAGE_FAILED", response);
+        }
+        return ResponseEntity.ok().body(response);
+    }
 }
 

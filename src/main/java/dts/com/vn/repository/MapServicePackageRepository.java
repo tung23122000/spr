@@ -29,6 +29,6 @@ public interface MapServicePackageRepository extends JpaRepository<MapServicePac
 	Page<MapServicePackage> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 
 	@Query("SELECT msp FROM MapServicePackage msp WHERE msp.packageId = ?1 AND msp.serviceProgram.programId = ?2")
-	List<MapServicePackage> getListClone(Long packageId, Long programId);
+	List<MapServicePackage> findByPackageIdAndProgramId(Long packageId, Long programId);
 
 }

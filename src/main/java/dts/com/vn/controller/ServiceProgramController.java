@@ -10,10 +10,8 @@ import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ServiceProgramResponse;
 import dts.com.vn.response.service_package_detail.DetailServicePackageResponse;
 import dts.com.vn.response.service_package_detail.DetailServiceProgramResponse;
-import dts.com.vn.service.IsdnListService;
-import dts.com.vn.service.ListDetailService;
-import dts.com.vn.service.ServicePackageListService;
-import dts.com.vn.service.ServiceProgramService;
+import dts.com.vn.security.jwt.TokenProvider;
+import dts.com.vn.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,21 +33,24 @@ import java.util.function.Function;
 public class ServiceProgramController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceProgramController.class);
-
 	private final ServiceProgramService serviceProgramService;
-
+	private final ServicePackageService servicePackageService;
 	private final IsdnListService isdnListService;
-
 	private final ListDetailService listDetailService;
-
 	private final ServicePackageListService servicePackageListService;
+	private final TokenProvider tokenProvider;
+	private final LogActionService logActionService;
 
-
-	public ServiceProgramController(ServiceProgramService serviceProgramService, IsdnListService isdnListService, ListDetailService listDetailService, ServicePackageListService servicePackageListService) {
+	public ServiceProgramController(ServiceProgramService serviceProgramService, IsdnListService isdnListService,
+			ListDetailService listDetailService, ServicePackageListService servicePackageListService,
+			ServicePackageService servicePackageService, TokenProvider tokenProvider, LogActionService logActionService) {
 		this.serviceProgramService = serviceProgramService;
 		this.isdnListService = isdnListService;
 		this.listDetailService = listDetailService;
 		this.servicePackageListService = servicePackageListService;
+		this.servicePackageService = servicePackageService;
+		this.tokenProvider = tokenProvider;
+		this.logActionService = logActionService;
 	}
 
 	@GetMapping("/find-all")
@@ -78,6 +79,17 @@ public class ServiceProgramController {
 		ApiResponse response;
 		try {
 			ServiceProgram data = serviceProgramService.add(request);
+			// Tạo Log Action
+			LogAction logAction = new LogAction();
+			logAction.setTableAction("service_program");
+			logAction.setAccount(tokenProvider.account);
+			logAction.setAction("CREATE");
+			logAction.setOldValue(null);
+			logAction.setNewValue(data.toString());
+			logAction.setTimeAction(new Date());
+			logAction.setIdAction(data.getProgramId());
+			logActionService.add(logAction);
+			//
 			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
@@ -112,7 +124,21 @@ public class ServiceProgramController {
 				servicePackageListService.save(servicePackageList);
 			}
 
+//			Tạo log action
+			LogAction logAction = new LogAction();
+			logAction.setTableAction("service_program");
+			logAction.setAccount(tokenProvider.account);
+			logAction.setAction("UPDATE");
+			logAction.setOldValue(serviceProgramService.findById(request.getServiceProgramId()).toString());
+
 			ServiceProgram data = serviceProgramService.update(request);
+
+			// Sau khi update set New Value
+			logAction.setIdAction(data.getProgramId());
+			logAction.setNewValue(data.toString());
+			logAction.setTimeAction(new Date());
+			logActionService.add(logAction);
+
 			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
@@ -196,6 +222,40 @@ public class ServiceProgramController {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
 			logger.error("GET_ALL_ACTION_CODE_MAPPING", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping("/clone-program")
+	public ResponseEntity<ApiResponse> cloneProgram(@RequestBody AddServiceProgramRequest request) {
+		ApiResponse response;
+		try {
+			response = serviceProgramService.cloneOneServiceProgram(request.getServicePackageId(),
+					request.getServicePackageId(), servicePackageService.findById(request.getServicePackageId()), serviceProgramService.findById(request.getServiceProgramId()));
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.CLONE_SERVICE_PROGRAM_FAILED);
+			logger.error("CLONE_SERVICE_PROGRAM_FAILED", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@Transactional
+	@PostMapping("/delete-program")
+	public ResponseEntity<ApiResponse> deleteServiceProgram(@RequestBody AddServiceProgramRequest request) {
+		ApiResponse response;
+		try {
+			ServiceProgram serviceProgram = serviceProgramService.findById(request.getServiceProgramId());
+			serviceProgramService.delete(serviceProgram);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("ADD_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

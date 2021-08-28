@@ -27,6 +27,6 @@ public interface BucketsInfoRepository extends JpaRepository<BucketsInfo, Long> 
 	Page<BucketsInfo> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 
 	@Query("SELECT b FROM BucketsInfo b WHERE b.packageId = ?1 AND b.serviceProgram.programId = ?2")
-	List<BucketsInfo> getListClone(Long packageId, Long programId);
+	List<BucketsInfo> findByPackageIdAndProgramId(Long packageId, Long programId);
 
 }

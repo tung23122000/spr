@@ -167,7 +167,7 @@ public class ServiceProgramService {
         return new DetailServicePackageResponse(response, pageResponse);
     }
 
-    public List<ServiceProgram> findAllByPackageId(Long packageId){
+    public List<ServiceProgram> findAllByPackageId(Long packageId) {
         return serviceProgramRepository.findAllByPackageId(packageId);
     }
 
@@ -255,7 +255,7 @@ public class ServiceProgramService {
         LogAction logAction = new LogAction();
         logAction.setTableAction("service_program");
         logAction.setAccount(tokenProvider.account);
-        logAction.setAction("CLONE");
+        logAction.setAction("CREATE");
         logAction.setOldValue(null);
         logAction.setNewValue(newProgram.toString());
         logAction.setTimeAction(new Date());
@@ -273,21 +273,34 @@ public class ServiceProgramService {
         // 3.2 Tìm những thông tin đấu nối BILLING của các
         List<MapServicePackage> lstOldMapServicePackages = mapServicePackageRepository.findByPackageIdAndProgramId(oldPackageId, oldProgram.getProgramId());
         if (lstOldBucketInfos.size() > 0) {
-            // 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
+            // 3.1.2 Thực hiện clone thông tin đấu nối BILLING nếu có
             for (MapServicePackage msp : lstOldMapServicePackages) {
                 cloneMapServicePackage(msp, newPackageId, newProgram);
             }
         }
         // 3.3 Tìm những thông tin đấu nối PCRF
         List<NdsTypeParamProgram> lstOldNdsTypeParamPrograms = ndsTypeParamProgramRepository.findByPackageIdAndProgramId(oldPackageId, oldProgram.getProgramId());
-        // 3.1.2 Thực hiện clone thông tin đấu nối IN nếu có
+        // 3.1.2 Thực hiện clone thông tin đấu nối PCRF nếu có
         if (lstOldNdsTypeParamPrograms.size() > 0) {
             for (NdsTypeParamProgram ntpp : lstOldNdsTypeParamPrograms) {
                 cloneNdsTypeParamProgram(ntpp, service, newProgram);
             }
         }
         // 3.4 Clone Transcode
-        // 3.5 Clone trừ tiền bậc thang nếu có
+        List<MapCommandAlias> listOldMapCommandAlias = mapCommandAliasRepository.findByPackageIdAndProgramId(oldPackageId, oldProgram.getProgramId());
+        if (listOldMapCommandAlias.size() > 0) {
+            for (MapCommandAlias mapCommandAlias : listOldMapCommandAlias) {
+                cloneMapCommandAlias(mapCommandAlias, service, newProgram);
+            }
+        }
+        // 3.5 Clone thông tin bổ sung (Service_info)
+        List<ServiceInfo> listServiceInfo = serviceInfoRepository.findAllByPackageId(oldPackageId, oldProgram.getProgramId());
+        if (listServiceInfo.size() > 0) {
+            for (ServiceInfo serviceInfo: listServiceInfo) {
+                cloneServiceInfo(serviceInfo, service, newProgram);
+            }
+        }
+        // RESPONSE
         response.setStatus(ApiResponseStatus.SUCCESS.getValue());
         response.setData(newProgram);
         response.setMessage("Clone thông tin chương trình thành công");
@@ -360,6 +373,44 @@ public class ServiceProgramService {
         logActionService.add(logAction);
     }
 
+    @SneakyThrows(CloneNotSupportedException.class)
+    private void cloneMapCommandAlias(MapCommandAlias mca, ServicePackage newPackage, ServiceProgram newProgram) {
+        MapCommandAlias mapCommandAlias = (MapCommandAlias) mca.clone();
+        mapCommandAlias.setCmdAliasId(null);
+        if (mapCommandAlias.getCmdAliasName() != null)
+            mapCommandAlias.setCmdAliasName(mapCommandAlias.getCmdAliasName() + "_copy_" + System.currentTimeMillis());
+        mapCommandAlias.setServiceProgram(newProgram);
+        mapCommandAlias.setServicePackage(newPackage);
+        MapCommandAlias mapCommandAliasReturn = mapCommandAliasRepository.saveAndFlush(mapCommandAlias);
+        LogAction logAction = new LogAction();
+        logAction.setAction("CREATE");
+        logAction.setOldValue(null);
+        logAction.setNewValue(mapCommandAliasReturn.toString());
+        logAction.setTimeAction(new Date());
+        logAction.setIdAction(mapCommandAliasReturn.getCmdAliasId());
+        logAction.setAccount(tokenProvider.account);
+        logAction.setTableAction("map_command_alias");
+        logActionService.add(logAction);
+    }
+
+    @SneakyThrows(CloneNotSupportedException.class)
+    private void cloneServiceInfo(ServiceInfo si, ServicePackage newPackage, ServiceProgram newProgram) {
+        ServiceInfo serviceInfo = (ServiceInfo) si.clone();
+        serviceInfo.setServiceInfoId(null);
+        serviceInfo.setPackageId(newPackage.getPackageId());
+        serviceInfo.setServiceProgram(newProgram);
+        ServiceInfo serviceInfoReturn = serviceInfoRepository.saveAndFlush(serviceInfo);
+        LogAction logAction = new LogAction();
+        logAction.setAction("CREATE");
+        logAction.setOldValue(null);
+        logAction.setNewValue(serviceInfoReturn.toString());
+        logAction.setTimeAction(new Date());
+        logAction.setIdAction(serviceInfoReturn.getServiceInfoId());
+        logAction.setAccount(tokenProvider.account);
+        logAction.setTableAction("service_info");
+        logActionService.add(logAction);
+    }
+
     public void delete(ServiceProgram serviceProgram) {
         // Tạo Log Action
         LogAction logAction = new LogAction();
@@ -374,7 +425,7 @@ public class ServiceProgramService {
         // Xóa các thành phần liên quan
         // Buckets_info
         List<BucketsInfo> listBucketsInfo = bucketsInfoRepository.findByPackageIdAndProgramId(serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (BucketsInfo bucketsInfo: listBucketsInfo) {
+        for (BucketsInfo bucketsInfo : listBucketsInfo) {
             // Tạo Log Action
             LogAction logActionBucketsInfo = new LogAction();
             logActionBucketsInfo.setTableAction("buckets_info");
@@ -391,7 +442,7 @@ public class ServiceProgramService {
         // MapServicePackage
         List<MapServicePackage> listMapServicePackage = mapServicePackageRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (MapServicePackage mapServicePackage: listMapServicePackage) {
+        for (MapServicePackage mapServicePackage : listMapServicePackage) {
             // Tạo Log Action
             LogAction logActionMapServicePackage = new LogAction();
             logActionMapServicePackage.setTableAction("map_service_package");
@@ -409,7 +460,7 @@ public class ServiceProgramService {
         // NdsTypeParamProgram
         List<NdsTypeParamProgram> listNdsTypeParamProgram = ndsTypeParamProgramRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (NdsTypeParamProgram ndsTypeParamProgram: listNdsTypeParamProgram) {
+        for (NdsTypeParamProgram ndsTypeParamProgram : listNdsTypeParamProgram) {
             // Tạo Log Action
             LogAction logActionNdsTypeParamProgram = new LogAction();
             logActionNdsTypeParamProgram.setTableAction("nds_type_param_program");
@@ -427,7 +478,7 @@ public class ServiceProgramService {
         // MapCommandAlias
         List<MapCommandAlias> listMapCommandAlias = mapCommandAliasRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (MapCommandAlias mapCommandAlias: listMapCommandAlias){
+        for (MapCommandAlias mapCommandAlias : listMapCommandAlias) {
             // Tạo Log Action
             LogAction logActionMapCommandAlias = new LogAction();
             logActionMapCommandAlias.setTableAction("map_command_alias");
@@ -445,7 +496,7 @@ public class ServiceProgramService {
         // MinusMoney
         List<MinusMoney> listMinusMoney = minusMoneyRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (MinusMoney minusMoney: listMinusMoney) {
+        for (MinusMoney minusMoney : listMinusMoney) {
             // Tạo Log Action
             LogAction logActionMinusMoney = new LogAction();
             logActionMinusMoney.setTableAction("minus_money_ladder");
@@ -463,7 +514,7 @@ public class ServiceProgramService {
         // ServiceInfo
         List<ServiceInfo> listServiceInfo = serviceInfoRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
-        for (ServiceInfo serviceInfo: listServiceInfo) {
+        for (ServiceInfo serviceInfo : listServiceInfo) {
             // Tạo Log Action
             LogAction logActionServiceInfo = new LogAction();
             logActionServiceInfo.setTableAction("service_info");

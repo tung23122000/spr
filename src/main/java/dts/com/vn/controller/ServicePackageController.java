@@ -1,6 +1,7 @@
 package dts.com.vn.controller;
 
 import dts.com.vn.entities.BucketsInfo;
+import dts.com.vn.entities.LogAction;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
@@ -8,6 +9,8 @@ import dts.com.vn.exception.RestApiException;
 import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.ServicePackageResponse;
+import dts.com.vn.security.jwt.TokenProvider;
+import dts.com.vn.service.LogActionService;
 import dts.com.vn.service.ServicePackageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Service;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,6 +34,12 @@ public class ServicePackageController {
 
     @Autowired
     private ServicePackageService servicePackageService;
+
+    @Autowired
+    private LogActionService logActionService;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(ServicePackageController.class);
 
@@ -58,6 +68,16 @@ public class ServicePackageController {
         ApiResponse response;
         try {
             ServicePackage servicePackage = servicePackageService.add(request);
+            // Tạo Log Action
+            LogAction logAction = new LogAction();
+            logAction.setTableAction("service_package");
+            logAction.setAccount(tokenProvider.account);
+            logAction.setAction("CREATE");
+            logAction.setOldValue(null);
+            logAction.setNewValue(servicePackage.toString());
+            logAction.setTimeAction(new Date());
+            logAction.setIdAction(servicePackage.getPackageId());
+            logActionService.add(logAction);
             //		CREATE SUB_SERVICE_PACKAGE
             servicePackageService.saveSubServicePackge(request.getSubServicePackage(), servicePackage.getPackageId());
             ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
@@ -127,8 +147,21 @@ public class ServicePackageController {
     public ResponseEntity<ApiResponse> update(@RequestBody AddServicePackageRequest request) {
         ApiResponse response;
         try {
-            ServicePackage page = servicePackageService.update(request);
-            ServicePackageResponse responseEntity = new ServicePackageResponse(page);
+            // Tạo log action
+            LogAction logAction = new LogAction();
+            logAction.setTableAction("service_package");
+            logAction.setAccount(tokenProvider.account);
+            logAction.setAction("UPDATE");
+            logAction.setOldValue(servicePackageService.findById(request.getServicePackageId()).toString());
+            // UPDATE
+            ServicePackage servicePackage = servicePackageService.update(request);
+            // Sau khi update set New Value
+            logAction.setIdAction(servicePackage.getPackageId());
+            logAction.setNewValue(servicePackage.toString());
+            logAction.setTimeAction(new Date());
+            logActionService.add(logAction);
+
+            ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);

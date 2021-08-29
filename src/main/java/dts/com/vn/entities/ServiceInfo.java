@@ -11,7 +11,7 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "service_info", schema = "public")
-public class ServiceInfo {
+public class ServiceInfo implements Cloneable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,5 +56,10 @@ public class ServiceInfo {
 		this.staDate = DateTimeUtil.convertStringToInstant(request.getStaDate(), "dd/MM/yyyy HH:mm:ss");
 		this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
 		this.serviceProgram = serviceProgram;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

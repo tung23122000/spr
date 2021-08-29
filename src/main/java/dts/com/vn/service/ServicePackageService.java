@@ -202,8 +202,19 @@ public class ServicePackageService {
 			}
 			ServicePackage service = new ServicePackage(request, serviceType, services);
 			ServicePackage servicePackage = servicePackageRepository.save(service);
-			Long newPackageId = servicePackage.getPackageId();
 
+			// Tạo Log Action CREATE ServicePackage
+			LogAction logAction = new LogAction();
+			logAction.setTableAction("service_package");
+			logAction.setAccount(tokenProvider.account);
+			logAction.setAction("CREATE");
+			logAction.setOldValue(null);
+			logAction.setNewValue(servicePackage.toString());
+			logAction.setTimeAction(new Date());
+			logAction.setIdAction(servicePackage.getPackageId());
+			logActionService.add(logAction);
+			//
+			Long newPackageId = servicePackage.getPackageId();
 
 			// 2. Tìm những chương trình của gói cước cũ để clone
 			List<ServiceProgram> listOldServiceProgram = serviceProgramRepository.findAllByPackageId(oldPackageId);

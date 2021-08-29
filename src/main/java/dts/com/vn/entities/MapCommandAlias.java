@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "map_command_alias", schema = "public")
-public class MapCommandAlias {
+public class MapCommandAlias implements Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cmd_alias_id")
@@ -45,5 +45,10 @@ public class MapCommandAlias {
         }else{
             this.cmdStatus = "0";
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

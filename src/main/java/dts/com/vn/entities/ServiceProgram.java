@@ -137,6 +137,9 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "total_unit")
 	private Integer totalUnit; // Total Unit Flex Flow
 
+	@Column(name = "date_before_renew")
+	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn || default = 0
+
 	public ServiceProgram() {
 	}
 
@@ -174,6 +177,12 @@ public class ServiceProgram implements Cloneable {
 		this.number2 = request.getNumber2();
 		this.transCode = request.getTransCode();
 		this.totalUnit = request.getTotalUnit();
+		// Nếu không truyền số ngày gửi MT trước khi gia hạn thì mặc định = 0
+		if (request.getDateBeforeRenew() == null){
+			this.dateBeforeRenew = 0;
+		}else{
+			this.dateBeforeRenew = request.getDateBeforeRenew();
+		}
 	}
 
 	//	Convert A#B#C

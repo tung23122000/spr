@@ -14,6 +14,8 @@ public enum ErrorCode {
 	SERVICE_PACKAGE_NOT_FOUND("error.service.package.not.found", "Mã gói cước không tồn tại"),
 	CONDITION_NOT_LOADED("error.condition.loaded", "Không tải được điều kiện"),
 	SAVE_CONDITION_FAILED("error.condition.save", "Lưu điều kiện lỗi"),
+	SAVE_CONSTANT_FAILED("error.constant.save", "Lưu hằng số lỗi"),
+	FIND_CONSTANT_FAILED("error.constant.find", "Tìm kiếm hằng số lỗi"),
 	ADD_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
 	UPDATE_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
 	EXTERNAL_SYSTEM_NOT_FOUND("error.external.system.not.found", "Nguồn dữ liệu lỗi"),

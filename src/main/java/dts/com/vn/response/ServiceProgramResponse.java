@@ -60,6 +60,9 @@ public class ServiceProgramResponse {
 
 	private Integer totalUnit; // Total Unit Flex Flow
 
+	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
+
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -97,6 +100,7 @@ public class ServiceProgramResponse {
 		this.number2 = service.getNumber2();
 		this.transCode = service.getTransCode();
 		this.totalUnit = service.getTotalUnit();
+		this.dateBeforeRenew = service.getDateBeforeRenew();
 	}
 
 

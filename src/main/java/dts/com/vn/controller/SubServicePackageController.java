@@ -56,8 +56,8 @@ public class SubServicePackageController {
             response = new ApiResponse(ex);
         } catch (Exception ex) {
             ex.printStackTrace();
-            response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
-            logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
+            response = new ApiResponse(ex, ErrorCode.FIND_SUB_SERVICE_PACKAGE_FAILED);
+            logger.error("FIND_SUB_SERVICE_PACKAGE_FAILED", response);
         }
         return ResponseEntity.ok().body(response);
     }
@@ -69,16 +69,12 @@ public class SubServicePackageController {
         ApiResponse response;
         try {
             List<Object[]> listCurrentSubServicePackage = subServicePackageService.findById(packageId);
-            subServicePackageService.deActiveAll(listCurrentSubServicePackage);
+            subServicePackageService.deleteAll(listCurrentSubServicePackage);
             for (SubServicePackageRequest request : listSubServicePackage) {
                 SubServicePackage subServicePackage = new SubServicePackage();
                 subServicePackage.setPackageId(packageId);
                 subServicePackage.setSubPackageId(request.getPackageId());
-                if (subServicePackageService.checkExist(subServicePackage).size() == 0) {
-                    subServicePackageService.save(subServicePackage);
-                } else {
-                    subServicePackageService.update(subServicePackage);
-                }
+                subServicePackageService.save(subServicePackage);
             }
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
         } catch (RestApiException ex) {

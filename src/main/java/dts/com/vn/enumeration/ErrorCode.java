@@ -16,6 +16,7 @@ public enum ErrorCode {
 	SAVE_CONDITION_FAILED("error.condition.save", "Lưu điều kiện lỗi"),
 	SAVE_CONSTANT_FAILED("error.constant.save", "Lưu hằng số lỗi"),
 	FIND_CONSTANT_FAILED("error.constant.find", "Tìm kiếm hằng số lỗi"),
+	FIND_SUB_SERVICE_PACKAGE_FAILED("error.sub.service.package.find", "Lỗi trong quá trình tìm gói cước chặn"),
 	ADD_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
 	UPDATE_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
 	EXTERNAL_SYSTEM_NOT_FOUND("error.external.system.not.found", "Nguồn dữ liệu lỗi"),

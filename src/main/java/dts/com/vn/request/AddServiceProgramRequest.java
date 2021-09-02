@@ -59,4 +59,10 @@ public class AddServiceProgramRequest {
 	private Integer totalUnit; // Total Unit Flex Flow
 
 	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
+
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
+	private Long packageIdNext;
+
+	private Long programIdNext;
 }

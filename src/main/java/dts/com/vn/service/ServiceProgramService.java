@@ -512,6 +512,8 @@ public class ServiceProgramService {
         }
 
         // ServiceInfo
+        System.out.println(serviceProgram.getServicePackage().getPackageId());
+        System.out.println(serviceProgram.getProgramId());
         List<ServiceInfo> listServiceInfo = serviceInfoRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
         for (ServiceInfo serviceInfo : listServiceInfo) {

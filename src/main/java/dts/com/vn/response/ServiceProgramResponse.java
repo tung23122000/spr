@@ -62,6 +62,11 @@ public class ServiceProgramResponse {
 
 	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
 
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
+	private Long packageIdNext;
+
+	private Long programIdNext;
 
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
@@ -101,6 +106,9 @@ public class ServiceProgramResponse {
 		this.transCode = service.getTransCode();
 		this.totalUnit = service.getTotalUnit();
 		this.dateBeforeRenew = service.getDateBeforeRenew();
+		this.isRetry = service.getIsRetry();
+		this.packageIdNext = service.getPackageIdNext();
+		this.programIdNext = service.getProgramIdNext();
 	}
 
 

@@ -140,6 +140,9 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "date_before_renew")
 	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn || default = 0
 
+	@Column(name = "is_retry")
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
 	public ServiceProgram() {
 	}
 
@@ -183,6 +186,9 @@ public class ServiceProgram implements Cloneable {
 		}else{
 			this.dateBeforeRenew = request.getDateBeforeRenew();
 		}
+		this.isRetry = request.getIsRetry();
+		this.packageIdNext = request.getPackageIdNext();
+		this.programIdNext = request.getProgramIdNext();
 	}
 
 	//	Convert A#B#C

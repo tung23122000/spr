@@ -25,30 +25,28 @@ import java.util.Objects;
 
 @Service
 public class ServicePackageService {
+	private final ServicePackageRepository servicePackageRepository;
+	private final ServiceTypeRepository serviceTypeRepository;
+	private final ServicesRepository servicesRepository;
+	private final ServiceProgramRepository serviceProgramRepository;
+	private final SubServicePackageRepository subServicePackageRepository;
+	private final ServiceProgramService serviceProgramService;
+	private final LogActionService logActionService;
+	private final TokenProvider tokenProvider;
 
-	@Autowired
-	private ServicePackageRepository servicePackageRepository;
-
-	@Autowired
-	private ServiceTypeRepository serviceTypeRepository;
-
-	@Autowired
-	private ServicesRepository servicesRepository;
-
-	@Autowired
-	private ServiceProgramRepository serviceProgramRepository;
-
-	@Autowired
-	private SubServicePackageRepository subServicePackageRepository;
-
-	@Autowired
-	private ServiceProgramService serviceProgramService;
-
-	@Autowired
-	private LogActionService logActionService;
-
-	@Autowired
-	private TokenProvider tokenProvider;
+	public ServicePackageService(ServicePackageRepository servicePackageRepository, ServiceTypeRepository serviceTypeRepository,
+								 ServicesRepository servicesRepository, ServiceProgramRepository serviceProgramRepository,
+								 SubServicePackageRepository subServicePackageRepository, ServiceProgramService serviceProgramService,
+								 LogActionService logActionService, TokenProvider tokenProvider) {
+		this.servicePackageRepository = servicePackageRepository;
+		this.serviceTypeRepository = serviceTypeRepository;
+		this.servicesRepository = servicesRepository;
+		this.serviceProgramRepository = serviceProgramRepository;
+		this.subServicePackageRepository = subServicePackageRepository;
+		this.serviceProgramService = serviceProgramService;
+		this.logActionService = logActionService;
+		this.tokenProvider = tokenProvider;
+	}
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
 		if (StringUtils.hasLength(search)) {
@@ -168,7 +166,6 @@ public class ServicePackageService {
 				SubServicePackage subServicePackage = new SubServicePackage();
 				subServicePackage.setPackageId(packageId);
 				subServicePackage.setSubPackageId(block.getPackageId());
-				subServicePackage.setIsActive("1");
 				subServicePackageRepository.save(subServicePackage);
 			}
 		}

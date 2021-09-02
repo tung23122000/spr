@@ -3,7 +3,16 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/spr
-    username: postgres
-    password: 1234
-    driverClassName: org.postgresql.Driver
+    # Primary database
+    primary:
+      url: jdbc:postgresql://localhost:5432/spr
+      username: postgres
+      password: 1234
+      driverClassName: org.postgresql.Driver
+
+    # Secondary database
+    secondary:
+      jdbc-url: jdbc:oracle:thin:@10.3.17.151:1521:db01
+      username: VASP4_SUBS
+      password: abcd1234
+      driverClassName: oracle.jdbc.OracleDriver

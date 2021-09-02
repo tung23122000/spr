@@ -40,7 +40,7 @@ public class ServiceInfo implements Cloneable {
 	@JoinColumn(name = "program_id")
 	private ServiceProgram serviceProgram;
 
-	@Column(name = "serviceInfoTypeId")
+	@Column(name = "service_info_type_id")
 	private Long serviceInfoTypeId;
 
 	public ServiceInfo() {

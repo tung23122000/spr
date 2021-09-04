@@ -53,4 +53,6 @@ public class AddServicePackageRequest {
 
 	private PCRFGroup pcrfGroup; // Nhóm PCRF
 
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
 }

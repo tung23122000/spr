@@ -63,6 +63,8 @@ public class ServicePackageResponse {
 
 	private PCRFGroup pcrfGroup; // Nhóm PCRF
 
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
 	public ServicePackageResponse(ServicePackage service) {
 		super();
 		this.packageId = service.getPackageId();
@@ -97,5 +99,6 @@ public class ServicePackageResponse {
 		this.flowGroupId = service.getFlowGroupId();
 		this.extendStatus = service.getExtendStatus();
 		this.pcrfGroup = service.getPcrfGroup();
+		this.isRetry = service.getIsRetry();
 	}
 }

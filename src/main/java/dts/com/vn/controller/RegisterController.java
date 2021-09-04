@@ -38,8 +38,8 @@ public class RegisterController {
             response = new ApiResponse(ex);
         } catch (Exception ex) {
             ex.printStackTrace();
-            response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
-            logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
+            response = new ApiResponse(ex, ErrorCode.RESET_EXT_RETRY_NUM_FAILED);
+            logger.error("RESET_EXT_RETRY_NUM_FAILED", response);
         }
         return ResponseEntity.ok().body(response);
     }

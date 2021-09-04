@@ -116,6 +116,9 @@ public class ServicePackage {
 	@JoinColumn(name = "pcrf_group_id")
 	private PCRFGroup pcrfGroup;
 
+	@Column(name = "is_retry")
+	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
+
 	public ServicePackage(AddServicePackageRequest req, ServiceType serviceType, Services services) {
 		this.code = req.getPackageCode();
 		this.defaultCode = req.getPackageCode();
@@ -139,6 +142,7 @@ public class ServicePackage {
 		this.flowGroupId = req.getFlowGroupId();
 		this.extendStatus = req.getExtendStatus();
 		this.pcrfGroup = req.getPcrfGroup();
+		this.isRetry = req.getIsRetry();
 	}
 
 	public ServicePackage() {

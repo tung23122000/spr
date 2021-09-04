@@ -14,6 +14,7 @@ public enum ErrorCode {
 	SERVICE_PACKAGE_NOT_FOUND("error.service.package.not.found", "Mã gói cước không tồn tại"),
 	CONDITION_NOT_LOADED("error.condition.loaded", "Không tải được điều kiện"),
 	SAVE_CONDITION_FAILED("error.condition.save", "Lưu điều kiện lỗi"),
+	RESET_EXT_RETRY_NUM_FAILED("error.ext.retry.num.reset", "Reset EXT_RETRY_NUM lỗi"),
 	SAVE_CONSTANT_FAILED("error.constant.save", "Lưu hằng số lỗi"),
 	FIND_CONSTANT_FAILED("error.constant.find", "Tìm kiếm hằng số lỗi"),
 	FIND_SUB_SERVICE_PACKAGE_FAILED("error.sub.service.package.find", "Lỗi trong quá trình tìm gói cước chặn"),

@@ -135,6 +135,7 @@ public class ServicePackageService {
 			servicePackage.setFlowGroupId(request.getFlowGroupId());
 			servicePackage.setPcrfGroup(request.getPcrfGroup());
 			servicePackage.setExtendStatus(request.getExtendStatus());
+			servicePackage.setIsRetry(request.getIsRetry());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

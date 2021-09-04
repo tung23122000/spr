@@ -1,5 +1,7 @@
 app:
   name: extension-spr
+  config-path: D:/Source/DTS/scan-register-tool/config-file
+  scan-folder: /spr/register1-%d-%d-%d/
 
 spring:
   profiles:
@@ -30,5 +32,3 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-

@@ -23,17 +23,16 @@ public class CustomQueryController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomQueryController.class);
 
-    @Transactional
     @PostMapping("/execute")
-    public ResponseEntity<ApiResponse> executeQuery(@RequestBody RenewDataRequest renewDataRequest) {
+    public ResponseEntity<Object> executeQuery(@RequestBody RenewDataRequest renewDataRequest) {
         ApiResponse response = null;
         try {
             customQueryService.execute(renewDataRequest);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
         } catch (Exception ex) {
             ex.printStackTrace();
-            response = new ApiResponse(ex, ErrorCode.ADD_MINUS_MONEY_FAILED);
-            logger.error("UPDATE_PREFIX_FAILED", response);
+//            response = new ApiResponse(ex, ErrorCode.ADD_MINUS_MONEY_FAILED);
+//            logger.error("UPDATE_PREFIX_FAILED", response);
         }
         return ResponseEntity.ok().body(response);
     }

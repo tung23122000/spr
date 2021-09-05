@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceContext;
 import java.io.*;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
 @Service
+@PersistenceContext
 public class CustomQueryService {
     @Autowired
     private CustomQueryRepository customQueryRepository;
@@ -69,6 +71,8 @@ public class CustomQueryService {
 
     public void writeDataToTXT(List<RenewData> listData, String transactionCode, FileWriter writer) throws IOException {
         for (RenewData renewData : listData) {
+//            Hàm kiểm tra null
+//          filterNull()
             if (renewData.getExtRetryNum() == null) {
                 renewData.setExtRetryNum(1L);
             } else {

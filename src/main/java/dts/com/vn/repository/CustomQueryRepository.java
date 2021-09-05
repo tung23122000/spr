@@ -1,5 +1,6 @@
 package dts.com.vn.repository;
 
+import dts.com.vn.entities.RenewData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,25 +26,25 @@ public class CustomQueryRepository {
         this.entityManager = entityManager;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> Integer countByFilter(Class<T> classType, String sql) {
-        List<Object[]> lst = entityManager.createNativeQuery(sql).getResultList();
-        return Integer.valueOf(lst.size());
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> List<T> selectByFilterAndSortAndPage(Class<T> classType, String sql) {
-        List<T> arrObject = this.entityManager.createNativeQuery(sql, classType).getResultList();
-        return arrObject;
-    }
-
-    public Object countRecord(String sql) {
-        try {
-            return this.entityManager.createNativeQuery(sql).getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("RegisterRepository e: " + e);
-            return Integer.valueOf(0);
+    public List<RenewData> selectRenewDate(String sql){
+        List<Object[]> listObject = entityManager.createNativeQuery(sql).getResultList();
+        List<RenewData> returnList = new ArrayList<>();
+        for (Object[] objects: listObject) {
+            RenewData renewData = new RenewData();
+            renewData.setRegId(((BigInteger) objects[0]).longValue());
+            renewData.setIsdn((String) objects[1]);
+            renewData.setServiceNumber((String) objects[2]);
+            renewData.setGroupCode((String) objects[3]);
+            renewData.setCommandCode((String) objects[4]);
+            renewData.setSourceCode((String) objects[5]);
+            System.out.println(objects[6]);
+            if (objects[6] == null){
+                renewData.setExtRetryNum(null);
+            }else{
+                renewData.setExtRetryNum(((BigDecimal) objects[6]).longValue());
+            }
+            returnList.add(renewData);
         }
+        return returnList;
     }
 }

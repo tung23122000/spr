@@ -16,4 +16,7 @@ spring:
       password: abcd1234
       driverClassName: oracle.jdbc.OracleDriver
 
+app:
+  config-path: /web-admin/config/
+
 

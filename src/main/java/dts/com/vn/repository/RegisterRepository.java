@@ -3,8 +3,10 @@ package dts.com.vn.repository;
 import dts.com.vn.entities.Register;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -22,4 +24,8 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
 			" where re.ext_retry_num = ?1 and re.expire_datetime < ?2 ", nativeQuery = true)
 	List<Register> getAllRenew(Long extRetryNum, Timestamp timestamp);
 
+	@Transactional
+	@Modifying
+	@Query("update Register reg set reg.extRetryNum = :extRetryNum where reg.regId = :regId")
+	void saveRegister(Long regId, Long extRetryNum);
 }

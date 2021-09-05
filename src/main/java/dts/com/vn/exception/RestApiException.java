@@ -54,4 +54,9 @@ public class RestApiException extends RuntimeException {
 		this.errorCode = error.getErrorCode();
 	}
 
+	public RestApiException(RestApiException ex) {
+		this.defaultMessage = ex.getDefaultMessage();
+		this.errorCode = ex.getErrorCode();
+	}
+
 }

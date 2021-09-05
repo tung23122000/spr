@@ -17,9 +17,8 @@ public class JsonType implements UserType {
         return new int[] { Types.JAVA_OBJECT };
     }
 
-    @Override
-    public Class<LogAction> returnedClass() {
-        return LogAction.class;
+    public Class<ListDetailNew> returnedClass() {
+        return ListDetailNew.class;
     }
 
     @Override

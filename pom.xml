@@ -125,6 +125,11 @@
             <artifactId>ojdbc8</artifactId>
             <version>21.1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

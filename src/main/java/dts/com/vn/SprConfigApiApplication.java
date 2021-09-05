@@ -1,5 +1,6 @@
 package dts.com.vn;
 
+import org.hibernate.dialect.PostgreSQL94Dialect;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -7,9 +8,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.sql.Types;
+
 
 @SpringBootApplication
-public class SprConfigApiApplication {
+public class SprConfigApiApplication extends PostgreSQL94Dialect {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SprConfigApiApplication.class, args);
@@ -28,4 +31,7 @@ public class SprConfigApiApplication {
 		return new CorsFilter(source);
 	}
 
+	public SprConfigApiApplication() {
+		this.registerColumnType(Types.JAVA_OBJECT, "jsonb");
+	}
 }

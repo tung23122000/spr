@@ -36,21 +36,14 @@ public class ServiceProgramController {
 	private static final Logger logger = LoggerFactory.getLogger(ServiceProgramController.class);
 	private final ServiceProgramService serviceProgramService;
 	private final ServicePackageService servicePackageService;
-	private final IsdnListService isdnListService;
-	private final ListDetailService listDetailService;
-	private final ServicePackageListService servicePackageListService;
 	private final TokenProvider tokenProvider;
 	private final LogActionService logActionService;
 	private final ListDetailNewRepository listDetailNewRepository;
 
-	public ServiceProgramController(ServiceProgramService serviceProgramService, IsdnListService isdnListService,
-			ListDetailService listDetailService, ServicePackageListService servicePackageListService,
+	public ServiceProgramController(ServiceProgramService serviceProgramService,
 			ServicePackageService servicePackageService, TokenProvider tokenProvider, LogActionService logActionService,
 			ListDetailNewRepository listDetailNewRepository) {
 		this.serviceProgramService = serviceProgramService;
-		this.isdnListService = isdnListService;
-		this.listDetailService = listDetailService;
-		this.servicePackageListService = servicePackageListService;
 		this.servicePackageService = servicePackageService;
 		this.tokenProvider = tokenProvider;
 		this.logActionService = logActionService;

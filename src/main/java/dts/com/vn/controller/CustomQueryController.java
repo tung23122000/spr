@@ -1,6 +1,7 @@
 package dts.com.vn.controller;
 
 import dts.com.vn.enumeration.ApiResponseStatus;
+import dts.com.vn.enumeration.Constant;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.request.RenewDataRequest;
 import dts.com.vn.response.ApiResponse;
@@ -43,15 +44,16 @@ public class CustomQueryController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
-		logger.info(file.getName());
+		logger.info("File upload " + file.getOriginalFilename());
 		ApiResponse response;
 		try {
 			String fileName = customQueryService.storeFileToServer(file);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), fileName, null, "Upload file to server success");
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), fileName, null, Constant.UPLOAD_FILE_SUCCESS);
+			logger.info(response.toString());
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", "Upload file to server fail");
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", Constant.UPLOAD_FILE_FAIL);
 			return ResponseEntity.badRequest().body(response);
 		}
 	}

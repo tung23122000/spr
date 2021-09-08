@@ -38,13 +38,6 @@ public class AddServiceProgramRequest {
 
 	private String programCode; // Mã chương trình
 
-	private String fileName; // file import isdn
-
-//	private List<String> listIsdn; // list isdn
-
-
-	private List<JsonIsdn> listIsdn; // list isdn
-
 	private Long servicePackageId; // PackageID
 
 	private Boolean allowIsdnStatus; //Thông tin đấu nối

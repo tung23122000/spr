@@ -111,19 +111,6 @@ public class ServiceProgramController {
 	public ResponseEntity<ApiResponse> update(@RequestBody AddServiceProgramRequest request) {
 		ApiResponse response;
 		try {
-			if (request.getFileName() != null && request.getListIsdn().size()>0){
-				logger.info("Import isdn list: {}", request.getFileName(), request.getListIsdn());
-				//			Create isdn_list
-				IsdnList isdnListRequest = new IsdnList(null, request.getFileName(), Instant.now(), null, "1", null, "0");
-				IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
-				//			Create List_detail
-				ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), request.getListIsdn());
-				listDetailNewRepository.save(listDetailNew);
-				//			Create ServicePackageList
-				ServicePackageList servicePackageList = new ServicePackageList(request.getServicePackageId(), isdnListResponse.getIsdnListId(), Instant.now(), null, request.getServiceProgramId(), null);
-				servicePackageListService.save(servicePackageList);
-			}
-
 //			Tạo log action
 			LogAction logAction = new LogAction();
 			logAction.setTableAction("service_program");

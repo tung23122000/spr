@@ -29,18 +29,21 @@ import java.util.Properties;
 @Service
 @PersistenceContext
 public class CustomQueryService {
-	private final Path fileStorageLocation;
+
 	@Autowired
 	private CustomQueryRepository customQueryRepository;
+
 	@Autowired
 	private AppConfigProperties appConfigProperties;
+
 	@Autowired
 	private WriteDataUtils writeDataUtils;
+
+	private final Path fileStorageLocation;
 
 	public CustomQueryService(FileStorageConfig config) {
 		this.fileStorageLocation = Paths.get(config.getUploadDir()).toAbsolutePath().normalize();
 		try {
-			System.out.println(fileStorageLocation);
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {
 			throw new RestApiException(new ApiResponse());

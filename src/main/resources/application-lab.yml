@@ -1,9 +1,0 @@
-server:
-  port: 8083
-
-spring:
-  datasource:
-    url: jdbc:postgresql://10.10.88.182:5432/spr
-    username: postgres
-    password: 123456
-    driverClassName: org.postgresql.Driver

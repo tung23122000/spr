@@ -140,6 +140,9 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "date_before_renew")
 	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn || default = 0
 
+	@Column(name = "msg_before_renew")
+	private String msgBeforeRenew; // Tin nhắn trước khi gia hạn n ngày
+
 	public ServiceProgram() {
 	}
 
@@ -185,6 +188,7 @@ public class ServiceProgram implements Cloneable {
 		}
 		this.packageIdNext = request.getPackageIdNext();
 		this.programIdNext = request.getProgramIdNext();
+		this.msgBeforeRenew = request.getMsgBeforeRenew();
 	}
 
 	//	Convert A#B#C

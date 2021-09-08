@@ -40,6 +40,7 @@ public class ConditionService {
         mapConditionServicePackage.setCondition(conditionRepository.getOne(input.getConditionId()));
         mapConditionServicePackage.setIsConfirm(input.getIsConfirm());
         mapConditionServicePackage.setMessageMt(input.getMessageMt());
+        mapConditionServicePackage.setIsSoapConfirm(input.getIsSoapConfirm());
         return mapConditionServicePackageRepository.save(mapConditionServicePackage);
     }
 

@@ -66,6 +66,8 @@ public class ServiceProgramResponse {
 
 	private Long programIdNext;
 
+	private String msgBeforeRenew;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -106,6 +108,7 @@ public class ServiceProgramResponse {
 		this.dateBeforeRenew = service.getDateBeforeRenew();
 		this.packageIdNext = service.getPackageIdNext();
 		this.programIdNext = service.getProgramIdNext();
+		this.msgBeforeRenew = service.getMsgBeforeRenew();
 	}
 
 

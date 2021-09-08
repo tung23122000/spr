@@ -153,6 +153,10 @@ public class ServiceProgramService {
             servicePr.setNumber2(request.getNumber2());
             servicePr.setTransCode(request.getTransCode());
             servicePr.setTotalUnit(request.getTotalUnit());
+            servicePr.setDateBeforeRenew(request.getDateBeforeRenew());
+            servicePr.setPackageIdNext(request.getPackageIdNext());
+            servicePr.setProgramIdNext(request.getProgramIdNext());
+            servicePr.setMsgBeforeRenew(request.getMsgBeforeRenew());
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);

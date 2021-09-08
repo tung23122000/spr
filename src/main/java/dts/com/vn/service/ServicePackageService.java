@@ -134,6 +134,10 @@ public class ServicePackageService {
 			servicePackage.setDelayTimeCVQT(request.getDelayTimeCVQT());
 			servicePackage.setFlowGroupId(request.getFlowGroupId());
 			servicePackage.setPcrfGroup(request.getPcrfGroup());
+			servicePackage.setInputKey(request.getInputKey());
+			servicePackage.setInputValue(request.getInputValue());
+			servicePackage.setExcludePackageList(request.getExcludePackageList());
+			servicePackage.setExpectResult(request.getExpectResult());
 			servicePackage.setExtendStatus(request.getExtendStatus());
 			servicePackage.setIsRetry(request.getIsRetry());
 			return servicePackageRepository.save(servicePackage);

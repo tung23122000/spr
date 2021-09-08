@@ -67,4 +67,6 @@ public class AddServiceProgramRequest {
 	private Long packageIdNext;
 
 	private Long programIdNext;
+
+	private String msgBeforeRenew;
 }

@@ -22,13 +22,13 @@ public class MapConditionServicePackage {
     @ManyToOne
     @JoinColumn(name = "condition_id")
     private Condition condition;
-//
-//    @Column(name = "condition_id")
-//    private Long conditionId;
 
     @Column(name = "is_confirm")
     private Boolean isConfirm;
 
     @Column(name = "message_mt")
     private String messageMt;
+
+    @Column(name = "is_soap_confirm")
+    private Boolean isSoapConfirm;
 }

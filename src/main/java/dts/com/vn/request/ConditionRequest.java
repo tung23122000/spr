@@ -15,4 +15,6 @@ public class ConditionRequest {
     private Boolean isConfirm;
 
     private String messageMt;
+
+    private Boolean isSoapConfirm;
 }

@@ -51,6 +51,7 @@ public enum ErrorCode {
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),
 	FIND_LOG_ACTION_FAILED("error.find.log.action", "Lỗi khi tải Log Action"),
 	ADD_BUCKETS_INFO_FAILED("error.add.buckets.info", "Lỗi khi thêm cấu hình IN"),
+	ADD_SERVICE_PACKAGE_LIST_FAILED("error.add.service.package.list", "Lỗi khi thêm danh sách đối tượng"),
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 	REG_ID_NULL("error.reg.id.null", "Trường REG_ID trong truy vấn có giá trị NULL"),
 	EXT_RETRY_NUM_NULL("error.ext.retry.num.null", "Trường EXT_RETRY_NUM trong truy vấn có giá trị NULL"),

@@ -2,11 +2,8 @@ package dts.com.vn.controller;
 
 import dts.com.vn.entities.ConstantDeclaration;
 import dts.com.vn.entities.LogAction;
-import dts.com.vn.entities.MapConditionServicePackage;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
-import dts.com.vn.request.ConditionRequest;
-import dts.com.vn.request.MapConditionServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.security.jwt.TokenProvider;
 import dts.com.vn.service.ConstantDeclarationService;
@@ -17,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/constant-declaration")
@@ -45,7 +39,7 @@ public class ConstantDeclarationController {
             // Tạo Log Action
             LogAction logAction = new LogAction();
             logAction.setTableAction("constant");
-            logAction.setAccount(tokenProvider.account);
+            logAction.setAccount(TokenProvider.account);
             logAction.setOldValue(null);
             // Kiểm tra key đã tồn tại chưa
             ConstantDeclaration constantDeclarationExist = constantDeclarationService.findByConstantKey(constantDeclaration.getConstantKey());

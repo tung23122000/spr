@@ -1,11 +1,13 @@
 package dts.com.vn.service;
 
 import dts.com.vn.config.FileStorageConfig;
+import dts.com.vn.entities.ConstantDeclaration;
 import dts.com.vn.entities.RenewData;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.properties.AppConfigProperties;
+import dts.com.vn.repository.ConstantDeclarationRepository;
 import dts.com.vn.repository.CustomQueryRepository;
 import dts.com.vn.request.RenewDataRequest;
 import dts.com.vn.response.ApiResponse;
@@ -39,6 +41,9 @@ public class CustomQueryService {
 
 	@Autowired
 	private WriteDataUtils writeDataUtils;
+
+	@Autowired
+	private ConstantDeclarationRepository configRepository;
 
 	private final Path fileStorageLocation;
 
@@ -146,12 +151,18 @@ public class CustomQueryService {
 		List<File> files = Files.list(Paths.get(config.getUploadDir()))
 				.map(Path::toFile)
 				.collect(Collectors.toList());
+		List<ConstantDeclaration> listConfig = configRepository.findAll();
 		for (File item : files) {
 			FileResponse file = new FileResponse();
 			file.setFileName(item.getName());
 			SimpleDateFormat df = new SimpleDateFormat(DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
 			String date = df.format(new Date(item.lastModified()));
 			file.setUploadDate(date);
+			for (ConstantDeclaration configSystem : listConfig) {
+				if (item.getName().equalsIgnoreCase(configSystem.getConstantKey())) {
+					file.setConfigTime(configSystem.getConstantValue());
+				}
+			}
 			result.add(file);
 		}
 		return result;

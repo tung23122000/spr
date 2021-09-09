@@ -9,4 +9,6 @@ public class FileResponse {
 
 	private String uploadDate;
 
+	private String configTime;
+
 }

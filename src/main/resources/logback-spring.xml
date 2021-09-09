@@ -48,6 +48,9 @@
         <resetJUL>true</resetJUL>
     </contextListener>
 
+    <logger name="springfox.documentation.spring.web.readers.operation.CachingOperationNameGenerator" level="OFF"
+            additivity="false"/>
+
     <root level="info">
         <appender-ref ref="${LOG_INFO}"/>
         <appender-ref ref="${LOG_ERROR}"/>

@@ -9,6 +9,8 @@ import dts.com.vn.properties.AppConfigProperties;
 import dts.com.vn.repository.CustomQueryRepository;
 import dts.com.vn.request.RenewDataRequest;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.response.FileResponse;
+import dts.com.vn.util.DateTimeUtil;
 import dts.com.vn.util.WriteDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @PersistenceContext
@@ -130,6 +131,30 @@ public class CustomQueryService {
 		} catch (IOException ex) {
 			throw new IOException("Could not store file " + fileName + ". Please try again!", ex);
 		}
+	}
+
+	/**
+	 * Description - Lấy về toàn bộ file trong folder upload
+	 *
+	 * @param config - Đường dẫn folder
+	 * @return any
+	 * @author - giangdh
+	 * @created - 9/9/2021
+	 */
+	public List<FileResponse> getAllFiles(FileStorageConfig config) throws IOException {
+		List<FileResponse> result = new ArrayList<>();
+		List<File> files = Files.list(Paths.get(config.getUploadDir()))
+				.map(Path::toFile)
+				.collect(Collectors.toList());
+		for (File item : files) {
+			FileResponse file = new FileResponse();
+			file.setFileName(item.getName());
+			SimpleDateFormat df = new SimpleDateFormat(DateTimeUtil.DD_MM_YYYY_HH_mm_ss);
+			String date = df.format(new Date(item.lastModified()));
+			file.setUploadDate(date);
+			result.add(file);
+		}
+		return result;
 	}
 
 }

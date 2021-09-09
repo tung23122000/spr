@@ -2,119 +2,54 @@ package dts.com.vn.service;
 
 import dts.com.vn.config.FileStorageConfig;
 import dts.com.vn.entities.ConstantDeclaration;
-import dts.com.vn.entities.RenewData;
 import dts.com.vn.enumeration.ApiResponseStatus;
-import dts.com.vn.enumeration.ErrorCode;
+import dts.com.vn.enumeration.Constant;
 import dts.com.vn.exception.RestApiException;
-import dts.com.vn.properties.AppConfigProperties;
 import dts.com.vn.repository.ConstantDeclarationRepository;
-import dts.com.vn.repository.CustomQueryRepository;
-import dts.com.vn.request.RenewDataRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.FileResponse;
 import dts.com.vn.util.DateTimeUtil;
-import dts.com.vn.util.WriteDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.*;
+import javax.persistence.Query;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @PersistenceContext
 public class CustomQueryService {
 
-	@Autowired
-	private CustomQueryRepository customQueryRepository;
-
-	@Autowired
-	private AppConfigProperties appConfigProperties;
-
-	@Autowired
-	private WriteDataUtils writeDataUtils;
-
-	@Autowired
-	private ConstantDeclarationRepository configRepository;
-
+	private final ConstantDeclarationRepository configRepository;
 	private final Path fileStorageLocation;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-	public CustomQueryService(FileStorageConfig config) {
+	@Autowired
+	public CustomQueryService(ConstantDeclarationRepository configRepository,
+	                          FileStorageConfig config) {
+		this.configRepository = configRepository;
 		this.fileStorageLocation = Paths.get(config.getUploadDir()).toAbsolutePath().normalize();
 		try {
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {
 			throw new RestApiException(new ApiResponse());
 		}
-	}
-
-	public ApiResponse execute(RenewDataRequest renewDataRequest) throws IOException {
-		ApiResponse response = null;
-		List<RenewData> data = null;
-
-		StringBuilder sql = new StringBuilder(renewDataRequest.getInputSQL());
-		try {
-			data = getData(sql.toString());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return new ApiResponse(ex, ErrorCode.MISSING_DATA_FIELD);
-		}
-		File path = new File(appConfigProperties.getAppConfigPath());
-		if (path.listFiles().length > 0) {
-			for (int i = 0; i < path.listFiles().length; i++) {
-				if (path.listFiles()[i].getName().startsWith("CUSTOM_QUERY")) {
-					// Do anything
-
-					// READ OPTION
-					InputStream is = new FileInputStream(path + "/" + path.listFiles()[i].getName());
-					Properties prop = new Properties();
-					prop.load(is);
-					String outputFolder = String.valueOf(prop.getProperty("app.output_folder"));
-					//Write FILE
-					Calendar calendar = Calendar.getInstance();
-					String folder = String.format(outputFolder);
-					int day = calendar.get(Calendar.DATE);
-					int month = calendar.get(Calendar.MONTH) + 1;
-					int year = calendar.get(Calendar.YEAR);
-					int hour = calendar.get(Calendar.HOUR_OF_DAY);
-					int minute = calendar.get(Calendar.MINUTE);
-					int second = calendar.get(Calendar.SECOND);
-					String strD = day < 10 ? ("0" + day) : (day + "");
-					String strMonth = month < 10 ? ("0" + month) : (month + "");
-					String strH = hour < 10 ? ("0" + hour) : (hour + "");
-					String strM = minute < 10 ? ("0" + minute) : (minute + "");
-					String strS = second < 10 ? ("0" + second) : (second + "");
-					String pathFileOutput = folder + "CUSTOM_QUERY" + "-" + strD + strMonth + year + "-" + strH + strM + strS + ".txt";
-					File file = new File(pathFileOutput);
-
-					try {
-						file.getParentFile().mkdirs();
-						FileWriter writer = new FileWriter(file, true);
-						writeDataUtils.writeDataToTXT(data, renewDataRequest.getInputTransactionCode(), writer);
-						response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), file);
-						writer.flush();
-						writer.close();
-					} catch (RestApiException ex) {
-						file.delete();
-						ex.printStackTrace();
-						throw new RestApiException(ex);
-					}
-				}
-			}
-		}
-		return response;
-	}
-
-	private List<RenewData> getData(String sql) {
-		return this.customQueryRepository.selectRenewDate(sql);
 	}
 
 	/**
@@ -166,6 +101,34 @@ public class CustomQueryService {
 			result.add(file);
 		}
 		return result;
+	}
+
+	/**
+	 * Description - Run SQL from user
+	 *
+	 * @param sql - as string
+	 * @return any
+	 * @author - giangdh
+	 * @created - 9/9/2021
+	 */
+	@Transactional
+	public ApiResponse excuteQuery(String sql) {
+		if (sql.contains("auto_extend_package")) {
+			Query query = entityManager.createNativeQuery(sql);
+			if (sql.contains("insert")) {
+				query.executeUpdate();
+				return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, null, Constant.EXCUTE_QUERY_SUCCESS + " Thêm mới dữ liệu thành công");
+			}
+			List<Object> list = query.getResultList();
+			if (list.size() > 0) {
+				return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), list, null,
+						Constant.EXCUTE_QUERY_SUCCESS + " Đã tương tác với " + list.size() + " bản ghi");
+			} else {
+				return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, null, Constant.EXCUTE_QUERY_NO_RECORDS);
+			}
+		} else {
+			return new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, null, Constant.EXCUTE_QUERY_FAIL);
+		}
 	}
 
 }

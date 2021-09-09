@@ -3,8 +3,7 @@ package dts.com.vn.controller;
 import dts.com.vn.config.FileStorageConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.Constant;
-import dts.com.vn.exception.RestApiException;
-import dts.com.vn.request.RenewDataRequest;
+import dts.com.vn.request.SQLRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.FileResponse;
 import dts.com.vn.service.CustomQueryService;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -35,17 +33,16 @@ public class CustomQueryController {
 	}
 
 	@PostMapping("/execute")
-	public ResponseEntity<Object> executeQuery(@RequestBody RenewDataRequest renewDataRequest) {
-		ApiResponse response = null;
+	public ResponseEntity<Object> executeQuery(@RequestBody SQLRequest sqlRequest) {
+		ApiResponse response;
 		try {
-			response = customQueryService.execute(renewDataRequest);
-		} catch (RestApiException ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex);
-		} catch (IOException ex) {
-
+			response = customQueryService.excuteQuery(sqlRequest.getQuery());
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			logger.error(ex.toString());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", Constant.UPLOAD_FILE_FAIL);
+			return ResponseEntity.badRequest().body(response);
 		}
-		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping("/upload")

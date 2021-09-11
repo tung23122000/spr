@@ -33,6 +33,10 @@ public class MapCommandAliasService {
     public MapCommandAlias add(MapCommandAliasRequest request) {
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
+        List<MapCommandAlias> list = mapCommandAliasRepository.findByCmdAliasName(request.getCmdAliasName());
+        if (list.size() > 0) {
+            throw new RestApiException(ErrorCode.DUPLICATE_COMMAND_ALIAS_NAME);
+        }
         return mapCommandAliasRepository.save(new MapCommandAlias(request, serviceProgram));
     }
 
@@ -40,11 +44,11 @@ public class MapCommandAliasService {
         MapCommandAlias entity = findById(request.getCmdAliasId());
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
-        if (request.getCmdStatus()){
-            entity.setCmdStatus("1");
-        }else{
-            entity.setCmdStatus("0");
+        List<MapCommandAlias> list = mapCommandAliasRepository.findByCmdAliasNameAndCmdAliasId(request.getCmdAliasName(), request.getCmdAliasId());
+        if (list.size() > 0) {
+            throw new RestApiException(ErrorCode.DUPLICATE_COMMAND_ALIAS_NAME);
         }
+        entity.setCmdStatus(request.getCmdStatus());
         entity.setCmdAliasName(request.getCmdAliasName());
         entity.setCmdTransCode(request.getCmdTransCode());
         return mapCommandAliasRepository.save(entity);

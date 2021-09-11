@@ -46,6 +46,8 @@ public enum ErrorCode {
 	DELETE_SERVICE_PACKAGE_FAILED("error.delete.service.package", "Lỗi khi xóa gói cước"),
 	DELETE_NDS_TYPE_PARAM_PROGRAM_FAILED("error.delete.nds.type.param.program", "Lỗi khi xóa cấu hình PCRF"),
 	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
+	DUPLICATE_COMMAND_ALIAS_NAME("error.duplicate.command.alias.name", "Cú pháp đã tồn tại trong hệ thống"),
+	DUPLICATE_PROGRAM_CODE("error.duplicate.program.code", "Mã chương trình đã tồn tại trong hệ thống"),
 
 	UPDATE_BUCKETS_INFO_FAILED("error.update.buckets.info", "Lỗi khi chỉnh sửa cấu hình IN"),
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),

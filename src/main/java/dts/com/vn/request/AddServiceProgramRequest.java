@@ -62,4 +62,6 @@ public class AddServiceProgramRequest {
 	private Long programIdNext;
 
 	private String msgBeforeRenew;
+
+	private Boolean isDefaultProgram;
 }

@@ -17,4 +17,10 @@ public interface MapCommandAliasRepository extends JpaRepository<MapCommandAlias
 
     @Query("SELECT mca FROM MapCommandAlias mca WHERE mca.servicePackage.packageId = ?1 AND mca.serviceProgram.programId = ?2")
     List<MapCommandAlias> findByPackageIdAndProgramId(Long packageId, Long programId);
+
+    @Query("SELECT mca FROM MapCommandAlias mca WHERE mca.cmdAliasName = ?1 ")
+    List<MapCommandAlias> findByCmdAliasName(String cmdAliasName);
+
+    @Query("SELECT mca FROM MapCommandAlias mca WHERE mca.cmdAliasName = ?1 AND mca.cmdAliasId <> ?2")
+    List<MapCommandAlias> findByCmdAliasNameAndCmdAliasId(String cmdAliasName, Long cmdAliasId);
 }

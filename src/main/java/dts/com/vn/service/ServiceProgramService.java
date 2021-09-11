@@ -69,11 +69,25 @@ public class ServiceProgramService {
     }
 
     public ServiceProgram add(AddServiceProgramRequest request) {
+        List<ServiceProgram> listFindByProgramCode = serviceProgramRepository.findByProgramCode(request.getProgramCode());
+        if (listFindByProgramCode.size() > 0) {
+            throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+        }
         if (request.getProgramCode().trim().equals("")) {
             request.setProgramCode(null);
         }
         ServicePackage servicePackage =
                 servicePackageRepository.findByCode(request.getPackageCode()).get();
+        // Check DEFAULT_PROGRAM
+        if (request.getIsDefaultProgram() == true){
+            List<ServiceProgram> listFindDefaultProgram = serviceProgramRepository.findDefaultProgram(servicePackage.getPackageId());
+            if (listFindDefaultProgram.size() > 0) {
+                for (ServiceProgram item: listFindDefaultProgram) {
+                    item.setIsDefaultProgram(false);
+                    serviceProgramRepository.save(item);
+                }
+            }
+        }
         String pattern1 = "([A-Za-z0-9]+(,*[A-Za-z0-9]+)*)";
         String pattern2 = "([A-Za-z0-9]+(\\s*[A-Za-z0-9]+)*)";
         String pattern3 = "([A-Za-z0-9]+(#*[A-Za-z0-9]+)*)";
@@ -97,6 +111,20 @@ public class ServiceProgramService {
     }
 
     public ServiceProgram update(AddServiceProgramRequest request) {
+        List<ServiceProgram> list = serviceProgramRepository.findByProgramIdAndProgramCode(request.getServiceProgramId(), request.getProgramCode());
+        if (list.size() > 0) {
+            throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+        }
+        // Check DEFAULT_PROGRAM
+        if (request.getIsDefaultProgram() == true){
+            List<ServiceProgram> listFindDefaultProgram = serviceProgramRepository.findDefaultProgram(request.getServicePackageId());
+            if (listFindDefaultProgram.size() > 0) {
+                for (ServiceProgram item: listFindDefaultProgram) {
+                    item.setIsDefaultProgram(false);
+                    serviceProgramRepository.save(item);
+                }
+            }
+        }
         if (request.getProgramCode().trim().equals("")) {
             request.setProgramCode(null);
         }
@@ -157,6 +185,7 @@ public class ServiceProgramService {
             servicePr.setPackageIdNext(request.getPackageIdNext());
             servicePr.setProgramIdNext(request.getProgramIdNext());
             servicePr.setMsgBeforeRenew(request.getMsgBeforeRenew());
+            servicePr.setIsDefaultProgram(request.getIsDefaultProgram());
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);

@@ -40,11 +40,7 @@ public class MapCommandAlias implements Cloneable {
         this.servicePackage = serviceProgram.getServicePackage();
         this.cmdTransCode = request.getCmdTransCode();
         this.cmdAliasName = request.getCmdAliasName();
-        if (request.getCmdStatus()){
-            this.cmdStatus = "1";
-        }else{
-            this.cmdStatus = "0";
-        }
+        this.cmdStatus = request.getCmdStatus();
     }
 
     @Override

@@ -60,7 +60,6 @@ public class MapCommandAliasController {
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);
-            logger.error("SERVICE_PROGRAM_NOT_FOUND", response);
         } catch (Exception e) {
             response = new ApiResponse(e, ErrorCode.ADD_COMMAND_ALIAS_FAILED);
             logger.error("ADD_COMMAND_ALIAS_FAILED", response);
@@ -90,7 +89,6 @@ public class MapCommandAliasController {
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entityRes);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);
-            logger.error("SERVICE_PROGRAM_NOT_FOUND", response);
         } catch (Exception e) {
             response = new ApiResponse(e, ErrorCode.UPDATE_COMMAND_ALIAS_FAILED);
             logger.error("UPDATE_COMMAND_ALIAS_FAILED", response);

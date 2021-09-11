@@ -68,6 +68,8 @@ public class ServiceProgramResponse {
 
 	private String msgBeforeRenew;
 
+	private Boolean isDefaultProgram;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -109,6 +111,7 @@ public class ServiceProgramResponse {
 		this.packageIdNext = service.getPackageIdNext();
 		this.programIdNext = service.getProgramIdNext();
 		this.msgBeforeRenew = service.getMsgBeforeRenew();
+		this.isDefaultProgram = service.getIsDefaultProgram();
 	}
 
 

@@ -1,10 +1,12 @@
 package dts.com.vn.service;
 
 import dts.com.vn.config.FileStorageConfig;
+import dts.com.vn.entities.AutoExtendPackage;
 import dts.com.vn.entities.ConstantDeclaration;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.Constant;
 import dts.com.vn.exception.RestApiException;
+import dts.com.vn.repository.AutoExtendPackageRepository;
 import dts.com.vn.repository.ConstantDeclarationRepository;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.response.FileResponse;
@@ -36,15 +38,20 @@ import java.util.stream.Collectors;
 public class CustomQueryService {
 
 	private final ConstantDeclarationRepository configRepository;
+
 	private final Path fileStorageLocation;
+
+	private final AutoExtendPackageRepository autoExtendPackageRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Autowired
 	public CustomQueryService(ConstantDeclarationRepository configRepository,
-	                          FileStorageConfig config) {
+	                          FileStorageConfig config, AutoExtendPackageRepository autoExtendPackageRepository) {
 		this.configRepository = configRepository;
 		this.fileStorageLocation = Paths.get(config.getUploadDir()).toAbsolutePath().normalize();
+		this.autoExtendPackageRepository = autoExtendPackageRepository;
 		try {
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {
@@ -116,8 +123,26 @@ public class CustomQueryService {
 		if (sql.contains("auto_extend_package")) {
 			Query query = entityManager.createNativeQuery(sql);
 			if (sql.contains("insert")) {
-				query.executeUpdate();
-				return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, null, Constant.EXCUTE_QUERY_SUCCESS + " Thêm mới dữ liệu thành công");
+				List<AutoExtendPackage> listExistRecord = autoExtendPackageRepository.findAll();
+				if (listExistRecord.size() > 0) {
+					boolean isDuplicateRecord = false;
+					for (AutoExtendPackage item : listExistRecord) {
+						String strInsertDate = DateTimeUtil.formatInstantWithTimezone(item.getInsertDate(), "yyyy-MM-dd HH:mm:ss", "Asia/Ho_Chi_Minh");
+						if (sql.contains(item.getIsdn()) && sql.contains(item.getPackageId().toString()) && sql.contains(item.getPackageId().toString()) && sql.contains(strInsertDate)) {
+							isDuplicateRecord = true;
+							break;
+						}
+					}
+					if (!isDuplicateRecord) {
+						query.executeUpdate();
+						return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, null, Constant.EXCUTE_QUERY_SUCCESS + " Thêm mới dữ liệu thành công");
+					} else {
+						return new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, null, Constant.EXCUTE_QUERY_FAIL + " " + Constant.DUPLICATE_RECORD);
+					}
+				} else {
+					query.executeUpdate();
+					return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, null, Constant.EXCUTE_QUERY_SUCCESS + " Thêm mới dữ liệu thành công");
+				}
 			}
 			List<Object> list = query.getResultList();
 			if (list.size() > 0) {

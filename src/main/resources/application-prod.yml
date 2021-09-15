@@ -19,6 +19,9 @@ spring:
 app:
   config-path: /web-admin/config/
 
+file:
+  upload-dir: /home/upload
+
 
 
 

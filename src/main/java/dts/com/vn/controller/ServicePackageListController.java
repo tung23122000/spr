@@ -42,7 +42,6 @@ public class ServicePackageListController {
         this.listDetailNewRepository = listDetailNewRepository;
     }
 
-    @Transactional
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> save(@RequestBody ServicePackageListRequest servicePackageListRequest) {
         ApiResponse response = null;

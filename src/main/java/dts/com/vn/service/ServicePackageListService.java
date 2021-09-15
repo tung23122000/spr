@@ -9,6 +9,7 @@ import dts.com.vn.repository.ServicePackageListRepository;
 import dts.com.vn.request.ServicePackageListRequest;
 import dts.com.vn.response.ApiResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class ServicePackageListService {
         this.listDetailNewRepository = listDetailNewRepository;
     }
 
+    @Transactional
     public void save(ServicePackageListRequest servicePackageListRequest){
         if (servicePackageListRequest.getFileName() != null && servicePackageListRequest.getListIsdn().size() > 0) {
             //			Create isdn_list

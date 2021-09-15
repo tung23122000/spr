@@ -5,7 +5,7 @@ app:
 
 spring:
   profiles:
-    active: local
+    active: testbed
   jpa:
     show-sql: false
   servlet:

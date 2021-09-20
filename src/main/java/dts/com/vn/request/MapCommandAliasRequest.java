@@ -17,5 +17,7 @@ public class MapCommandAliasRequest {
 
     private String cmdAliasName;
 
+    private String smsMo;
+
     private String cmdStatus;
 }

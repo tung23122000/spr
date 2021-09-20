@@ -69,15 +69,25 @@ public class ServiceProgramService {
     }
 
     public ServiceProgram add(AddServiceProgramRequest request) {
+        ServicePackage servicePackage =
+                servicePackageRepository.findByCode(request.getPackageCode()).get();
+        ServiceProgram serviceProgram = new ServiceProgram(request, servicePackage);
+        // Tìm ra tất cả serviceProgram trùng program_code
         List<ServiceProgram> listFindByProgramCode = serviceProgramRepository.findByProgramCode(request.getProgramCode());
         if (listFindByProgramCode.size() > 0) {
-            throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+            for (ServiceProgram item: listFindByProgramCode) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+                }
+            }
         }
+
         if (request.getProgramCode().trim().equals("")) {
             request.setProgramCode(null);
         }
-        ServicePackage servicePackage =
-                servicePackageRepository.findByCode(request.getPackageCode()).get();
         // Check DEFAULT_PROGRAM
         if (request.getIsDefaultProgram() == true){
             List<ServiceProgram> listFindDefaultProgram = serviceProgramRepository.findDefaultProgram(servicePackage.getPackageId());
@@ -111,9 +121,37 @@ public class ServiceProgramService {
     }
 
     public ServiceProgram update(AddServiceProgramRequest request) {
-        List<ServiceProgram> list = serviceProgramRepository.findByProgramIdAndProgramCode(request.getServiceProgramId(), request.getProgramCode());
-        if (list.size() > 0) {
-            throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+        ServicePackage servicePackage =
+                servicePackageRepository.findByCode(request.getPackageCode()).get();
+        ServiceProgram serviceProgram = new ServiceProgram(request, servicePackage);
+        // Tìm ra tất cả serviceProgram trùng program_code
+        List<ServiceProgram> listFindByProgramCode = serviceProgramRepository.findByProgramIdAndProgramCode(request.getServiceProgramId(), request.getProgramCode());
+        if (listFindByProgramCode.size() > 0) {
+            for (ServiceProgram item: listFindByProgramCode) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_PROGRAM_CODE);
+                }
+            }
+        }
+        // Tìm ra tất cả command_alias liên quan đến service_program
+        List<MapCommandAlias> listMapCommandAlias = mapCommandAliasRepository.findByProgramId(request.getServiceProgramId());
+        for (MapCommandAlias mapCommandAlias: listMapCommandAlias) {
+            // Tìm ra tất cả serviceProgram trùng smsMo
+            List<ServiceProgram> listServiceProgram = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(mapCommandAlias.getSmsMo(), mapCommandAlias.getCmdAliasId());
+            // Check trùng khoảng thời gian
+            if (listServiceProgram.size() > 0) {
+                for (ServiceProgram item: listServiceProgram) {
+                    // Check 2 service program có trùng lặp thời gian hay không?
+                    if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                        // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                        // Nếu tất cả trường hợp đều không trùng thì mới save
+                        throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+                    }
+                }
+            }
         }
         // Check DEFAULT_PROGRAM
         if (request.getIsDefaultProgram() == true){
@@ -145,8 +183,6 @@ public class ServiceProgramService {
             }
         }
         if (Objects.nonNull(servicePr)) {
-            ServicePackage servicePackage =
-                    servicePackageRepository.findByCode(request.getPackageCode()).get();
             servicePr.setServicePackage(servicePackage);
             servicePr.setChargePrice(request.getChargePrice());
             servicePr.setIsNinusIn(request.getIsMinusIn());
@@ -158,10 +194,10 @@ public class ServiceProgramService {
             servicePr.setMinusMethod(request.getMinusMethod());
             servicePr.setStaDate(
                     DateTimeUtil.convertStringToInstant(request.getStaDate(), "dd/MM/yyyy HH:mm:ss"));
-            servicePr.setExtendEndDate(
-                    DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss"));
+//            servicePr.setExtendEndDate(
+//                    DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss"));
             servicePr.setEndDate(
-                    DateTimeUtil.convertStringToInstant(request.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss"));
+                    DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
             servicePr.setDescription(request.getDescription());
             servicePr.setMinStepMinus(request.getMinStepMinus());
             servicePr.setCheckStepType(request.getCheckStepType());
@@ -320,12 +356,7 @@ public class ServiceProgramService {
             }
         }
         // 3.4 Clone Transcode
-        List<MapCommandAlias> listOldMapCommandAlias = mapCommandAliasRepository.findByPackageIdAndProgramId(oldPackageId, oldProgram.getProgramId());
-        if (listOldMapCommandAlias.size() > 0) {
-            for (MapCommandAlias mapCommandAlias : listOldMapCommandAlias) {
-                cloneMapCommandAlias(mapCommandAlias, service, newProgram);
-            }
-        }
+        // Không clone transcode do trùng smsMo
         // 3.5 Clone thông tin bổ sung (Service_info)
         List<ServiceInfo> listServiceInfo = serviceInfoRepository.findAllByPackageId(oldPackageId, oldProgram.getProgramId());
         if (listServiceInfo.size() > 0) {
@@ -565,5 +596,29 @@ public class ServiceProgramService {
         }
 
         serviceProgramRepository.delete(serviceProgram);
+    }
+
+    public boolean areTwoDateTimeRangesOverlapping(ServiceProgram serviceProgramA, ServiceProgram serviceProgramB) {
+        if (serviceProgramA.getEndDate() == null) {
+            if (serviceProgramB.getEndDate() == null) {
+                return true;
+            } else {
+                if (serviceProgramB.getEndDate().toEpochMilli() >= serviceProgramA.getStaDate().toEpochMilli()) {
+                    return true;
+                }
+            }
+        } else {
+            if (serviceProgramB.getEndDate() == null) {
+                if (serviceProgramA.getEndDate().toEpochMilli() >= serviceProgramB.getStaDate().toEpochMilli()) {
+                    return true;
+                }
+            } else {
+                if (serviceProgramA.getEndDate().toEpochMilli() >= serviceProgramB.getStaDate().toEpochMilli() &&
+                        serviceProgramA.getStaDate().toEpochMilli() <= serviceProgramB.getEndDate().toEpochMilli()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

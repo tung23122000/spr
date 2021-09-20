@@ -18,6 +18,8 @@ public class MapCommandAliasResponse {
 
     private String cmdAliasName;
 
+    private String smsMo;
+
     private String cmdStatus;
 
 
@@ -31,6 +33,7 @@ public class MapCommandAliasResponse {
                         : null;
         this.cmdTransCode = entity.getCmdTransCode();
         this.cmdAliasName = entity.getCmdAliasName();
+        this.smsMo = entity.getSmsMo();
         this.cmdStatus = entity.getCmdStatus();
     }
 }

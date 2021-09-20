@@ -31,7 +31,7 @@ public class ServiceProgramResponse {
 
 	private String staDate;// Ngày hiệu lực
 
-	private String extendEndDate;// Ngày hết hiệu lực
+	private String endDate;// Ngày hết hiệu lực
 
 	private String description;// Mô tả chương trình
 
@@ -90,8 +90,8 @@ public class ServiceProgramResponse {
 		this.staDate = Objects.nonNull(service.getStaDate())
 				? DateTimeUtil.formatInstant(service.getStaDate(), "dd/MM/yyyy HH:mm:ss")
 				: "";
-		this.extendEndDate = Objects.nonNull(service.getExtendEndDate())
-				? DateTimeUtil.formatInstant(service.getExtendEndDate(), "dd/MM/yyyy HH:mm:ss")
+		this.endDate = Objects.nonNull(service.getEndDate())
+				? DateTimeUtil.formatInstant(service.getEndDate(), "dd/MM/yyyy HH:mm:ss")
 				: "";
 		this.minStepMinus = service.getMinStepMinus();
 		this.checkStepType = service.getCheckStepType();

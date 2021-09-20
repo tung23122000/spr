@@ -29,6 +29,9 @@ public class MapCommandAlias implements Cloneable {
     @Column(name = "cmd_alias_name")
     private String cmdAliasName;
 
+    @Column(name = "sms_mo")
+    private String smsMo;
+
     @Column(name = "cmd_status")
     private String cmdStatus;
 
@@ -40,6 +43,7 @@ public class MapCommandAlias implements Cloneable {
         this.servicePackage = serviceProgram.getServicePackage();
         this.cmdTransCode = request.getCmdTransCode();
         this.cmdAliasName = request.getCmdAliasName();
+        this.smsMo = request.getSmsMo();
         this.cmdStatus = request.getCmdStatus();
     }
 

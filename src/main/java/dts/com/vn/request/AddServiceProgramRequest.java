@@ -24,7 +24,7 @@ public class AddServiceProgramRequest {
 
 	private String staDate;// Ngày hiệu lực
 
-	private String extendEndDate;// Ngày hết hiệu lực
+	private String endDate;// Ngày hết hiệu lực
 
 	private String description;// Mô tả chương trình
 

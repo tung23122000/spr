@@ -33,16 +33,19 @@ public class MapCommandAliasService {
     public MapCommandAlias add(MapCommandAliasRequest request) {
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
-        // Tìm ra tất cả serviceProgram trùng smsMo
-        List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMo(request.getSmsMo());
-        // Check trùng khoảng thời gian
-        if (list.size() > 0) {
-            for (ServiceProgram item: list) {
-                // Check 2 service program có trùng lặp thời gian hay không?
-                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
-                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
-                    // Nếu tất cả trường hợp đều không trùng thì mới save
-                    throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+        // Nếu trạng thái là Hoạt động thì phải kiểm tra trùng sms MO trong cùng 1 khoảng thời gian
+        if (request.getCmdStatus().equals("1")) {
+            // Tìm ra tất cả serviceProgram trùng smsMo
+            List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMo(request.getSmsMo());
+            // Check trùng khoảng thời gian
+            if (list.size() > 0) {
+                for (ServiceProgram item: list) {
+                    // Check 2 service program có trùng lặp thời gian hay không?
+                    if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                        // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                        // Nếu tất cả trường hợp đều không trùng thì mới save
+                        throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+                    }
                 }
             }
         }
@@ -53,15 +56,18 @@ public class MapCommandAliasService {
         MapCommandAlias entity = findById(request.getCmdAliasId());
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
-        // Tìm ra tất cả serviceProgram trùng smsMo
-        List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(request.getSmsMo(), request.getCmdAliasId());
-        // Check trùng khoảng thời gian
-        for (ServiceProgram item: list) {
+        // Nếu trạng thái là Hoạt động thì phải kiểm tra trùng sms MO trong cùng 1 khoảng thời gian
+        if (request.getCmdStatus().equals("1")) {
+            // Tìm ra tất cả serviceProgram trùng smsMo
+            List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(request.getSmsMo(), request.getCmdAliasId());
+            // Check trùng khoảng thời gian
+            for (ServiceProgram item: list) {
 //            Check 2 service program có trùng lặp thời gian hay không?
-            if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
-                // Nếu 1 trường hợp trùng là loại bỏ luôn.
-                // Nếu tất cả trường hợp đều không trùng thì mới save
-                throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+                }
             }
         }
         entity.setCmdStatus(request.getCmdStatus());

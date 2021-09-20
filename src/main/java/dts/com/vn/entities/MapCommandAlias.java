@@ -32,6 +32,7 @@ public class MapCommandAlias implements Cloneable {
     @Column(name = "sms_mo")
     private String smsMo;
 
+    // 1: Hoạt động, 0: Không hoạt động
     @Column(name = "cmd_status")
     private String cmdStatus;
 

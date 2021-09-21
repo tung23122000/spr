@@ -24,11 +24,11 @@ public interface MapCommandAliasRepository extends JpaRepository<MapCommandAlias
 
     @Query("SELECT sp FROM ServiceProgram sp " +
             " INNER JOIN MapCommandAlias mca ON mca.serviceProgram.programId = sp.programId " +
-            " WHERE mca.smsMo = ?1 AND mca.cmdStatus = '1' ")
+            " WHERE mca.smsMo = ?1 ")
     List<ServiceProgram> findBySmsMo(String cmdAliasName);
 
     @Query("SELECT sp FROM ServiceProgram sp " +
             " INNER JOIN MapCommandAlias mca ON mca.serviceProgram.programId = sp.programId " +
-            " WHERE mca.smsMo = ?1 AND mca.cmdStatus = '1' AND mca.cmdAliasId <> ?2")
+            " WHERE mca.smsMo = ?1 AND mca.cmdAliasId <> ?2")
     List<ServiceProgram> findBySmsMoAndCmdAliasId(String cmdAliasName, Long cmdAliasId);
 }

@@ -438,26 +438,6 @@ public class ServiceProgramService {
     }
 
     @SneakyThrows(CloneNotSupportedException.class)
-    private void cloneMapCommandAlias(MapCommandAlias mca, ServicePackage newPackage, ServiceProgram newProgram) {
-        MapCommandAlias mapCommandAlias = (MapCommandAlias) mca.clone();
-        mapCommandAlias.setCmdAliasId(null);
-        if (mapCommandAlias.getCmdAliasName() != null)
-            mapCommandAlias.setCmdAliasName(mapCommandAlias.getCmdAliasName() + "_copy_" + System.currentTimeMillis());
-        mapCommandAlias.setServiceProgram(newProgram);
-        mapCommandAlias.setServicePackage(newPackage);
-        MapCommandAlias mapCommandAliasReturn = mapCommandAliasRepository.saveAndFlush(mapCommandAlias);
-        LogAction logAction = new LogAction();
-        logAction.setAction("CREATE");
-        logAction.setOldValue(null);
-        logAction.setNewValue(mapCommandAliasReturn.toString());
-        logAction.setTimeAction(new Date());
-        logAction.setIdAction(mapCommandAliasReturn.getCmdAliasId());
-        logAction.setAccount(tokenProvider.account);
-        logAction.setTableAction("map_command_alias");
-        logActionService.add(logAction);
-    }
-
-    @SneakyThrows(CloneNotSupportedException.class)
     private void cloneServiceInfo(ServiceInfo si, ServicePackage newPackage, ServiceProgram newProgram) {
         ServiceInfo serviceInfo = (ServiceInfo) si.clone();
         serviceInfo.setServiceInfoId(null);

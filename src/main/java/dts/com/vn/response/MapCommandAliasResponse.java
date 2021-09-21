@@ -14,14 +14,9 @@ public class MapCommandAliasResponse {
 
     private Long serviceProgramId;
 
-    private String cmdTransCode;
-
-    private String cmdAliasName;
-
     private String smsMo;
 
-    private String cmdStatus;
-
+    private String soapRequest;
 
     public MapCommandAliasResponse(MapCommandAlias entity) {
         this.cmdAliasId = entity.getCmdAliasId();
@@ -31,9 +26,7 @@ public class MapCommandAliasResponse {
         this.serviceProgramId =
                 Objects.nonNull(entity.getServiceProgram()) ? entity.getServiceProgram().getProgramId()
                         : null;
-        this.cmdTransCode = entity.getCmdTransCode();
-        this.cmdAliasName = entity.getCmdAliasName();
         this.smsMo = entity.getSmsMo();
-        this.cmdStatus = entity.getCmdStatus();
+        this.soapRequest = entity.getSoapRequest();
     }
 }

@@ -55,7 +55,7 @@ public class AddServiceProgramRequest {
 
 	private Integer totalUnit; // Total Unit Flex Flow
 
-	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
+	private String dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
 
 	private Long packageIdNext;
 

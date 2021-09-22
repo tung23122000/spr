@@ -138,7 +138,7 @@ public class ServiceProgram implements Cloneable {
 	private Integer totalUnit; // Total Unit Flex Flow
 
 	@Column(name = "date_before_renew")
-	private Integer dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn || default = 0
+	private String dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn. vd: 1,3,5
 
 	@Column(name = "msg_before_renew")
 	private String msgBeforeRenew; // Tin nhắn trước khi gia hạn n ngày

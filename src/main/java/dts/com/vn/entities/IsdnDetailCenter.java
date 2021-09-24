@@ -1,5 +1,6 @@
 package dts.com.vn.entities;
 
+import dts.com.vn.request.IsdnDetailCenterRequest;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,4 +23,14 @@ public class IsdnDetailCenter {
 
 	@Column(name = "network")
 	private String network;
+
+	public IsdnDetailCenter() {
+	}
+
+	public IsdnDetailCenter(IsdnDetailCenterRequest isdnDetailCenterRequest) {
+		this.isdnDetailCenterId = isdnDetailCenterRequest.getIsdnDetailCenterId();
+		this.centerId = isdnDetailCenterRequest.getCenterId();
+		this.isdnPrefix = isdnDetailCenterRequest.getIsdnPrefix();
+		this.network = isdnDetailCenterRequest.getNetwork();
+	}
 }

@@ -48,6 +48,9 @@ public enum ErrorCode {
 	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
 	DUPLICATE_SMS_MO("error.duplicate.sms.mo", "Cú pháp không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_PROGRAM_CODE("error.duplicate.program.code", "Mã chương trình không được trùng trong cùng 1 thời điểm"),
+	ADD_ISDN_DETAIL_CENTER("error.add.isdn.detail.center", "Lỗi khi thêm mới CTKV"),
+	UPDATE_ISDN_DETAIL_CENTER("error.update.isdn.detail.center", "Lỗi khi chỉnh sửa CTKV"),
+	DELETE_ISDN_DETAIL_CENTER("error.delete.isdn.detail.center", "Lỗi khi chỉnh sửa CTKV"),
 
 	UPDATE_BUCKETS_INFO_FAILED("error.update.buckets.info", "Lỗi khi chỉnh sửa cấu hình IN"),
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),

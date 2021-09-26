@@ -202,11 +202,7 @@ public class ServiceProgramService {
             servicePr.setMinStepMinus(request.getMinStepMinus());
             servicePr.setCheckStepType(request.getCheckStepType());
             servicePr.setProgramCode(request.getProgramCode());
-            if (request.getAllowIsdnStatus()) {
-                servicePr.setAllowIsdnStatus("1");
-            } else {
-                servicePr.setAllowIsdnStatus("0");
-            }
+            servicePr.setAllowIsdnStatus(request.getAllowIsdnStatus());
             if (request.getCcspServiceCode() != null) {
                 servicePr.setCcspServiceCode(this.convertToCcspDesign(request.getCcspServiceCode()));
             }

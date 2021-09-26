@@ -168,11 +168,7 @@ public class ServiceProgram implements Cloneable {
 		this.minStepMinus = request.getMinStepMinus();
 		this.checkStepType = request.getCheckStepType();
 		this.programCode = request.getProgramCode();
-		if (request.getAllowIsdnStatus()) {
-			this.allowIsdnStatus = "1";
-		} else {
-			this.allowIsdnStatus = "0";
-		}
+		this.allowIsdnStatus = request.getAllowIsdnStatus();
 		if (request.getCcspServiceCode() != null) {
 			this.ccspServiceCode = this.convertToCcspDesign(request.getCcspServiceCode());
 		}

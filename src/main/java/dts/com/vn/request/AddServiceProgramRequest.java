@@ -40,7 +40,7 @@ public class AddServiceProgramRequest {
 
 	private Long servicePackageId; // PackageID
 
-	private Boolean allowIsdnStatus; //Thông tin đấu nối
+	private String allowIsdnStatus; //Thông tin đấu nối
 
 	// CCSP
 	private String ccspServiceCode;

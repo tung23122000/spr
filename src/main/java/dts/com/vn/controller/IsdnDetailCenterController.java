@@ -4,9 +4,7 @@ import dts.com.vn.entities.IsdnDetailCenter;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
-import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.request.IsdnDetailCenterRequest;
-import dts.com.vn.request.LogActionRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.service.IsdnDetailCenterService;
 import org.slf4j.Logger;
@@ -15,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/isdn-detail-center")
@@ -30,10 +26,11 @@ public class IsdnDetailCenterController {
     private static final Logger logger = LoggerFactory.getLogger(IsdnDetailCenterController.class);
 
     @GetMapping("/find-all")
-    public ResponseEntity<ApiResponse> findAll() {
+    public ResponseEntity<ApiResponse> findAll(
+            @RequestParam(name = "search", required = false) String search, Pageable pageable) {
         ApiResponse response;
         try {
-            List<IsdnDetailCenter> page = isdnDetailCenterService.findAll();
+            Page<IsdnDetailCenter> page = isdnDetailCenterService.findAll(search, pageable);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), page);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);

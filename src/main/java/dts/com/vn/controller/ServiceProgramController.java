@@ -93,7 +93,7 @@ public class ServiceProgramController {
 			response = new ApiResponse(ex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			response = new ApiResponse(ex, ErrorCode.ADD_SERVICE_PROGRAM_FAILED);
 			logger.error("ADD_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);

@@ -24,8 +24,11 @@ public class IsdnDetailCenterService {
         this.isdnDetailCenterRepository = isdnDetailCenterRepository;
     }
 
-    public List<IsdnDetailCenter> findAll() {
-        return isdnDetailCenterRepository.findAll();
+    public Page<IsdnDetailCenter> findAll(String search, Pageable pageable) {
+        if (StringUtils.hasLength(search)) {
+            return isdnDetailCenterRepository.findAll(search, pageable);
+        }
+        return isdnDetailCenterRepository.findAll(pageable);
     }
 
     public IsdnDetailCenter add(IsdnDetailCenterRequest request) {

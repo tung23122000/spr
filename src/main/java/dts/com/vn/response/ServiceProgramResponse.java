@@ -96,11 +96,6 @@ public class ServiceProgramResponse {
 		this.minStepMinus = service.getMinStepMinus();
 		this.checkStepType = service.getCheckStepType();
 		this.programCode = service.getProgramCode();
-//		if (service.getAllowIsdnStatus().equals("1")){
-//			this.allowIsdnStatus = true;
-//		}else {
-//			this.allowIsdnStatus = false;
-//		}
 		this.allowIsdnStatus = service.getAllowIsdnStatus();
 		this.ccspServiceCode = service.getCcspServiceCode();
 		this.ccspResultCode = service.getCcspResultCode();

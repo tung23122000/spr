@@ -571,6 +571,8 @@ public class ServiceProgramService {
             serviceInfoRepository.delete(serviceInfo);
         }
 
+        // SMS Respond
+
         serviceProgramRepository.delete(serviceProgram);
     }
 

@@ -5,7 +5,7 @@ app:
 
 spring:
   profiles:
-    active: prod
+    active: testbed
   jpa:
     show-sql: false
   servlet:

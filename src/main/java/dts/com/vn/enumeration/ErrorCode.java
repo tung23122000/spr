@@ -49,6 +49,7 @@ public enum ErrorCode {
 	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
 	DUPLICATE_SMS_MO("error.duplicate.sms.mo", "Cú pháp không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_PROGRAM_CODE("error.duplicate.program.code", "Mã chương trình không được trùng trong cùng 1 thời điểm"),
+	DUPLICATE_SMS_RESPOND("error.duplicate.sms.respond", "SMS Respond đã tồn tại trong hệ thống"),
 	ADD_ISDN_DETAIL_CENTER("error.add.isdn.detail.center", "Lỗi khi thêm mới CTKV"),
 	UPDATE_ISDN_DETAIL_CENTER("error.update.isdn.detail.center", "Lỗi khi chỉnh sửa CTKV"),
 	DELETE_ISDN_DETAIL_CENTER("error.delete.isdn.detail.center", "Lỗi khi chỉnh sửa CTKV"),
@@ -67,6 +68,9 @@ public enum ErrorCode {
 	SERVICE_NUMBER_NULL("error.service.number.null", "Trường SERVICE_NUMBER trong truy vấn có giá trị NULL"),
 	SOURCE_CODE_NULL("error.source.code.null", "Trường SOURCE_CODE trong truy vấn có giá trị NULL"),
 	MISSING_DATA_FIELD("error.missing.data.field", "Thiếu trường trong truy vấn dữ liệu"),
+	SAVE_SMS_RESPOND_FAIL("error.save.sms.respond.fail", "Lỗi khi lưu sms respond"),
+	FIND_ALL_SMS_RESPOND_FAIL("error.find.all.sms.respond.fail", "Lỗi khi tải sms respond"),
+	DELETE_SMS_RESPOND_FAIL("error.delete.sms.respond.fail", "Lỗi khi xóa sms respond"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

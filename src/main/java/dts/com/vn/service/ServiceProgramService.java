@@ -57,6 +57,9 @@ public class ServiceProgramService {
     private MapCommandAliasRepository mapCommandAliasRepository;
 
     @Autowired
+    private MapSmsRespondRepository mapSmsRespondRepository;
+
+    @Autowired
     private TokenProvider tokenProvider;
 
     @Autowired
@@ -552,8 +555,6 @@ public class ServiceProgramService {
         }
 
         // ServiceInfo
-        System.out.println(serviceProgram.getServicePackage().getPackageId());
-        System.out.println(serviceProgram.getProgramId());
         List<ServiceInfo> listServiceInfo = serviceInfoRepository.findByPackageIdAndProgramId(
                 serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
         for (ServiceInfo serviceInfo : listServiceInfo) {
@@ -572,6 +573,21 @@ public class ServiceProgramService {
         }
 
         // SMS Respond
+        List<MapSmsRespond> mapSmsRespondList = mapSmsRespondRepository.findAllByProgramId(serviceProgram.getProgramId());
+        for (MapSmsRespond mapSmsRespond: mapSmsRespondList) {
+            // Tạo Log Action
+            LogAction logActionServiceInfo = new LogAction();
+            logActionServiceInfo.setTableAction("map_sms_respond");
+            logActionServiceInfo.setAccount(tokenProvider.account);
+            logActionServiceInfo.setAction("DELETE");
+            logActionServiceInfo.setOldValue(mapSmsRespond.toString());
+            logActionServiceInfo.setNewValue(null);
+            logActionServiceInfo.setTimeAction(new Date());
+            logActionServiceInfo.setIdAction(mapSmsRespond.getMapSmsRespondId());
+            logActionService.add(logActionServiceInfo);
+            //
+            mapSmsRespondRepository.delete(mapSmsRespond);
+        }
 
         serviceProgramRepository.delete(serviceProgram);
     }

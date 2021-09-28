@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Repository
 public interface LogActionRepository extends JpaRepository<LogAction, Long> {
 
-    @Query("select la from LogAction la where (:action is null or la.action = :action) " +
+    @Query("select la from LogAction la where (:action is null or la.action like :action) " +
             " and (cast(:startDate as date) is null  or la.timeAction >= :startDate) " +
             " and (cast(:endDate as date) is null  or la.timeAction <= :endDate) " +
             " order by la.logActionId desc")

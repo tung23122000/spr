@@ -62,6 +62,7 @@ public class BucketsInfoService {
 				DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
 		bucketsInfo.setMobType(request.getMobType());
 		bucketsInfo.setServiceIn(request.getServiceIn());
+		bucketsInfo.setAccountType(request.getAccountType());
 		return bucketsInfoRepository.save(bucketsInfo);
 	}
 

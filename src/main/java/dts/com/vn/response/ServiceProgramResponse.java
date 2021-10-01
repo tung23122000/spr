@@ -70,6 +70,8 @@ public class ServiceProgramResponse {
 
 	private Boolean isDefaultProgram;
 
+	private Boolean isOnKtPro;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -108,6 +110,7 @@ public class ServiceProgramResponse {
 		this.programIdNext = service.getProgramIdNext();
 		this.msgBeforeRenew = service.getMsgBeforeRenew();
 		this.isDefaultProgram = service.getIsDefaultProgram();
+		this.isOnKtPro = service.getIsOnKtPro();
 	}
 
 

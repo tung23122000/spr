@@ -93,6 +93,7 @@ public class ServicePackageService {
 			throw new RestApiException(ErrorCode.PACKAGE_PENDING);
 		} else {
 			servicePackage.setStatus(Constant.PENDING);
+			servicePackage.setUpdateDate(now);
 		}
 		return servicePackageRepository.save(servicePackage);
 	}

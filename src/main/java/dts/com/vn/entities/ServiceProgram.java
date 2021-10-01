@@ -146,6 +146,9 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "is_default_program")
 	private Boolean isDefaultProgram;
 
+	@Column(name = "is_on_kt_pro")
+	private Boolean isOnKtPro;
+
 	public ServiceProgram() {
 	}
 
@@ -184,6 +187,7 @@ public class ServiceProgram implements Cloneable {
 		this.programIdNext = request.getProgramIdNext();
 		this.msgBeforeRenew = request.getMsgBeforeRenew();
 		this.isDefaultProgram = request.getIsDefaultProgram();
+		this.isOnKtPro = request.getIsOnKtPro();
 	}
 
 	//	Convert A#B#C

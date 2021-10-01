@@ -64,4 +64,7 @@ public class AddServiceProgramRequest {
 	private String msgBeforeRenew;
 
 	private Boolean isDefaultProgram;
+
+	private Boolean isOnKtPro;
+
 }

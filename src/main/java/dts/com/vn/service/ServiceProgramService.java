@@ -214,7 +214,6 @@ public class ServiceProgramService {
             }
             servicePr.setNumber1(request.getNumber1());
             servicePr.setNumber2(request.getNumber2());
-            servicePr.setTransCode(request.getTransCode());
             servicePr.setTotalUnit(request.getTotalUnit());
             servicePr.setDateBeforeRenew(request.getDateBeforeRenew());
             servicePr.setPackageIdNext(request.getPackageIdNext());

@@ -56,8 +56,6 @@ public class ServiceProgramResponse {
 
 	private Long number2; // MAX REGISTER ON MAX DATE
 
-	private String transCode; // ACTIONCODE_MAPPING
-
 	private Integer totalUnit; // Total Unit Flex Flow
 
 	private String dateBeforeRenew; // Số ngày gửi MT trước khi gia hạn
@@ -103,7 +101,6 @@ public class ServiceProgramResponse {
 		this.ccspResultCode = service.getCcspResultCode();
 		this.number1 = service.getNumber1();
 		this.number2 = service.getNumber2();
-		this.transCode = service.getTransCode();
 		this.totalUnit = service.getTotalUnit();
 		this.dateBeforeRenew = service.getDateBeforeRenew();
 		this.packageIdNext = service.getPackageIdNext();

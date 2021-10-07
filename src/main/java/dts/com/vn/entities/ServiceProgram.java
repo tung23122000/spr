@@ -131,9 +131,6 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "number2")
 	private Long number2; // MAX REGISTER ON MAX DATE
 
-	@Column(name = "trans_code")
-	private String transCode; // ACTIONCODE_MAPPING
-
 	@Column(name = "total_unit")
 	private Integer totalUnit; // Total Unit Flex Flow
 
@@ -180,7 +177,6 @@ public class ServiceProgram implements Cloneable {
 		}
 		this.number1 = request.getNumber1();
 		this.number2 = request.getNumber2();
-		this.transCode = request.getTransCode();
 		this.totalUnit = request.getTotalUnit();
 		this.dateBeforeRenew = request.getDateBeforeRenew();
 		this.packageIdNext = request.getPackageIdNext();

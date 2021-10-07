@@ -12,7 +12,7 @@ spring:
 
     # Secondary database
     secondary:
-      jdbc-url: jdbc:oracle:thin:@10.3.17.151:1521:db01
+      jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
       username: VASP4_SUBS
       password: abcd1234
       driverClassName: oracle.jdbc.OracleDriver

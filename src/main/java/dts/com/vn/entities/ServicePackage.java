@@ -112,9 +112,8 @@ public class ServicePackage {
 	@Column(name = "extend_status")
 	private Integer extendStatus; // EXTEND STATUS
 
-	@OneToOne
-	@JoinColumn(name = "pcrf_group_id")
-	private PCRFGroup pcrfGroup;
+	@Column(name = "pcrf_group_id")
+	private String pcrfGroup; // Nhóm PCRF (format 1,2,3...)
 
 	@Column(name = "is_retry")
 	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không

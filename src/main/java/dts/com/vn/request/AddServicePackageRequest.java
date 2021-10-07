@@ -51,7 +51,7 @@ public class AddServicePackageRequest {
 
 	private List<SubServicePackageRequest> subServicePackage; // List BlockPackage
 
-	private PCRFGroup pcrfGroup; // Nhóm PCRF
+	private String pcrfGroup; // Nhóm PCRF (format 1,2,3...)
 
 	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
 

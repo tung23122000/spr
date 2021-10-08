@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class ServicePackageService {
@@ -155,9 +152,9 @@ public class ServicePackageService {
 		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getBucType(), bucketsInfo.getBucName());
 	}
 
-	public List<ServicePackage> findBlockPCRF(Long packageId) {
+	public HashSet<ServicePackage> findBlockPCRF(Long packageId) {
 		ServicePackage servicePackage = findById(packageId);
-		List<ServicePackage> returnList = new ArrayList<>();
+		HashSet<ServicePackage> returnList = new HashSet<>();
 		if (servicePackage.getPcrfGroup() == null) {
 			return null;
 		} else {
@@ -168,19 +165,20 @@ public class ServicePackageService {
 				for (String item: arrPcrfGroupId) {
 					// Với mỗi id pcrf lấy ra list chặn
 					List<ServicePackage> list = servicePackageRepository.findBlockPCRF(packageId, item);
-					for (ServicePackage itemServicePackage: list) {
-						// Nếu chưa có trong listReturn thì add vào
-						boolean isStop = false;
-						while (isStop == false) {
-							for (ServicePackage itemReturn: returnList) {
-								if (itemServicePackage.getPackageId() == itemReturn.getPackageId()) {
-									isStop = true;
-									break;
-								}
-							}
-							returnList.add(itemServicePackage);
-						}
-					}
+//					for (ServicePackage itemServicePackage: list) {
+//						// Nếu chưa có trong listReturn thì add vào
+//						boolean isStop = false;
+//						while (isStop == false) {
+//							for (ServicePackage itemReturn: returnList) {
+//								if (itemServicePackage.getPackageId() == itemReturn.getPackageId()) {
+//									isStop = true;
+//									break;
+//								}
+//							}
+//							returnList.add(itemServicePackage);
+//						}
+//					}
+					returnList.addAll(list);
 				}
 			}
 		}

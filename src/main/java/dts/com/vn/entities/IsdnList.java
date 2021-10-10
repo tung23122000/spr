@@ -34,6 +34,10 @@ public class IsdnList {
 	@Column(name = "list_type")
 	private String listType;
 
+	public IsdnList() {
+
+	}
+
 	public IsdnList(Long isdnListId, String name, Instant createDate, String cvCodeList, String isDisplay, Instant endDate, String listType) {
 		this.isdnListId = isdnListId;
 		this.name = name;

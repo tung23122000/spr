@@ -18,6 +18,7 @@ spring:
 
 app:
   config-path: /web-admin/config/
+  auto-import: /home/spr/import/
 
 file:
   upload-dir: /home/upload

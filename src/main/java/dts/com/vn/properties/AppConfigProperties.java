@@ -13,4 +13,7 @@ public class AppConfigProperties {
 
   @Value("${app.scan-folder}")
   private String scanFolder;
+
+  @Value("${app.auto-import}")
+  private String autoImport;
 }

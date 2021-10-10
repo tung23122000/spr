@@ -58,6 +58,8 @@ public enum ErrorCode {
 	UPDATE_BUCKETS_INFO_FAILED("error.update.buckets.info", "Lỗi khi chỉnh sửa cấu hình IN"),
 	GET_ALL_MINUS_MONEY_FAILED("error.get.all.minus.money", "Lỗi khi tải trừ tiền bậc thang"),
 	FIND_LOG_ACTION_FAILED("error.find.log.action", "Lỗi khi tải Log Action"),
+	FIND_ISDN_LIST_FAILED("error.find.isdn.list", "Lỗi khi tải danh sách đối tượng"),
+	SAVE_ISDN_LIST_FAILED("error.save.isdn.list", "Lỗi khi lưu danh sách đối tượng"),
 	ADD_BUCKETS_INFO_FAILED("error.add.buckets.info", "Lỗi khi thêm cấu hình IN"),
 	ADD_SERVICE_PACKAGE_LIST_FAILED("error.add.service.package.list", "Lỗi khi thêm danh sách đối tượng"),
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),

@@ -165,19 +165,6 @@ public class ServicePackageService {
 				for (String item: arrPcrfGroupId) {
 					// Với mỗi id pcrf lấy ra list chặn
 					List<ServicePackage> list = servicePackageRepository.findBlockPCRF(packageId, item);
-//					for (ServicePackage itemServicePackage: list) {
-//						// Nếu chưa có trong listReturn thì add vào
-//						boolean isStop = false;
-//						while (isStop == false) {
-//							for (ServicePackage itemReturn: returnList) {
-//								if (itemServicePackage.getPackageId() == itemReturn.getPackageId()) {
-//									isStop = true;
-//									break;
-//								}
-//							}
-//							returnList.add(itemServicePackage);
-//						}
-//					}
 					returnList.addAll(list);
 				}
 			}

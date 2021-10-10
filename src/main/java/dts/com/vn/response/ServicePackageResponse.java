@@ -61,7 +61,7 @@ public class ServicePackageResponse {
 
 	private Integer extendStatus; // EXTEND STATUS
 
-	private PCRFGroup pcrfGroup; // Nhóm PCRF
+	private String pcrfGroup; // Nhóm PCRF
 
 	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
 

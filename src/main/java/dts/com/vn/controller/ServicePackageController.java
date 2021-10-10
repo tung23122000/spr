@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Service;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 @RestController
@@ -267,7 +264,7 @@ public class ServicePackageController {
         ApiResponse response;
         List<ServicePackage> returnList = new ArrayList<>();
         try {
-            List<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id);
+            HashSet<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listBlockPCRF);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);

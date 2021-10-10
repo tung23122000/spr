@@ -69,7 +69,7 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	List<ServicePackage> findBlockIN(Long packageId, String bucType, String bucName);
 
 	@Query("SELECT spa FROM ServicePackage spa " +
-			" WHERE spa.pcrfGroup.pcrfGroupId = :pcrfGroupId AND spa.packageId <> :packageId ")
-	List<ServicePackage> findBlockPCRF(Long packageId, Long pcrfGroupId);
+			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId ")
+	List<ServicePackage> findBlockPCRF(Long packageId, String pcrfGroupId);
 
 }

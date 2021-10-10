@@ -5,6 +5,7 @@ import dts.com.vn.entities.PrefixInfo;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.response.PCRFGroupResponse;
 import dts.com.vn.service.PCRFGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,20 @@ public class PCRFGroupController {
             ex.printStackTrace();
             response = new ApiResponse(ex, ErrorCode.ADD_PCRF_GROUP_FAILED);
             logger.error("ADD_PCRF_GROUP_FAILED", response);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/find-pcrf-group")
+    public ResponseEntity<ApiResponse> findPcrfGroup(@RequestParam String pcrfGroupId) {
+        ApiResponse response = null;
+        try {
+            List<PCRFGroupResponse> listPcrf = pcrfGroupService.findPcrfGroup(pcrfGroupId);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listPcrf);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.FIND_PCRF_GROUP_FAILED);
+            logger.error("FIND_PCRF_GROUP_FAILED", response);
         }
         return ResponseEntity.ok().body(response);
     }

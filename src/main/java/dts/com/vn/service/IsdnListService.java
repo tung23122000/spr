@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class IsdnListService {
@@ -81,5 +82,9 @@ public class IsdnListService {
 
     public Page<IsdnList> findAll(Pageable pageable) {
         return isdnListRepository.findAll(pageable);
+    }
+
+    public List<IsdnList> findAllNotMapped() {
+        return isdnListRepository.findAllNotMapped();
     }
 }

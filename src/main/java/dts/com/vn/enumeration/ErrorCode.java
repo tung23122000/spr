@@ -74,6 +74,8 @@ public enum ErrorCode {
 	SAVE_SMS_RESPOND_FAIL("error.save.sms.respond.fail", "Lỗi khi lưu sms respond"),
 	FIND_ALL_SMS_RESPOND_FAIL("error.find.all.sms.respond.fail", "Lỗi khi tải sms respond"),
 	DELETE_SMS_RESPOND_FAIL("error.delete.sms.respond.fail", "Lỗi khi xóa sms respond"),
+	GET_WHITE_LIST_FAIL("error.get.white.list", "Lỗi khi tải danh sách White List"),
+	GET_BLACK_LIST_FAIL("error.get.black.list", "Lỗi khi tải danh sách Black List"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

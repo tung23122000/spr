@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/isdn-list")
 public class IsdnListController {
@@ -60,4 +62,21 @@ public class IsdnListController {
         }
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/find-all-not-mapped")
+    public ResponseEntity<ApiResponse> findAllNotMapped() {
+        ApiResponse response;
+        try {
+            List<IsdnList> page = isdnListService.findAllNotMapped();
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), page);
+        } catch (RestApiException ex) {
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.FIND_ISDN_LIST_FAILED);
+            logger.error("FIND_ISDN_LIST_FAILED", response);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
 }

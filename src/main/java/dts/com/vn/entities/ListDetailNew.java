@@ -27,6 +27,10 @@ public class ListDetailNew {
     @Type(type = "JsonType")
     private List<JsonIsdn> data;
 
+    public ListDetailNew() {
+
+    }
+
     public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data) {
         this.listDetailId = listDetailId;
         this.isdnListId = isdnListId;

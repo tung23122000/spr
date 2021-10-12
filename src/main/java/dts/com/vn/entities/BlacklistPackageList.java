@@ -30,4 +30,13 @@ public class BlacklistPackageList {
 
 	@Column(name = "end_date")
 	private Instant endDate;
+
+	public BlacklistPackageList(Long blacklistPackageListId, Long packageId, Long programId, Long isdnListId, Instant staDate, Instant endDate) {
+		this.blacklistPackageListId = blacklistPackageListId;
+		this.packageId = packageId;
+		this.programId = programId;
+		this.isdnListId = isdnListId;
+		this.staDate = staDate;
+		this.endDate = endDate;
+	}
 }

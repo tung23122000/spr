@@ -70,10 +70,12 @@ public enum ErrorCode {
 	ISDN_NULL("error.isdn.null", "Trường ISDN trong truy vấn có giá trị NULL"),
 	SERVICE_NUMBER_NULL("error.service.number.null", "Trường SERVICE_NUMBER trong truy vấn có giá trị NULL"),
 	SOURCE_CODE_NULL("error.source.code.null", "Trường SOURCE_CODE trong truy vấn có giá trị NULL"),
-	MISSING_DATA_FIELD("error.missing.data.field", "Thiếu trường trong truy vấn dữ liệu"),
+	MISSING_DATA_FIELD("error.missing.data.field", "Thiếu trường dữ liệu"),
 	SAVE_SMS_RESPOND_FAIL("error.save.sms.respond.fail", "Lỗi khi lưu sms respond"),
 	FIND_ALL_SMS_RESPOND_FAIL("error.find.all.sms.respond.fail", "Lỗi khi tải sms respond"),
 	DELETE_SMS_RESPOND_FAIL("error.delete.sms.respond.fail", "Lỗi khi xóa sms respond"),
+	GET_WHITE_LIST_FAIL("error.get.white.list", "Lỗi khi tải danh sách White List"),
+	GET_BLACK_LIST_FAIL("error.get.black.list", "Lỗi khi tải danh sách Black List"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

@@ -60,6 +60,9 @@ public class ServiceProgramService {
     private MapSmsRespondRepository mapSmsRespondRepository;
 
     @Autowired
+    private CcspInfoRepository ccspInfoRepository;
+
+    @Autowired
     private TokenProvider tokenProvider;
 
     @Autowired
@@ -240,7 +243,8 @@ public class ServiceProgramService {
     }
 
     public DetailServiceProgramResponse detailServiceProgram(Long programId, Pageable pageableIN,
-                                                             Pageable pageableBILLING, Pageable pageablePCRF, Pageable pageableTransaction, Pageable pageServiceInfo) {
+                                                             Pageable pageableBILLING, Pageable pageablePCRF,
+                                                             Pageable pageableTransaction, Pageable pageServiceInfo, Pageable pageCcspInfo) {
         ServiceProgram serviceProgram = findById(programId);
         ServiceProgramResponse serviceProgramResponse = new ServiceProgramResponse(serviceProgram);
         Page<BucketsInfo> pageIn = bucketsInfoRepository.findAllByProgramId(programId, pageableIN);
@@ -283,6 +287,16 @@ public class ServiceProgramService {
         List<MinusMoney> listMinusMoney = minusMoneyRepository.findAllByProgramId(programId);
         Page<ServiceInfo> pageService =
                 serviceInfoRepository.findAllByProgramId(programId, pageServiceInfo);
+        Page<CcspInfo> pageCcsp =  ccspInfoRepository.findAllByProgramId(programId, pageCcspInfo);
+        Page<CcspInfoResponse> pageCcspInfoRes =
+                pageCcsp.map(new Function<CcspInfo, CcspInfoResponse>() {
+
+                    @Override
+                    public CcspInfoResponse apply(CcspInfo t) {
+                        return new CcspInfoResponse(t);
+                    }
+                });
+
         Page<ServiceInfoResponse> pageServiceRes =
                 pageService.map(new Function<ServiceInfo, ServiceInfoResponse>() {
                     @Override
@@ -291,7 +305,7 @@ public class ServiceProgramService {
                     }
                 });
         return new DetailServiceProgramResponse(serviceProgramResponse, pageInRes, pageBillingRes,
-                pagePCRFRes, pageTransactionRes, pageServiceRes, listMinusMoney);
+                pagePCRFRes, pageTransactionRes, pageServiceRes, listMinusMoney, pageCcspInfoRes);
     }
 
 

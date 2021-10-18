@@ -76,6 +76,9 @@ public enum ErrorCode {
 	DELETE_SMS_RESPOND_FAIL("error.delete.sms.respond.fail", "Lỗi khi xóa sms respond"),
 	GET_WHITE_LIST_FAIL("error.get.white.list", "Lỗi khi tải danh sách White List"),
 	GET_BLACK_LIST_FAIL("error.get.black.list", "Lỗi khi tải danh sách Black List"),
+	SAVE_CCSP_INFO_FAIL("error.save.ccsp.info", "Lỗi khi lưu thông tin CCSP"),
+	DUPLICATE_CCSP_INFO("error.duplicate.ccsp.info", "Đã tồn tại thông tin CCSP với giá trị FlowOne trong chương trình này"),
+	EXIST_CCSP_VALUE("error.exist.ccsp.value", "CCSP Value đã tồn tại"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

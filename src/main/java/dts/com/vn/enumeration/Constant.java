@@ -20,4 +20,8 @@ public class Constant {
 
 	public static final String DUPLICATE_RECORD = "Không thể thêm mới bản ghi do trùng lặp dữ liệu";
 
+	public static final String FO_SERVICE_CODE = "FO_SERVICECODE";
+
+	public static final String FO_RESULT = "FO_RESULT";
+
 }

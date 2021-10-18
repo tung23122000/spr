@@ -174,11 +174,12 @@ public class ServiceProgramController {
 			@Qualifier(value = "pageableBILLING") Pageable pageableBILLING,
 			@Qualifier(value = "pageablePCRF") Pageable pageablePCRF,
 			@Qualifier(value = "pageableTransaction") Pageable pageableTransaction,
-			@Qualifier(value = "pageServiceInfo") Pageable pageServiceInfo) {
+			@Qualifier(value = "pageServiceInfo") Pageable pageServiceInfo,
+			@Qualifier(value = "pageCcspInfo") Pageable pageCcspInfo) {
 		ApiResponse response;
 		try {
 			DetailServiceProgramResponse entity = serviceProgramService.detailServiceProgram(programId,
-					pageableIN, pageableBILLING, pageablePCRF, pageableTransaction, pageServiceInfo);
+					pageableIN, pageableBILLING, pageablePCRF, pageableTransaction, pageServiceInfo, pageCcspInfo);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), entity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);

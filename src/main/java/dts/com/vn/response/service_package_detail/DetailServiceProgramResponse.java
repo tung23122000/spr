@@ -29,6 +29,9 @@ public class DetailServiceProgramResponse {
 	// MinusMoney
 	private List<MinusMoney> listMinusMoney;
 
+	// CCSP Info
+	private Page<CcspInfoResponse> listCcspInfo;
+
 	private Page<ServiceInfoResponse> pageServiceInfoResponse;
 
 	public DetailServiceProgramResponse(ServiceProgramResponse serviceProgramResponse,
@@ -37,7 +40,8 @@ public class DetailServiceProgramResponse {
 	                                    Page<NdsTypeParamProgramResponse> pageNdsTypeParamProgram,
 										Page<MapCommandAliasResponse> pageTransaction,
 	                                    Page<ServiceInfoResponse> pageServiceInfoResponse,
-										List<MinusMoney> listMinusMoney
+										List<MinusMoney> listMinusMoney,
+										Page<CcspInfoResponse> listCcspInfo
 	) {
 		this.serviceProgramResponse = serviceProgramResponse;
 		this.pageBucketsInfo = pageBucketsInfo;
@@ -46,5 +50,6 @@ public class DetailServiceProgramResponse {
 		this.pageTransaction = pageTransaction;
 		this.pageServiceInfoResponse = pageServiceInfoResponse;
 		this.listMinusMoney = listMinusMoney;
+		this.listCcspInfo = listCcspInfo;
 	}
 }

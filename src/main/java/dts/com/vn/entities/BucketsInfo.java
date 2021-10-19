@@ -90,7 +90,12 @@ public class BucketsInfo implements Cloneable {
 		this.bucAddDay = request.getBucAddDay();
 		this.bundleType = request.getBundleType();
 		this.subsType = request.getSubsType();
-		this.subsDelayTime = request.getSubDelayTime();
+		if (request.getSubDelayTime() == null) {
+			this.subsDelayTime = 0L;
+		} else {
+			this.subsDelayTime = request.getSubDelayTime();
+
+		}
 		this.bucUnit = request.getBucUnit();
 		this.mobType = request.getMobType();
 		this.packageId =

@@ -79,6 +79,8 @@ public enum ErrorCode {
 	SAVE_CCSP_INFO_FAIL("error.save.ccsp.info", "Lỗi khi lưu thông tin CCSP"),
 	DUPLICATE_CCSP_INFO("error.duplicate.ccsp.info", "Đã tồn tại thông tin CCSP với giá trị FlowOne trong chương trình này"),
 	EXIST_CCSP_VALUE("error.exist.ccsp.value", "CCSP Value đã tồn tại"),
+	LIST_CONDITION_ID_NOT_FOUND("error.list.condition.not.found", "Không tìm thấy điều kiện"),
+	SAVE_CONDITION_PROGRAM_FAIL("error.save.condition.program", "Lỗi khi thêm điều kiện"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

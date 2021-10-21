@@ -1,5 +1,6 @@
 package dts.com.vn.service;
 
+import com.google.gson.Gson;
 import dts.com.vn.entities.ListCondition;
 import dts.com.vn.entities.MapConditionProgram;
 import dts.com.vn.enumeration.ErrorCode;
@@ -7,11 +8,9 @@ import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.ListConditionRepository;
 import dts.com.vn.repository.MapConditionProgramRepository;
 import dts.com.vn.request.MapConditionProgramRequest;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashMap;
 
 @Service
 public class MapConditionProgramService {
@@ -41,13 +40,8 @@ public class MapConditionProgramService {
 		if (mapConditionProgramExist != null) {
 			throw new RestApiException(ErrorCode.EXIST_MAP_CONDITION_PROGRAM);
 		}
-		String rawConditionValue = mapConditionProgramRequest.getConditionValue().toString();
-		String conditionValue = rawConditionValue.substring(1, rawConditionValue.length() - 1);
-		List<String> lstString = Arrays.asList(conditionValue.split("="));
-		String jsonConditionValue = "";
-		if (lstString.size() > 0) {
-			jsonConditionValue = new JSONObject().put(lstString.get(0), lstString.get(1)).toString();
-		}
+		Object rawConditionValue = mapConditionProgramRequest.getConditionValue();
+		String jsonConditionValue = new Gson().toJson(rawConditionValue, LinkedHashMap.class);
 		MapConditionProgram mapConditionProgram = new MapConditionProgram();
 		mapConditionProgram.setId(mapConditionProgramRequest.getId());
 		mapConditionProgram.setProgramId(mapConditionProgramRequest.getProgramId());

@@ -30,17 +30,29 @@ public class MapConditionProgramService {
 		if (listCondition == null) {
 			throw new RestApiException(ErrorCode.LIST_CONDITION_ID_NOT_FOUND);
 		}
+		MapConditionProgram mapConditionProgramExist;
+		if (mapConditionProgramRequest.getId() == null) {
+			mapConditionProgramExist = mapConditionProgramRepository.findByProgramIdAndConditionId(
+					mapConditionProgramRequest.getProgramId(), mapConditionProgramRequest.getConditionId());
+		} else {
+			mapConditionProgramExist = mapConditionProgramRepository.findByProgramIdAndConditionId(
+					mapConditionProgramRequest.getProgramId(), mapConditionProgramRequest.getConditionId(), mapConditionProgramRequest.getId());
+		}
+		if (mapConditionProgramExist != null) {
+			throw new RestApiException(ErrorCode.EXIST_MAP_CONDITION_PROGRAM);
+		}
 		String rawConditionValue = mapConditionProgramRequest.getConditionValue().toString();
 		String conditionValue = rawConditionValue.substring(1, rawConditionValue.length() - 1);
 		List<String> lstString = Arrays.asList(conditionValue.split("="));
-		String jsonConditonValue = "";
+		String jsonConditionValue = "";
 		if (lstString.size() > 0) {
-			jsonConditonValue = new JSONObject().put(lstString.get(0), lstString.get(1)).toString();
+			jsonConditionValue = new JSONObject().put(lstString.get(0), lstString.get(1)).toString();
 		}
 		MapConditionProgram mapConditionProgram = new MapConditionProgram();
+		mapConditionProgram.setId(mapConditionProgramRequest.getId());
 		mapConditionProgram.setProgramId(mapConditionProgramRequest.getProgramId());
 		mapConditionProgram.setConditionId(listCondition);
-		mapConditionProgram.setConditionValue(jsonConditonValue);
+		mapConditionProgram.setConditionValue(jsonConditionValue);
 		return mapConditionProgramRepository.save(mapConditionProgram);
 	}
 

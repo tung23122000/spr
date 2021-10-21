@@ -11,4 +11,7 @@ public interface MapConditionProgramRepository extends JpaRepository<MapConditio
     @Query("SELECT mcp FROM MapConditionProgram mcp WHERE mcp.programId = ?1 and mcp.conditionId.id = ?2")
     MapConditionProgram findByProgramIdAndConditionId(Long programId, Integer conditionId);
 
+    @Query("SELECT mcp FROM MapConditionProgram mcp WHERE mcp.programId = ?1 and mcp.conditionId.id = ?2 and mcp.id <> ?3")
+    MapConditionProgram findByProgramIdAndConditionId(Long programId, Integer conditionId, Long id);
+
 }

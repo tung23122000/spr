@@ -3,6 +3,7 @@ package dts.com.vn.controller;
 import dts.com.vn.entities.MapConditionProgram;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
+import dts.com.vn.exception.RestApiException;
 import dts.com.vn.request.MapConditionProgramRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.service.MapConditionProgramService;
@@ -29,6 +30,8 @@ public class MapConditionProgramController {
 		try {
 			MapConditionProgram mapConditionProgram = mapConditionProgramService.save(mapConditionProgramRequest);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
+		} catch (RestApiException e) {
+			response = new ApiResponse(e);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
@@ -45,8 +48,8 @@ public class MapConditionProgramController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
-			logger.error("SAVE_CONDITION_PROGRAM_FAIL", response);
+			response = new ApiResponse(ex, ErrorCode.GET_CONDITION_PROGRAM_FAIL);
+			logger.error("GET_CONDITION_PROGRAM_FAIL", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

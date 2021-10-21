@@ -7,32 +7,45 @@ import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.ListConditionRepository;
 import dts.com.vn.repository.MapConditionProgramRepository;
 import dts.com.vn.request.MapConditionProgramRequest;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class MapConditionProgramService {
-    private final MapConditionProgramRepository mapConditionProgramRepository;
-    private final ListConditionRepository listConditionRepository;
 
-    public MapConditionProgramService(MapConditionProgramRepository mapConditionProgramRepository, ListConditionRepository listConditionRepository) {
-        this.mapConditionProgramRepository = mapConditionProgramRepository;
-        this.listConditionRepository = listConditionRepository;
-    }
-    public MapConditionProgram save(MapConditionProgramRequest mapConditionProgramRequest) {
-        ListCondition listCondition = listConditionRepository.findById(mapConditionProgramRequest.getConditionId()).orElse(null);
-        if (listCondition == null) {
-            throw new RestApiException(ErrorCode.LIST_CONDITION_ID_NOT_FOUND);
-        }
-        MapConditionProgram mapConditionProgram = new MapConditionProgram();
-        mapConditionProgram.setProgramId(mapConditionProgramRequest.getProgramId());
-        mapConditionProgram.setConditionId(listCondition);
-        mapConditionProgram.setConditionValue(mapConditionProgramRequest.getConditionValue());
-        return mapConditionProgramRepository.save(mapConditionProgram);
-    }
+	private final MapConditionProgramRepository mapConditionProgramRepository;
 
-    public MapConditionProgram getOne(Long programId, Integer conditionId) {
-        return mapConditionProgramRepository.findByProgramIdAndConditionId(programId, conditionId);
-    }
+	private final ListConditionRepository listConditionRepository;
+
+	public MapConditionProgramService(MapConditionProgramRepository mapConditionProgramRepository, ListConditionRepository listConditionRepository) {
+		this.mapConditionProgramRepository = mapConditionProgramRepository;
+		this.listConditionRepository = listConditionRepository;
+	}
+
+	public MapConditionProgram save(MapConditionProgramRequest mapConditionProgramRequest) {
+		ListCondition listCondition = listConditionRepository.findById(mapConditionProgramRequest.getConditionId()).orElse(null);
+		if (listCondition == null) {
+			throw new RestApiException(ErrorCode.LIST_CONDITION_ID_NOT_FOUND);
+		}
+		String rawConditionValue = mapConditionProgramRequest.getConditionValue().toString();
+		String conditionValue = rawConditionValue.substring(1, rawConditionValue.length() - 1);
+		List<String> lstString = Arrays.asList(conditionValue.split("="));
+		String jsonConditonValue = "";
+		if (lstString.size() > 0) {
+			jsonConditonValue = new JSONObject().put(lstString.get(0), lstString.get(1)).toString();
+		}
+		MapConditionProgram mapConditionProgram = new MapConditionProgram();
+		mapConditionProgram.setProgramId(mapConditionProgramRequest.getProgramId());
+		mapConditionProgram.setConditionId(listCondition);
+		mapConditionProgram.setConditionValue(jsonConditonValue);
+		return mapConditionProgramRepository.save(mapConditionProgram);
+	}
+
+	public MapConditionProgram getOne(Long programId, Integer conditionId) {
+		return mapConditionProgramRepository.findByProgramIdAndConditionId(programId, conditionId);
+	}
+
 }

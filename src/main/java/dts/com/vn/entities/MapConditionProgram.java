@@ -6,7 +6,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "map_condition_program", schema = "public")
@@ -25,11 +24,6 @@ public class MapConditionProgram {
 	@ManyToOne
 	@JoinColumn(name = "condition_id")
 	ListCondition conditionId;
-
-//	@Type(type = "jsonb")
-//	@Column(columnDefinition = "jsonb", name = "condition_value")
-////	@Column(name = "condition_value")
-//	String conditionValue;
 
 	@Column(name = "condition_value")
 	@Type(type = "jsonb")

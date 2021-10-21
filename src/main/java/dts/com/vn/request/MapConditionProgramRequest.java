@@ -4,12 +4,13 @@ import lombok.Data;
 
 @Data
 public class MapConditionProgramRequest {
-    private Long id;
 
-    private Long programId;
+	private Long id;
 
-    private  Long conditionId;
+	private Long programId;
 
-    private String conditionValue;
+	private Integer conditionId;
+
+	private Object conditionValue;
 
 }

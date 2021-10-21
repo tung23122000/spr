@@ -14,39 +14,41 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/condition-program")
 public class MapConditionProgramController {
-    private static final Logger logger = LoggerFactory.getLogger(MapConditionProgramController.class);
 
-    private final MapConditionProgramService mapConditionProgramService;
+	private static final Logger logger = LoggerFactory.getLogger(MapConditionProgramController.class);
 
-    public MapConditionProgramController(MapConditionProgramService mapConditionProgramService) {
-        this.mapConditionProgramService = mapConditionProgramService;
-    }
+	private final MapConditionProgramService mapConditionProgramService;
 
-    @PostMapping("/save")
-    public ResponseEntity<ApiResponse> save(@RequestBody MapConditionProgramRequest mapConditionProgramRequest) {
-        ApiResponse response = null;
-        try {
-            MapConditionProgram mapConditionProgram = mapConditionProgramService.save(mapConditionProgramRequest);
-            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
-            logger.error("SAVE_CONDITION_PROGRAM_FAIL", response);
-        }
-        return ResponseEntity.ok().body(response);
-    }
+	public MapConditionProgramController(MapConditionProgramService mapConditionProgramService) {
+		this.mapConditionProgramService = mapConditionProgramService;
+	}
 
-    @GetMapping("/get-one")
-    public ResponseEntity<ApiResponse> getOne(@RequestParam Long programId, @RequestParam Integer conditionId) {
-        ApiResponse response = null;
-        try {
-            MapConditionProgram mapConditionProgram = mapConditionProgramService.getOne(programId, conditionId);
-            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
-            logger.error("SAVE_CONDITION_PROGRAM_FAIL", response);
-        }
-        return ResponseEntity.ok().body(response);
-    }
+	@PostMapping("/save")
+	public ResponseEntity<ApiResponse> save(@RequestBody MapConditionProgramRequest mapConditionProgramRequest) {
+		ApiResponse response;
+		try {
+			MapConditionProgram mapConditionProgram = mapConditionProgramService.save(mapConditionProgramRequest);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
+			logger.error("SAVE_CONDITION_PROGRAM_FAIL", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/get-one")
+	public ResponseEntity<ApiResponse> getOne(@RequestParam Long programId, @RequestParam Integer conditionId) {
+		ApiResponse response;
+		try {
+			MapConditionProgram mapConditionProgram = mapConditionProgramService.getOne(programId, conditionId);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mapConditionProgram);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.SAVE_CONDITION_PROGRAM_FAIL);
+			logger.error("SAVE_CONDITION_PROGRAM_FAIL", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
 }

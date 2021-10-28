@@ -238,6 +238,17 @@ public class ServiceProgramService {
         return new DetailServicePackageResponse(response, pageResponse);
     }
 
+    public void updateCheckMaxRegisted(AddServiceProgramRequest request) {
+        ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgramId()).orElse(null);
+        if (serviceProgram == null) {
+            throw new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND);
+        } else {
+            serviceProgram.setNumber1(request.getNumber1());
+            serviceProgram.setNumber2(request.getNumber2());
+            serviceProgramRepository.save(serviceProgram);
+        }
+    }
+
     public List<ServiceProgram> findAllByPackageId(Long packageId) {
         return serviceProgramRepository.findAllByPackageId(packageId);
     }

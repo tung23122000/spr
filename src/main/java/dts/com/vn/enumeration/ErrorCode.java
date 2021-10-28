@@ -83,6 +83,7 @@ public enum ErrorCode {
 	SAVE_CONDITION_PROGRAM_FAIL("error.save.condition.program", "Lỗi khi thêm điều kiện"),
 	GET_CONDITION_PROGRAM_FAIL("error.get.condition.program", "Lỗi khi tải điều kiện"),
 	EXIST_MAP_CONDITION_PROGRAM("error.exist.map.condition.program", "Đã tồn tại điều kiện với program_id và condition_id"),
+	UPDATE_CHECK_MAX_REGISTED("error.check.max.registed", "Lỗi khi lưu điều kiện CHECK_MAX_REGISTED"),
 
 	TOKEN_NOT_EXIST("error.token.not.exist", ""),
 	USER_NOT_MATCH("error.username.invalid", ""),

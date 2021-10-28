@@ -266,4 +266,23 @@ public class ServiceProgramController {
 		return null;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@PutMapping("/update-check-max-registed")
+	public ResponseEntity<ApiResponse> updateCheckMaxRegisted(@RequestBody AddServiceProgramRequest request) {
+		ApiResponse response;
+		try {
+			serviceProgramService.updateCheckMaxRegisted(request);
+
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+			logger.error("UPDATE_CHECK_MAX_REGISTED", response);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.UPDATE_CHECK_MAX_REGISTED);
+			logger.error("UPDATE_CHECK_MAX_REGISTED", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
 }

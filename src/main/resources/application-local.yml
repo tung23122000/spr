@@ -19,3 +19,4 @@ spring:
 
 file:
   upload-dir: D:/DTS/Uploads
+  config-package: D:/Source/spr-config-api/package-file.txt

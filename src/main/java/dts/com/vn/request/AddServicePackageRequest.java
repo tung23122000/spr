@@ -55,4 +55,5 @@ public class AddServicePackageRequest {
 
 	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
 
+	private String systemOwner; // Hệ thống quản lý
 }

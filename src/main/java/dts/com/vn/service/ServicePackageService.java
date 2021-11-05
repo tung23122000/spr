@@ -139,6 +139,7 @@ public class ServicePackageService {
 			servicePackage.setExpectResult(request.getExpectResult());
 			servicePackage.setExtendStatus(request.getExtendStatus());
 			servicePackage.setIsRetry(request.getIsRetry());
+			servicePackage.setSystemOwner(request.getSystemOwner());
 			return servicePackageRepository.save(servicePackage);
 		}
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);

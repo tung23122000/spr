@@ -57,21 +57,35 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query("SELECT sp FROM ServicePackage sp WHERE sp.serviceType.serviceTypeId = :serviceTypeId ORDER BY sp.systemOwner asc, sp.packageId desc")
 	List<ServicePackage> findAllByServiceTypeId(Long serviceTypeId);
 
-	@Query("SELECT bi FROM ServicePackage spa " +
-			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
-			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
-			" WHERE spr.programCode = spa.code AND spr.servicePackage.packageId = :id")
-	List<BucketsInfo> findBucketsInfo(Long id);
+//	@Query("SELECT bi FROM ServicePackage spa " +
+//			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
+//			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
+//			" WHERE spr.programCode = spa.code AND spr.servicePackage.packageId = :id")
+//	List<BucketsInfo> findBucketsInfo(Long id);
 
+	// Chặn IN không cùng nhóm
 	@Query("SELECT spa FROM ServicePackage spa " +
 			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
 			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
-			" WHERE spr.programCode = spa.code AND spa.packageId <> :packageId " +
-			" AND ((bi.accountType = 'SUBS' AND bi.bucName = :bucName) OR (bi.accountType = 'BUNDLE' AND bi.bucType = :bucType))")
-	List<ServicePackage> findBlockIN(Long packageId, String bucType, String bucName);
+			" WHERE spa.packageId <> :packageId AND spa.serviceType.serviceTypeId <> :serviceTypeId  " +
+			" AND (((bi.accountType = 'SUBS' or bi.bucType = 'SUBS') AND bi.bucName = :bucName) OR ((bi.accountType = 'BUNDLE' or bi.bucType <> 'SUBS') AND bi.bucType = :bucType))")
+	List<ServicePackage> findBlockINWithoutServiceType(Long packageId, String bucType, String bucName, Long serviceTypeId);
 
+	// Chặn IN cùng nhóm
 	@Query("SELECT spa FROM ServicePackage spa " +
-			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId ")
-	List<ServicePackage> findBlockPCRF(Long packageId, String pcrfGroupId);
+			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
+			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
+			" WHERE spa.packageId <> :packageId AND spa.serviceType.serviceTypeId = :serviceTypeId  " +
+			" AND (((bi.accountType = 'SUBS' or bi.bucType = 'SUBS') AND bi.bucName = :bucName) OR ((bi.accountType = 'BUNDLE' or bi.bucType <> 'SUBS') AND bi.bucType = :bucType))")
+	List<ServicePackage> findBlockINWithServiceType(Long packageId, String bucType, String bucName, Long serviceTypeId);
 
+	// Chặn PCRF không cùng nhóm
+	@Query("SELECT spa FROM ServicePackage spa " +
+			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId AND spa.serviceType.serviceTypeId <> :serviceTypeId ")
+	List<ServicePackage> findBlockPCRFWithoutServiceType(Long packageId, String pcrfGroupId, Long serviceTypeId);
+
+	// Chặn PCRF cùng nhóm
+	@Query("SELECT spa FROM ServicePackage spa " +
+			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId AND spa.serviceType.serviceTypeId = :serviceTypeId ")
+	List<ServicePackage> findBlockPCRFWithServiceType(Long packageId, String pcrfGroupId, Long serviceTypeId);
 }

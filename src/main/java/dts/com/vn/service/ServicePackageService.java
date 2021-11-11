@@ -31,11 +31,12 @@ public class ServicePackageService {
 	private final ServiceProgramService serviceProgramService;
 	private final LogActionService logActionService;
 	private final TokenProvider tokenProvider;
+	private final BucketsInfoRepository bucketsInfoRepository;
 
 	public ServicePackageService(ServicePackageRepository servicePackageRepository, ServiceTypeRepository serviceTypeRepository,
 								 ServicesRepository servicesRepository, ServiceProgramRepository serviceProgramRepository,
 								 SubServicePackageRepository subServicePackageRepository, ServiceProgramService serviceProgramService,
-								 LogActionService logActionService, TokenProvider tokenProvider) {
+								 LogActionService logActionService, TokenProvider tokenProvider, BucketsInfoRepository bucketsInfoRepository) {
 		this.servicePackageRepository = servicePackageRepository;
 		this.serviceTypeRepository = serviceTypeRepository;
 		this.servicesRepository = servicesRepository;
@@ -44,6 +45,7 @@ public class ServicePackageService {
 		this.serviceProgramService = serviceProgramService;
 		this.logActionService = logActionService;
 		this.tokenProvider = tokenProvider;
+		this.bucketsInfoRepository = bucketsInfoRepository;
 	}
 
 	public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
@@ -145,16 +147,60 @@ public class ServicePackageService {
 		throw new RestApiException(ErrorCode.API_FAILED_UNKNOWN);
 	}
 
-	public List<BucketsInfo> findBucketsInfo(Long id) {
-		return servicePackageRepository.findBucketsInfo(id);
+//	public List<BucketsInfo> findBucketsInfo(Long id) {
+//		return servicePackageRepository.findBucketsInfo(id);
+//	}
+//
+//	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo) {
+//		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getBucType(), bucketsInfo.getBucName());
+//	}
+
+	// Chặn IN không cùng nhóm
+	public List<ServicePackage> findBlockINWithoutServiceType(Long packageId) {
+		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
+		if (servicePackage == null) {
+			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
+		}
+		List<BucketsInfo> bucketsInfoList = bucketsInfoRepository.findByPackageId(packageId);
+		if (bucketsInfoList.size() == 0) {
+			return null;
+		} else {
+			List<ServicePackage> servicePackageList = new ArrayList<>();
+			for (BucketsInfo bucketInfo : bucketsInfoList) {
+				List<ServicePackage> listBlockIN = servicePackageRepository.findBlockINWithoutServiceType(packageId, bucketInfo.getBucType(),
+						bucketInfo.getBucName(), servicePackage.getServiceType().getServiceTypeId());
+				servicePackageList.addAll(listBlockIN);
+			}
+			return servicePackageList;
+		}
 	}
 
-	public List<ServicePackage> findBlockIN(Long packageId, BucketsInfo bucketsInfo) {
-		return servicePackageRepository.findBlockIN(packageId, bucketsInfo.getBucType(), bucketsInfo.getBucName());
+	// Chặn IN cùng nhóm
+	public List<ServicePackage> findBlockINWithServiceType(Long packageId) {
+		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
+		if (servicePackage == null) {
+			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
+		}
+		List<BucketsInfo> bucketsInfoList = bucketsInfoRepository.findByPackageId(packageId);
+		if (bucketsInfoList.size() == 0) {
+			return null;
+		} else {
+			List<ServicePackage> servicePackageList = new ArrayList<>();
+			for (BucketsInfo bucketInfo : bucketsInfoList) {
+				List<ServicePackage> listBlockIN = servicePackageRepository.findBlockINWithServiceType(packageId, bucketInfo.getBucType(),
+						bucketInfo.getBucName(), servicePackage.getServiceType().getServiceTypeId());
+				servicePackageList.addAll(listBlockIN);
+			}
+			return servicePackageList;
+		}
 	}
 
-	public HashSet<ServicePackage> findBlockPCRF(Long packageId) {
-		ServicePackage servicePackage = findById(packageId);
+	// Chặn PCRF không cùng nhóm
+	public HashSet<ServicePackage> findBlockPCRFWithoutServiceType(Long packageId) {
+		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
+		if (servicePackage == null) {
+			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
+		}
 		HashSet<ServicePackage> returnList = new HashSet<>();
 		if (servicePackage.getPcrfGroup() == null) {
 			return null;
@@ -165,7 +211,33 @@ public class ServicePackageService {
 			if (arrPcrfGroupId.length > 0) {
 				for (String item: arrPcrfGroupId) {
 					// Với mỗi id pcrf lấy ra list chặn
-					List<ServicePackage> list = servicePackageRepository.findBlockPCRF(packageId, item);
+					List<ServicePackage> list = servicePackageRepository.findBlockPCRFWithoutServiceType(packageId,
+							item, servicePackage.getServiceType().getServiceTypeId());
+					returnList.addAll(list);
+				}
+			}
+		}
+		return returnList;
+	}
+
+	// Chặn PCRF cùng nhóm
+	public HashSet<ServicePackage> findBlockPCRFWithServiceType(Long packageId) {
+		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
+		if (servicePackage == null) {
+			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
+		}
+		HashSet<ServicePackage> returnList = new HashSet<>();
+		if (servicePackage.getPcrfGroup() == null) {
+			return null;
+		} else {
+			String pcrfGroupId = servicePackage.getPcrfGroup();
+			// Tách chuỗi thành mảng chứa id pcrf
+			String[] arrPcrfGroupId = pcrfGroupId.split(",");
+			if (arrPcrfGroupId.length > 0) {
+				for (String item: arrPcrfGroupId) {
+					// Với mỗi id pcrf lấy ra list chặn
+					List<ServicePackage> list = servicePackageRepository.findBlockPCRFWithServiceType(packageId,
+							item, servicePackage.getServiceType().getServiceTypeId());
 					returnList.addAll(list);
 				}
 			}

@@ -237,19 +237,49 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
-	@GetMapping("/find-block-in/{id}")
-	public ResponseEntity<ApiResponse> findBlockIN(@PathVariable(name = "id", required = true) Long id) {
-		ApiResponse response;
-		List<ServicePackage> returnList = new ArrayList<>();
-		try {
-//			SEARCH IN CỦA CHƯƠNG TRÌNH DEFAULT VỚI ID
-            List<BucketsInfo> listBucketsInfo = servicePackageService.findBucketsInfo(id);
-//			SEARCH LIST BLOCK BY BUCKETS INFO
-            for (BucketsInfo bucketInfo : listBucketsInfo) {
-                List<ServicePackage> listBlockIN = servicePackageService.findBlockIN(id, bucketInfo);
-                returnList.addAll(listBlockIN);
-            }
+    // Chặn IN không cùng nhóm
+    @GetMapping("/find-block-in-without-service-type/{packageId}")
+    public ResponseEntity<ApiResponse> findBlockINWithoutServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
+        ApiResponse response;
+        List<ServicePackage> returnList;
+        try {
+            returnList = servicePackageService.findBlockINWithoutServiceType(packageId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    // Chặn IN cùng nhóm
+    @GetMapping("/find-block-in-with-service-type/{packageId}")
+    public ResponseEntity<ApiResponse> findBlockINWithServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
+        ApiResponse response;
+        List<ServicePackage> returnList;
+        try {
+            returnList = servicePackageService.findBlockINWithServiceType(packageId);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    // Chặn PCRF không cùng nhóm
+    @GetMapping("/find-block-pcrf-without-service-type/{packageId}")
+    public ResponseEntity<ApiResponse> findBlockPCRFWithoutServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
+        ApiResponse response;
+        try {
+            HashSet<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRFWithoutServiceType(packageId);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listBlockPCRF);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);
         } catch (Exception ex) {
@@ -259,12 +289,12 @@ public class ServicePackageController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/find-block-pcrf/{id}")
-    public ResponseEntity<ApiResponse> findBlockPCRF(@PathVariable(name = "id", required = true) Long id) {
+    // Chặn PCRF cùng nhóm
+    @GetMapping("/find-block-pcrf-with-service-type/{packageId}")
+    public ResponseEntity<ApiResponse> findBlockPCRFWithServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
         ApiResponse response;
-        List<ServicePackage> returnList = new ArrayList<>();
         try {
-            HashSet<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRF(id);
+            HashSet<ServicePackage> listBlockPCRF = servicePackageService.findBlockPCRFWithServiceType(packageId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listBlockPCRF);
         } catch (RestApiException ex) {
             response = new ApiResponse(ex);

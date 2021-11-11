@@ -29,4 +29,7 @@ public interface BucketsInfoRepository extends JpaRepository<BucketsInfo, Long> 
 	@Query("SELECT b FROM BucketsInfo b WHERE b.packageId = ?1 AND b.serviceProgram.programId = ?2")
 	List<BucketsInfo> findByPackageIdAndProgramId(Long packageId, Long programId);
 
+	@Query("SELECT bi from BucketsInfo bi WHERE bi.packageId = ?1")
+	List<BucketsInfo> findByPackageId(Long packageId);
+
 }

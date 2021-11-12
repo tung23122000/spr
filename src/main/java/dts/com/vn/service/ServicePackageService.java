@@ -336,5 +336,13 @@ public class ServicePackageService {
 		servicePackageRepository.delete(servicePackage);
 	}
 
+	public void switchServicePackage(Long packageId) {
+		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
+		if (servicePackage == null) {
+			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
+		}
+		servicePackage.setSystemOwner("FO");
+		servicePackageRepository.save(servicePackage);
+	}
 
 }

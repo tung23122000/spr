@@ -322,23 +322,23 @@ public class ServicePackageController {
     }
 
     @Transactional
-	@PostMapping("/clone-service-package")
-	public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
-		ApiResponse response;
-		try {
-			response = servicePackageService.cloneServicePackage(request);
-			return ResponseEntity.ok().body(response);
-		} catch (Exception e) {
-			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
-					ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getErrorCode(),
-					ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getMessage());
-			return ResponseEntity.badRequest().body(response);
-		}
-	}
+    @PostMapping("/clone-service-package")
+    public ResponseEntity<ApiResponse> cloneServicePackage(@RequestBody AddServicePackageRequest request) {
+        ApiResponse response;
+        try {
+            response = servicePackageService.cloneServicePackage(request);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), "Exception " + e.getMessage(),
+                    ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getErrorCode(),
+                    ErrorCode.CLONE_SERVICE_PACKAGE_FAILED.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
     @Transactional
     @PostMapping("/delete-service-package")
-    public ResponseEntity<ApiResponse> deleteServicePackage(@RequestBody AddServicePackageRequest request){
+    public ResponseEntity<ApiResponse> deleteServicePackage(@RequestBody AddServicePackageRequest request) {
         ApiResponse response;
         try {
             ServicePackage servicePackage = servicePackageService.findById(request.getServicePackageId());
@@ -350,6 +350,21 @@ public class ServicePackageController {
             ex.printStackTrace();
             response = new ApiResponse(ex, ErrorCode.DELETE_SERVICE_PACKAGE_FAILED);
             logger.error("DELETE_SERVICE_PACKAGE_FAILED", response);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/switch-service-package/{packageId}")
+    public ResponseEntity<ApiResponse> switchServicePackage(@PathVariable(name = "packageId") Long packageId) {
+        ApiResponse response;
+        try {
+            servicePackageService.switchServicePackage(packageId);
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+        } catch (RestApiException ex) {
+            response = new ApiResponse(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
         }
         return ResponseEntity.ok().body(response);
     }

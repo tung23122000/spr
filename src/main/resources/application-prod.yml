@@ -15,6 +15,12 @@ spring:
       username: VASP4_SUBS
       password: abcd1234
       driverClassName: oracle.jdbc.OracleDriver
+    # Database ILINK
+    third:
+      jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/ilink
+      username: ilink
+      password: ilink
+      driverClassName: org.postgresql.Driver
 
 app:
   config-path: /web-admin/config/

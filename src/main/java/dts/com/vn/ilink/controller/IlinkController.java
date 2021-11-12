@@ -1,4 +1,4 @@
-package dts.com.vn.controller;
+package dts.com.vn.ilink.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,6 +23,19 @@ public class IlinkController {
 	@Autowired
 	public IlinkController(ConditionService conditionService) {
 		this.conditionService = conditionService;
+	}
+
+	@GetMapping("/find-all-condition")
+	public ResponseEntity<ApiResponse> findConditionByProgramCodeAndTransaction() {
+		ApiResponse response;
+		try {
+			response = conditionService.findAllCondition();
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			logger.error(ex.toString());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
 	}
 
 	@GetMapping("/find-conditon-by-programCode")

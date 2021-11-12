@@ -19,4 +19,10 @@ public class ListCondition {
 	@Column(name = "condition_name")
 	String conditionName;
 
+	@Column(name = "ilink_service_name")
+	String ilinkServiceName;
+
+	@Column(name = "description")
+	String description;
+
 }

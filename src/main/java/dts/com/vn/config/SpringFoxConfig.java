@@ -1,15 +1,13 @@
 package dts.com.vn.config;
 
+import dts.com.vn.ilink.constants.IlinkTableName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -23,13 +21,24 @@ import java.util.List;
 @EnableSwagger2
 public class SpringFoxConfig {
 
+	public static final String LKT_CHECK_CONDITIONS_TAG = "LKT_CHECK_CONDITIONS";
+
 	@Bean
 	public Docket createRestApi() {
 
-		return new Docket(DocumentationType.SWAGGER_2).pathMapping("/").apiInfo(this.apiEndPointsInfo())
-				.forCodeGeneration(true).securityContexts(Collections.singletonList(this.securityContext()))
-				.securitySchemes(Collections.singletonList(this.apiKey())).useDefaultResponseMessages(false)
-				.select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.regex("/api/.*")).build();
+		return new Docket(DocumentationType.SWAGGER_2)
+				.pathMapping("/")
+				.apiInfo(this.apiEndPointsInfo())
+				.forCodeGeneration(true)
+				.securityContexts(Collections.singletonList(this.securityContext()))
+				.securitySchemes(Collections.singletonList(this.apiKey()))
+				.useDefaultResponseMessages(false)
+				.select()
+				.apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.regex("/api/.*")).build()
+				.tags(new Tag(LKT_CHECK_CONDITIONS_TAG, "API cho bảng " + IlinkTableName.LKT_CHECK_CONDITIONS)
+
+				);
 	}
 
 	private ApiKey apiKey() {

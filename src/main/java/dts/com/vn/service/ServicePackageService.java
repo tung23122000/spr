@@ -11,8 +11,6 @@ import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.security.jwt.TokenProvider;
 import dts.com.vn.util.DateTimeUtil;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,20 +21,29 @@ import java.util.*;
 
 @Service
 public class ServicePackageService {
+
 	private final ServicePackageRepository servicePackageRepository;
+
 	private final ServiceTypeRepository serviceTypeRepository;
+
 	private final ServicesRepository servicesRepository;
+
 	private final ServiceProgramRepository serviceProgramRepository;
+
 	private final SubServicePackageRepository subServicePackageRepository;
+
 	private final ServiceProgramService serviceProgramService;
+
 	private final LogActionService logActionService;
+
 	private final TokenProvider tokenProvider;
+
 	private final BucketsInfoRepository bucketsInfoRepository;
 
 	public ServicePackageService(ServicePackageRepository servicePackageRepository, ServiceTypeRepository serviceTypeRepository,
-								 ServicesRepository servicesRepository, ServiceProgramRepository serviceProgramRepository,
-								 SubServicePackageRepository subServicePackageRepository, ServiceProgramService serviceProgramService,
-								 LogActionService logActionService, TokenProvider tokenProvider, BucketsInfoRepository bucketsInfoRepository) {
+	                             ServicesRepository servicesRepository, ServiceProgramRepository serviceProgramRepository,
+	                             SubServicePackageRepository subServicePackageRepository, ServiceProgramService serviceProgramService,
+	                             LogActionService logActionService, TokenProvider tokenProvider, BucketsInfoRepository bucketsInfoRepository) {
 		this.servicePackageRepository = servicePackageRepository;
 		this.serviceTypeRepository = serviceTypeRepository;
 		this.servicesRepository = servicesRepository;
@@ -209,7 +216,7 @@ public class ServicePackageService {
 			// Tách chuỗi thành mảng chứa id pcrf
 			String[] arrPcrfGroupId = pcrfGroupId.split(",");
 			if (arrPcrfGroupId.length > 0) {
-				for (String item: arrPcrfGroupId) {
+				for (String item : arrPcrfGroupId) {
 					// Với mỗi id pcrf lấy ra list chặn
 					List<ServicePackage> list = servicePackageRepository.findBlockPCRFWithoutServiceType(packageId,
 							item, servicePackage.getServiceType().getServiceTypeId());
@@ -234,7 +241,7 @@ public class ServicePackageService {
 			// Tách chuỗi thành mảng chứa id pcrf
 			String[] arrPcrfGroupId = pcrfGroupId.split(",");
 			if (arrPcrfGroupId.length > 0) {
-				for (String item: arrPcrfGroupId) {
+				for (String item : arrPcrfGroupId) {
 					// Với mỗi id pcrf lấy ra list chặn
 					List<ServicePackage> list = servicePackageRepository.findBlockPCRFWithServiceType(packageId,
 							item, servicePackage.getServiceType().getServiceTypeId());
@@ -249,9 +256,9 @@ public class ServicePackageService {
 		return servicePackageRepository.findAll();
 	}
 
-	public void saveSubServicePackge(List<SubServicePackageRequest> listBlock, Long packageId){
-		if (listBlock.size()>0){
-			for (SubServicePackageRequest block: listBlock) {
+	public void saveSubServicePackge(List<SubServicePackageRequest> listBlock, Long packageId) {
+		if (listBlock.size() > 0) {
+			for (SubServicePackageRequest block : listBlock) {
 				SubServicePackage subServicePackage = new SubServicePackage();
 				subServicePackage.setPackageId(packageId);
 				subServicePackage.setSubPackageId(block.getPackageId());
@@ -292,7 +299,7 @@ public class ServicePackageService {
 			// Tạo Log Action CREATE ServicePackage
 			LogAction logAction = new LogAction();
 			logAction.setTableAction("service_package");
-			logAction.setAccount(tokenProvider.account);
+			logAction.setAccount(TokenProvider.account);
 			logAction.setAction("CREATE");
 			logAction.setOldValue(null);
 			logAction.setNewValue(servicePackage.toString());
@@ -322,7 +329,7 @@ public class ServicePackageService {
 		// Tạo Log Action
 		LogAction logAction = new LogAction();
 		logAction.setTableAction("service_package");
-		logAction.setAccount(tokenProvider.account);
+		logAction.setAccount(TokenProvider.account);
 		logAction.setAction("DELETE");
 		logAction.setOldValue(servicePackage.toString());
 		logAction.setNewValue(null);
@@ -330,7 +337,7 @@ public class ServicePackageService {
 		logAction.setIdAction(servicePackage.getPackageId());
 		logActionService.add(logAction);
 		List<ServiceProgram> listServiceProgram = serviceProgramService.findAllByPackageId(servicePackage.getPackageId());
-		for (ServiceProgram serviceProgram: listServiceProgram) {
+		for (ServiceProgram serviceProgram : listServiceProgram) {
 			serviceProgramService.delete(serviceProgram);
 		}
 		servicePackageRepository.delete(servicePackage);

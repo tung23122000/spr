@@ -2,10 +2,13 @@ package dts.com.vn.ilink.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.service.ConditionService;
 import dts.com.vn.request.ListConditionRequest;
 import dts.com.vn.response.ApiResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +17,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class IlinkController {
+@Api(tags = {SpringFoxConfig.LKT_CHECK_CONDITIONS_TAG})
+public class LKTCheckConditionController {
 
-	private static final Logger logger = LoggerFactory.getLogger(IlinkController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LKTCheckConditionController.class);
 
 	private final ConditionService conditionService;
 
 	@Autowired
-	public IlinkController(ConditionService conditionService) {
+	public LKTCheckConditionController(ConditionService conditionService) {
 		this.conditionService = conditionService;
 	}
 
+	@ApiOperation(value = "Lấy danh sách các điều kiện của hệ thống")
 	@GetMapping("/find-all-condition")
+	@ResponseBody
 	public ResponseEntity<ApiResponse> findConditionByProgramCodeAndTransaction() {
 		ApiResponse response;
 		try {
@@ -38,7 +44,9 @@ public class IlinkController {
 		}
 	}
 
+	@ApiOperation(value = "Lấy danh sách điều kiện đang có của 1 chương trình")
 	@GetMapping("/find-conditon-by-programCode")
+	@ResponseBody
 	public ResponseEntity<ApiResponse> findConditionByProgramCodeAndTransaction(@RequestParam String programCode,
 	                                                                            @RequestParam String transaction) {
 		JsonObject requestJson = new JsonObject();
@@ -56,7 +64,9 @@ public class IlinkController {
 		}
 	}
 
+	@ApiOperation(value = "Cập nhật danh sách điều kiện của 1 chương trình")
 	@PostMapping("/update-list-condition")
+	@ResponseBody
 	public ResponseEntity<ApiResponse> updateListCondition(@RequestBody ListConditionRequest request) {
 		logger.info("==========>   " + new Gson().toJson(request));
 		ApiResponse response;

@@ -2,6 +2,7 @@ package dts.com.vn.ilink.service.impl;
 
 import dts.com.vn.entities.ListCondition;
 import dts.com.vn.enumeration.ApiResponseStatus;
+import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.entities.BstLookupTableRow;
 import dts.com.vn.ilink.repository.BstLookupTableRowRepository;
 import dts.com.vn.ilink.service.ConditionService;
@@ -30,7 +31,7 @@ public class ConditionServiceImpl implements ConditionService {
 	}
 
 	/**
-	 * Description - Lấy danh sách các điều kiện để config
+	 * Description - Lấy danh sách các điều kiện để config trong bảng list_condition
 	 *
 	 * @return any
 	 * @author - giangdh
@@ -39,9 +40,12 @@ public class ConditionServiceImpl implements ConditionService {
 	@Override
 	public ApiResponse findAllCondition() {
 		ApiResponse response;
-		List<ListCondition> listConditions = listConditionRepository.findAll();
-		response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(),
-				listConditions, null, "Lấy danh sách điều kiện thành công");
+		try {
+			List<ListCondition> listConditions = listConditionRepository.findAll();
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listConditions, null, "Lấy danh sách điều kiện thành công");
+		} catch (Exception e) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, null, "Lấy danh sách điều kiện thất bại");
+		}
 		return response;
 	}
 
@@ -58,7 +62,7 @@ public class ConditionServiceImpl implements ConditionService {
 	public ApiResponse findConditionByProgramCodeAndTransaction(String programCode, String transaction) {
 		ApiResponse response;
 		String key = "\"" + programCode + "#" + transaction + "\"";
-		BstLookupTableRow record = bstLookupTableRowRepository.findByTableNameAndKey("LKT_CHECK_CONDITIONS", key);
+		BstLookupTableRow record = bstLookupTableRowRepository.findByTableNameAndKey(IlinkTableName.LKT_CHECK_CONDITIONS, key);
 		if (record != null) {
 			List<HashMap<String, String>> listCondition = new ArrayList<>();
 			if (record.getValue() != null) {
@@ -66,8 +70,10 @@ public class ConditionServiceImpl implements ConditionService {
 				for (int i = 0; i < listConditonFromIlink.size(); i++) {
 					if (!listConditonFromIlink.get(i).equals("\"" + "\"")) {
 						HashMap<String, String> condition = new HashMap<>();
+						String[] value = listConditonFromIlink.get(i).replaceAll("\"", "").split("#");
+						condition.put("conditionName", value[1].trim());
+						condition.put("ilinkServiceName", value[0].trim());
 						condition.put("order", String.valueOf(i + 1));
-						condition.put("conditionName", listConditonFromIlink.get(i).replaceAll("\"", ""));
 						listCondition.add(condition);
 					}
 				}

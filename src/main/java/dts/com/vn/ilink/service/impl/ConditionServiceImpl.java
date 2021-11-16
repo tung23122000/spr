@@ -161,10 +161,10 @@ public class ConditionServiceImpl implements ConditionService {
 			record.setValue(newValue.toString());
 			bstLookupTableRowRepository.saveAndFlush(record);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), record,
-					null, "Cập nhật danh sách điều kiện thành công.");
+					null, "Cập nhật danh sách điều kiện thành công");
 		} else {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listCondition,
-					null, "Không tồn tại bản ghi nào phù hợp.");
+					null, "Không tồn tại bản ghi nào phù hợp");
 		}
 		return response;
 	}
@@ -180,6 +180,15 @@ public class ConditionServiceImpl implements ConditionService {
 	 */
 	@Override
 	public ApiResponse deleteListCondition(String programCode, String transaction) {
-		return null;
+		ApiResponse response;
+		String key = "\"" + programCode + "#" + transaction + "\"";
+		// Tìm bản ghi để update
+		BstLookupTableRow record = bstLookupTableRowRepository.findByTableNameAndKey("LKT_CHECK_CONDITIONS", key);
+		if (record != null) {
+			bstLookupTableRowRepository.delete(record);
+		}
+		response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), record,
+				null, "Xóa danh sách điều kiện thành công");
+		return response;
 	}
 }

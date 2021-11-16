@@ -11,6 +11,10 @@ public interface ConditionService {
 
 	ApiResponse findConditionByProgramCodeAndTransaction(String programCode, String transaction);
 
+	ApiResponse createListCondition(String programCode, String transaction, List<Condition> listCondition);
+
 	ApiResponse updateListCondition(String programCode, String transaction, List<Condition> listCondition);
+
+	ApiResponse deleteListCondition(String programCode, String transaction);
 
 }

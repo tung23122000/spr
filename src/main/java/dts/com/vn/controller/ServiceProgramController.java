@@ -167,6 +167,24 @@ public class ServiceProgramController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@GetMapping("/find-by-package-id-without-pageable/{packageId}")
+	public ResponseEntity<ApiResponse> findByPackageIdWithoutPageable(@PathVariable(name = "packageId") Long packageId) {
+		ApiResponse response;
+		try {
+			List<ServiceProgram> serviceProgramList =
+					serviceProgramService.findByPackageIdWithoutPageable(packageId);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), serviceProgramList);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+			logger.error("SERVICE_PACKAGE_NOT_FOUND", response);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("FIND_BY_PACKAGE_ID_NOT_FOUND", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
 	@GetMapping("/detail-service-program/{programId}")
 	public ResponseEntity<ApiResponse> detailServiceProgram(
 			@PathVariable(name = "programId", required = true) Long programId,

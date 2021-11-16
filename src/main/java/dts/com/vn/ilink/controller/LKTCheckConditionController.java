@@ -44,7 +44,7 @@ public class LKTCheckConditionController {
 		}
 	}
 
-	@ApiOperation(value = "Lấy danh sách điều kiện đang có của 1 chương trình")
+	@ApiOperation(value = "Lấy danh sách điều kiện đang có của 1 chương trình theo 1 luồng")
 	@GetMapping("/find-conditon-by-programCode")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> findConditionByProgramCodeAndTransaction(@RequestParam String programCode,
@@ -64,7 +64,23 @@ public class LKTCheckConditionController {
 		}
 	}
 
-	@ApiOperation(value = "Cập nhật danh sách điều kiện của 1 chương trình")
+	@ApiOperation(value = "Thêm mới danh sách điều kiện của 1 chương trình theo 1 luồng")
+	@PostMapping("/create-list-condition")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> createListCondition(@RequestBody ListConditionRequest request) {
+		logger.info("==========>   " + new Gson().toJson(request));
+		ApiResponse response;
+		try {
+			response = conditionService.updateListCondition(request.getProgramCode(), request.getTransaction(), request.getListCondition());
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			logger.error(ex.toString());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Cập nhật danh sách điều kiện của 1 chương trình theo 1 luồng")
 	@PostMapping("/update-list-condition")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> updateListCondition(@RequestBody ListConditionRequest request) {

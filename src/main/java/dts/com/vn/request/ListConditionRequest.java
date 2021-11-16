@@ -1,8 +1,8 @@
 package dts.com.vn.request;
 
+import dts.com.vn.ilink.entities.Condition;
 import lombok.Data;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -12,6 +12,6 @@ public class ListConditionRequest {
 
 	private String transaction;
 
-	private List<HashMap<String, String>> listCondition;
+	private List<Condition> listCondition;
 
 }

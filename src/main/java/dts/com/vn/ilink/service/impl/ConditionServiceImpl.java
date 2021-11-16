@@ -4,6 +4,7 @@ import dts.com.vn.entities.ListCondition;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.entities.BstLookupTableRow;
+import dts.com.vn.ilink.entities.Condition;
 import dts.com.vn.ilink.repository.BstLookupTableRowRepository;
 import dts.com.vn.ilink.service.ConditionService;
 import dts.com.vn.repository.ListConditionRepository;
@@ -11,10 +12,7 @@ import dts.com.vn.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ConditionServiceImpl implements ConditionService {
@@ -86,7 +84,7 @@ public class ConditionServiceImpl implements ConditionService {
 	}
 
 	@Override
-	public ApiResponse updateListCondition(String programCode, String transaction, List<HashMap<String, String>> listCondition) {
+	public ApiResponse updateListCondition(String programCode, String transaction, List<Condition> listCondition) {
 		ApiResponse response;
 		String key = "\"" + programCode + "#" + transaction + "\"";
 		// Tìm bản ghi để update
@@ -94,8 +92,10 @@ public class ConditionServiceImpl implements ConditionService {
 		if (record != null) {
 			// Build danh sách các điều kiện
 			StringBuilder newValue = new StringBuilder();
+			// Sắp sếp lại danh sách điều kiện theo thứ tự dựa vào order
+			listCondition.sort(Comparator.comparing(Condition::getOrder));
 			for (int i = 0; i < listCondition.size(); i++) {
-				String conditionName = "\"" + listCondition.get(i).get("conditionName") + "\"";
+				String conditionName = "\"" + listCondition.get(i).getConditionName() + "\"";
 				if (listCondition.get(i).equals(listCondition.get(listCondition.size() - 1))) {
 					newValue.append(conditionName);
 				} else {
@@ -104,7 +104,7 @@ public class ConditionServiceImpl implements ConditionService {
 			}
 			record.setValue(newValue.toString());
 			bstLookupTableRowRepository.saveAndFlush(record);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listCondition,
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), record,
 					null, "Cập nhật danh sách điều kiện thành công.");
 		} else {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listCondition,

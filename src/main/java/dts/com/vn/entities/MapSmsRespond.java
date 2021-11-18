@@ -26,6 +26,9 @@ public class MapSmsRespond {
     @Column(name = "shortcode")
     private String shortcode;
 
+    @Column(name = "source_vas")
+    private String sourceVas;
+
     @ManyToOne
     @JoinColumn(name = "program_id")
     private ServiceProgram serviceProgram;
@@ -40,5 +43,6 @@ public class MapSmsRespond {
         this.mapSmsRespond = mapSmsRespondRequest.getMapSmsRespond();
         this.description = mapSmsRespondRequest.getDescription();
         this.shortcode = mapSmsRespondRequest.getShortcode();
+        this.sourceVas = mapSmsRespondRequest.getSourceVas();
     }
 }

@@ -13,10 +13,11 @@ import java.util.List;
 @Repository
 public interface MapServicePackageRepository extends JpaRepository<MapServicePackage, Long> {
 
-	@Query("select m from MapServicePackage m where m.serviceProgram.programId is not null order by m.mapId desc")
+	@Query("select m from MapServicePackage m where m.serviceProgram.programId is not null and m.extSystem.extSystemId = 382 order by m.mapId desc")
 	Page<MapServicePackage> findAll(Pageable pageable);
 
 	@Query("select m from MapServicePackage m where m.serviceProgram.programId is not null "
+			+ "and m.extSystem.extSystemId = 382 "
 			+ "and ((:search is not null and upper(m.regMapCode) like CONCAT('%',upper(:search),'%')) or "
 			+ "(:search is not null and upper(m.delMapCode) like CONCAT('%',upper(:search),'%')) "
 			+ "or (:search is not null and upper(m.promCode) like CONCAT('%',upper(:search),'%')) "
@@ -25,10 +26,10 @@ public interface MapServicePackageRepository extends JpaRepository<MapServicePac
 			+ "order by m.mapId desc")
 	Page<MapServicePackage> findAll(@Param("search") String search, Pageable pageable);
 
-	@Query("select m from MapServicePackage m where m.serviceProgram.programId = :programId order by m.mapId desc")
+	@Query("select m from MapServicePackage m where m.serviceProgram.programId = :programId and m.extSystem.extSystemId = 382 order by m.mapId desc")
 	Page<MapServicePackage> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 
-	@Query("SELECT msp FROM MapServicePackage msp WHERE msp.packageId = ?1 AND msp.serviceProgram.programId = ?2")
+	@Query("SELECT msp FROM MapServicePackage msp WHERE msp.packageId = ?1 AND msp.serviceProgram.programId = ?2 and msp.extSystem.extSystemId = 382")
 	List<MapServicePackage> findByPackageIdAndProgramId(Long packageId, Long programId);
 
 }

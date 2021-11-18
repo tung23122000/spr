@@ -35,8 +35,12 @@ public class BucketsInfoService {
 	}
 
 	public BucketsInfo add(AddBucketsInfoRequest request) {
-		if (request.getBundleType() == null)
+		if (request.getBundleType() == null) {
 			request.setBundleType("0");
+		}
+		if (request.getSubsType() == null) {
+			request.setSubsType("2");
+		}
 		ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getProgramId())
 				.orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
 		return bucketsInfoRepository.save(new BucketsInfo(request, serviceProgram));
@@ -52,8 +56,16 @@ public class BucketsInfoService {
 		bucketsInfo.setBucType(request.getBucType());
 		bucketsInfo.setBucAddUnit(request.getBucAddUnit());
 		bucketsInfo.setBucAddDay(request.getBucAddDay());
-		bucketsInfo.setBundleType(request.getBundleType());
-		bucketsInfo.setSubsType(request.getSubsType());
+		if (request.getBundleType() == null) {
+			bucketsInfo.setBundleType("0");
+		} else {
+			bucketsInfo.setBundleType(request.getBundleType());
+		}
+		if (request.getSubsType() == null) {
+			bucketsInfo.setSubsType("2");
+		} else {
+			bucketsInfo.setSubsType(request.getSubsType());
+		}
 		bucketsInfo.setSubsDelayTime(request.getSubDelayTime());
 		bucketsInfo.setBucUnit(request.getBucUnit());
 		bucketsInfo.setStaDate(

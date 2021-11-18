@@ -146,6 +146,8 @@ public class ServicePackage {
 		this.pcrfGroup = req.getPcrfGroup();
 		this.isRetry = req.getIsRetry();
 		this.systemOwner = req.getSystemOwner();
+		// add 18/11/2021
+		this.displayStatus = "1";
 	}
 
 	public ServicePackage() {

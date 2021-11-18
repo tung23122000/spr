@@ -15,4 +15,6 @@ public class MapSmsRespondRequest {
     private String shortcode;
 
     private Long programId;
+
+    private String sourceVas;
 }

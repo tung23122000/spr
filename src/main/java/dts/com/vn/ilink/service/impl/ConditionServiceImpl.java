@@ -83,6 +83,62 @@ public class ConditionServiceImpl implements ConditionService {
 		return response;
 	}
 
+	/**
+	 * Description - Tạo mới danh sách điều kiện cho 1 CT vs 1 luồng
+	 *
+	 * @param programCode   - Mã chương trình
+	 * @param transaction   - Luồng
+	 * @param listCondition - Danh sách điều kiện
+	 * @return any
+	 * @author - giangdh
+	 * @created - 11/16/2021
+	 */
+	@Override
+	public ApiResponse createListCondition(String programCode, String transaction, List<Condition> listCondition) {
+		ApiResponse response;
+		String key = "\"" + programCode + "#" + transaction + "\"";
+		// Tìm xem có bản ghi trùng không
+		BstLookupTableRow record = bstLookupTableRowRepository.findByTableNameAndKey("LKT_CHECK_CONDITIONS", key);
+		if (record != null) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), record,
+					null, "Đã tồn tại bản ghi với chương trình và luồng này");
+		} else {
+			// Build danh sách các điều kiện
+			StringBuilder newValue = new StringBuilder();
+			// Sắp sếp lại danh sách điều kiện theo thứ tự dựa vào order
+			listCondition.sort(Comparator.comparing(Condition::getOrder));
+			for (int i = 0; i < listCondition.size(); i++) {
+				String conditionName = "\"" + listCondition.get(i).getConditionName() + "\"";
+				if (listCondition.get(i).equals(listCondition.get(listCondition.size() - 1))) {
+					newValue.append(conditionName);
+				} else {
+					newValue.append(conditionName).append(",,");
+				}
+			}
+			// Tạo mới 1 record
+			BstLookupTableRow row = new BstLookupTableRow();
+			Long rowId = bstLookupTableRowRepository.getMaxRowId(702) + 1;
+			row.setTableId(702L);
+			row.setRowId(rowId);
+			row.setKey(key);
+			row.setValue(newValue.toString());
+			bstLookupTableRowRepository.saveAndFlush(row);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), row,
+					null, "Thêm mới danh sách điều kiện thành công");
+		}
+		return response;
+	}
+
+	/**
+	 * Description - Cập nhật danh sách điều kiện cho 1 CT vs 1 luồng
+	 *
+	 * @param programCode   - Mã chương trình
+	 * @param transaction   - Luồng
+	 * @param listCondition - Danh sách điều kiện
+	 * @return any
+	 * @author - giangdh
+	 * @created - 11/16/2021
+	 */
 	@Override
 	public ApiResponse updateListCondition(String programCode, String transaction, List<Condition> listCondition) {
 		ApiResponse response;
@@ -105,11 +161,34 @@ public class ConditionServiceImpl implements ConditionService {
 			record.setValue(newValue.toString());
 			bstLookupTableRowRepository.saveAndFlush(record);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), record,
-					null, "Cập nhật danh sách điều kiện thành công.");
+					null, "Cập nhật danh sách điều kiện thành công");
 		} else {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listCondition,
-					null, "Không tồn tại bản ghi nào phù hợp.");
+					null, "Không tồn tại bản ghi nào phù hợp");
 		}
+		return response;
+	}
+
+	/**
+	 * Description - Xóa danh sách điều kiện cho 1 CT vs 1 luồng
+	 *
+	 * @param programCode - Mã chương trình
+	 * @param transaction - Luồng
+	 * @return any
+	 * @author - giangdh
+	 * @created - 11/16/2021
+	 */
+	@Override
+	public ApiResponse deleteListCondition(String programCode, String transaction) {
+		ApiResponse response;
+		String key = "\"" + programCode + "#" + transaction + "\"";
+		// Tìm bản ghi để update
+		BstLookupTableRow record = bstLookupTableRowRepository.findByTableNameAndKey("LKT_CHECK_CONDITIONS", key);
+		if (record != null) {
+			bstLookupTableRowRepository.delete(record);
+		}
+		response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), record,
+				null, "Xóa danh sách điều kiện thành công");
 		return response;
 	}
 }

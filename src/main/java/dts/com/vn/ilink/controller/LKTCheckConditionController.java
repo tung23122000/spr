@@ -71,7 +71,7 @@ public class LKTCheckConditionController {
 		logger.info("==========>   " + new Gson().toJson(request));
 		ApiResponse response;
 		try {
-			response = conditionService.updateListCondition(request.getProgramCode(), request.getTransaction(), request.getListCondition());
+			response = conditionService.createListCondition(request.getProgramCode(), request.getTransaction(), request.getListCondition());
 			return ResponseEntity.ok().body(response);
 		} catch (Exception ex) {
 			logger.error(ex.toString());
@@ -88,6 +88,22 @@ public class LKTCheckConditionController {
 		ApiResponse response;
 		try {
 			response = conditionService.updateListCondition(request.getProgramCode(), request.getTransaction(), request.getListCondition());
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			logger.error(ex.toString());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Cập nhật danh sách điều kiện của 1 chương trình theo 1 luồng")
+	@PostMapping("/delete-list-condition")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> deleteListCondition(@RequestBody ListConditionRequest request) {
+		logger.info("==========>   " + new Gson().toJson(request));
+		ApiResponse response;
+		try {
+			response = conditionService.deleteListCondition(request.getProgramCode(), request.getTransaction());
 			return ResponseEntity.ok().body(response);
 		} catch (Exception ex) {
 			logger.error(ex.toString());

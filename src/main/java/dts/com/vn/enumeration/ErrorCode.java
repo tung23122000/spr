@@ -49,6 +49,7 @@ public enum ErrorCode {
 	DELETE_NDS_TYPE_PARAM_PROGRAM_FAILED("error.delete.nds.type.param.program", "Lỗi khi xóa cấu hình PCRF"),
 	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
 	DUPLICATE_SMS_MO("error.duplicate.sms.mo", "Cú pháp không được trùng trong cùng 1 thời điểm"),
+	DUPLICATE_SOAP_REQUEST("error.duplicate.soap.request", "Soap Request không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_PROGRAM_CODE("error.duplicate.program.code", "Mã chương trình không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_SMS_RESPOND("error.duplicate.sms.respond", "SMS Respond đã tồn tại trong hệ thống"),
 	ADD_ISDN_DETAIL_CENTER("error.add.isdn.detail.center", "Lỗi khi thêm mới CTKV"),

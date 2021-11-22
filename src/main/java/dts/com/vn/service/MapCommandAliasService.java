@@ -33,6 +33,12 @@ public class MapCommandAliasService {
     public MapCommandAlias add(MapCommandAliasRequest request) {
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
+        // Update 22/11/2021
+        if (request.getSoapRequest() == null) {
+            if (request.getCmdTransCode() != "DK" && request.getCmdTransCode() != "ADDM" && request.getCmdTransCode() != "DELM") {
+                throw new RestApiException(ErrorCode.ADD_COMMAND_ALIAS_FAILED);
+            }
+        }
         // Tìm ra tất cả serviceProgram trùng smsMo
         List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMo(request.getSmsMo());
         // Check trùng khoảng thời gian
@@ -46,6 +52,21 @@ public class MapCommandAliasService {
                 }
             }
         }
+
+        // Tìm ra tất cả serviceProgram trùng soapRequest
+        List<ServiceProgram> listDuplicateSoapRequest = mapCommandAliasRepository.findBySoapRequest(request.getSoapRequest());
+        // Check trùng khoảng thời gian
+        if (listDuplicateSoapRequest.size() > 0) {
+            for (ServiceProgram item: listDuplicateSoapRequest) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_SOAP_REQUEST);
+                }
+            }
+        }
+
         return mapCommandAliasRepository.save(new MapCommandAlias(request, serviceProgram));
     }
 
@@ -53,6 +74,13 @@ public class MapCommandAliasService {
         MapCommandAlias entity = findById(request.getCmdAliasId());
         ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getServiceProgram())
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
+        // Update 22/11/2021
+        if (request.getSoapRequest() == null) {
+            if (request.getCmdTransCode() != "DK" && request.getCmdTransCode() != "ADDM" && request.getCmdTransCode() != "DELM") {
+                throw new RestApiException(ErrorCode.ADD_COMMAND_ALIAS_FAILED);
+            }
+        }
+
         // Tìm ra tất cả serviceProgram trùng smsMo
         List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(request.getSmsMo(), request.getCmdAliasId());
         // Check trùng khoảng thời gian
@@ -62,6 +90,19 @@ public class MapCommandAliasService {
                 // Nếu 1 trường hợp trùng là loại bỏ luôn.
                 // Nếu tất cả trường hợp đều không trùng thì mới save
                 throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
+            }
+        }
+        // Tìm ra tất cả serviceProgram trùng soapRequest
+        List<ServiceProgram> listDuplicateSoapRequest = mapCommandAliasRepository.findBySoapRequest(request.getSoapRequest());
+        // Check trùng khoảng thời gian
+        if (listDuplicateSoapRequest.size() > 0) {
+            for (ServiceProgram item: listDuplicateSoapRequest) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_SOAP_REQUEST);
+                }
             }
         }
         entity.setSmsMo(request.getSmsMo());
@@ -98,7 +139,7 @@ public class MapCommandAliasService {
                 }
             } else {
                 if (serviceProgramA.getEndDate().toEpochMilli() >= serviceProgramB.getStaDate().toEpochMilli() &&
-                    serviceProgramA.getStaDate().toEpochMilli() <= serviceProgramB.getEndDate().toEpochMilli()) {
+                        serviceProgramA.getStaDate().toEpochMilli() <= serviceProgramB.getEndDate().toEpochMilli()) {
                     return true;
                 }
             }

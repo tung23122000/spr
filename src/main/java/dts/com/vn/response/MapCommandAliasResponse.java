@@ -16,6 +16,8 @@ public class MapCommandAliasResponse {
 
     private String smsMo;
 
+    private String cmdTransCode;
+
     private String soapRequest;
 
     public MapCommandAliasResponse(MapCommandAlias entity) {
@@ -27,6 +29,7 @@ public class MapCommandAliasResponse {
                 Objects.nonNull(entity.getServiceProgram()) ? entity.getServiceProgram().getProgramId()
                         : null;
         this.smsMo = entity.getSmsMo();
+        this.cmdTransCode = entity.getCmdTransCode();
         this.soapRequest = entity.getSoapRequest();
     }
 }

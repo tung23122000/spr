@@ -26,9 +26,9 @@ public class ListDetailNew {
     @Column(name = "isdn_list_id")
     private Long isdnListId;
 
-    @Column(name = "data")
+    @Column(name = "details")
     @Type(type = "jsonb")
-    private List<JsonIsdn> data;
+    private List<JsonIsdn> details;
 
     public ListDetailNew() {
 
@@ -37,6 +37,6 @@ public class ListDetailNew {
     public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data) {
         this.listDetailId = listDetailId;
         this.isdnListId = isdnListId;
-        this.data = data;
+        this.details = data;
     }
 }

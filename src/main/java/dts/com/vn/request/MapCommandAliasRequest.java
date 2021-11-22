@@ -13,6 +13,8 @@ public class MapCommandAliasRequest {
 
     private Long serviceProgram;
 
+    private String cmdTransCode;
+
     private String smsMo;
 
     private String soapRequest;

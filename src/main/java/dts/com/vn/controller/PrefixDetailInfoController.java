@@ -7,6 +7,8 @@ import dts.com.vn.response.ApiResponse;
 import dts.com.vn.service.PrefixDetailInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,10 @@ public class PrefixDetailInfoController {
     }
 
     @GetMapping("/getPrefixDetailById/{prefixId}")
-    public ResponseEntity<ApiResponse> getPrefixDetailById(@PathVariable("prefixId") Long prefixId){
+    public ResponseEntity<ApiResponse> getPrefixDetailById(@PathVariable("prefixId") Long prefixId, Pageable pageable){
         ApiResponse response = null;
         try {
-            List<PrefixDetailInfo> item = prefixDetailInfoService.getPrefixDetailById(prefixId);
+            Page<PrefixDetailInfo> item = prefixDetailInfoService.getPrefixDetailById(prefixId, pageable);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), item);
         } catch (Exception ex) {
             ex.printStackTrace();

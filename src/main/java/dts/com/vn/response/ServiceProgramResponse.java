@@ -70,6 +70,8 @@ public class ServiceProgramResponse {
 
 	private Boolean isOnKtPro;
 
+	private String expireByOldPackage;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -108,6 +110,7 @@ public class ServiceProgramResponse {
 		this.msgBeforeRenew = service.getMsgBeforeRenew();
 		this.isDefaultProgram = service.getIsDefaultProgram();
 		this.isOnKtPro = service.getIsOnKtPro();
+		this.expireByOldPackage = service.getExpireByOldPackage();
 	}
 
 

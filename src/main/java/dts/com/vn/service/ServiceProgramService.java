@@ -224,6 +224,7 @@ public class ServiceProgramService {
             servicePr.setMsgBeforeRenew(request.getMsgBeforeRenew());
             servicePr.setIsDefaultProgram(request.getIsDefaultProgram());
             servicePr.setIsOnKtPro(request.getIsOnKtPro());
+            servicePr.setExpireByOldPackage(request.getExpireByOldPackage());
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);

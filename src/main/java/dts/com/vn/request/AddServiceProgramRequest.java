@@ -65,4 +65,5 @@ public class AddServiceProgramRequest {
 
 	private Boolean isOnKtPro;
 
+	private String expireByOldPackage;
 }

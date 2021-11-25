@@ -146,6 +146,10 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "is_on_kt_pro")
 	private Boolean isOnKtPro;
 
+	// 25/11/2021: Thêm HSD theo gói cước cũ
+	@Column(name = "condition")
+	private String expireByOldPackage;
+
 	public ServiceProgram() {
 	}
 
@@ -184,6 +188,7 @@ public class ServiceProgram implements Cloneable {
 		this.msgBeforeRenew = request.getMsgBeforeRenew();
 		this.isDefaultProgram = request.getIsDefaultProgram();
 		this.isOnKtPro = request.getIsOnKtPro();
+		this.expireByOldPackage = request.getExpireByOldPackage();
 	}
 
 	//	Convert A#B#C

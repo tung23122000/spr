@@ -241,7 +241,7 @@ public class ServicePackageController {
     @GetMapping("/find-block-in-without-service-type/{packageId}")
     public ResponseEntity<ApiResponse> findBlockINWithoutServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
         ApiResponse response;
-        List<ServicePackage> returnList;
+        HashSet<ServicePackage> returnList;
         try {
             returnList = servicePackageService.findBlockINWithoutServiceType(packageId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);
@@ -259,7 +259,7 @@ public class ServicePackageController {
     @GetMapping("/find-block-in-with-service-type/{packageId}")
     public ResponseEntity<ApiResponse> findBlockINWithServiceType(@PathVariable(name = "packageId", required = true) Long packageId) {
         ApiResponse response;
-        List<ServicePackage> returnList;
+        HashSet<ServicePackage> returnList;
         try {
             returnList = servicePackageService.findBlockINWithServiceType(packageId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), returnList);

@@ -64,7 +64,7 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 //	List<BucketsInfo> findBucketsInfo(Long id);
 
 	// Chặn IN không cùng nhóm
-	@Query("SELECT spa FROM ServicePackage spa " +
+	@Query("SELECT DISTINCT spa FROM ServicePackage spa " +
 			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
 			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
 			" WHERE spa.packageId <> :packageId AND spa.serviceType.serviceTypeId <> :serviceTypeId  " +
@@ -72,7 +72,7 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	List<ServicePackage> findBlockINWithoutServiceType(Long packageId, String bucType, String bucName, Long serviceTypeId);
 
 	// Chặn IN cùng nhóm
-	@Query("SELECT spa FROM ServicePackage spa " +
+	@Query("SELECT DISTINCT spa FROM ServicePackage spa " +
 			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
 			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +
 			" WHERE spa.packageId <> :packageId AND spa.serviceType.serviceTypeId = :serviceTypeId  " +
@@ -80,12 +80,12 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	List<ServicePackage> findBlockINWithServiceType(Long packageId, String bucType, String bucName, Long serviceTypeId);
 
 	// Chặn PCRF không cùng nhóm
-	@Query("SELECT spa FROM ServicePackage spa " +
+	@Query("SELECT DISTINCT spa FROM ServicePackage spa " +
 			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId AND spa.serviceType.serviceTypeId <> :serviceTypeId ")
 	List<ServicePackage> findBlockPCRFWithoutServiceType(Long packageId, String pcrfGroupId, Long serviceTypeId);
 
 	// Chặn PCRF cùng nhóm
-	@Query("SELECT spa FROM ServicePackage spa " +
+	@Query("SELECT DISTINCT spa FROM ServicePackage spa " +
 			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId AND spa.serviceType.serviceTypeId = :serviceTypeId ")
 	List<ServicePackage> findBlockPCRFWithServiceType(Long packageId, String pcrfGroupId, Long serviceTypeId);
 }

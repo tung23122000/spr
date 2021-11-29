@@ -164,7 +164,7 @@ public class ServicePackageService {
 //	}
 
 	// Chặn IN không cùng nhóm
-	public List<ServicePackage> findBlockINWithoutServiceType(Long packageId) {
+	public HashSet<ServicePackage> findBlockINWithoutServiceType(Long packageId) {
 		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
 		if (servicePackage == null) {
 			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
@@ -173,7 +173,7 @@ public class ServicePackageService {
 		if (bucketsInfoList.size() == 0) {
 			return null;
 		} else {
-			List<ServicePackage> servicePackageList = new ArrayList<>();
+			HashSet<ServicePackage> servicePackageList = new HashSet<>();
 			for (BucketsInfo bucketInfo : bucketsInfoList) {
 				List<ServicePackage> listBlockIN = servicePackageRepository.findBlockINWithoutServiceType(packageId, bucketInfo.getBucType(),
 						bucketInfo.getBucName(), servicePackage.getServiceType().getServiceTypeId());
@@ -184,7 +184,7 @@ public class ServicePackageService {
 	}
 
 	// Chặn IN cùng nhóm
-	public List<ServicePackage> findBlockINWithServiceType(Long packageId) {
+	public HashSet<ServicePackage> findBlockINWithServiceType(Long packageId) {
 		ServicePackage servicePackage = servicePackageRepository.findByPackageId(packageId);
 		if (servicePackage == null) {
 			throw new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND);
@@ -193,7 +193,7 @@ public class ServicePackageService {
 		if (bucketsInfoList.size() == 0) {
 			return null;
 		} else {
-			List<ServicePackage> servicePackageList = new ArrayList<>();
+			HashSet<ServicePackage> servicePackageList = new HashSet<>();
 			for (BucketsInfo bucketInfo : bucketsInfoList) {
 				List<ServicePackage> listBlockIN = servicePackageRepository.findBlockINWithServiceType(packageId, bucketInfo.getBucType(),
 						bucketInfo.getBucName(), servicePackage.getServiceType().getServiceTypeId());

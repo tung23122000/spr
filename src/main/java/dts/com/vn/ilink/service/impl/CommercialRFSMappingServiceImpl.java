@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,15 +29,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 	public ApiResponse findAll(String tableName, Pageable pageable) {
 		ApiResponse response = new ApiResponse();
 		Page<BstLookupTableRow> page = repository.findAll(tableName, pageable);
-		List<CommercialMapping> data = new ArrayList<>();
-		for (BstLookupTableRow row : page) {
-			CommercialMapping item = new CommercialMapping();
-			item.setTableId(row.getTableId());
-			item.setRowId(row.getRowId());
-			item.setCommercialPackageCode(row.getKey().replaceAll("\"", ""));
-			item.setRfsMapping(row.getValue().replaceAll("\"", ""));
-			data.add(item);
-		}
+		Page<CommercialMapping> data = page.map(CommercialMapping::new);
 		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 		response.setData(data);
 		response.setMessage("Lấy thông tin mapping gói cước với luồng thành công");

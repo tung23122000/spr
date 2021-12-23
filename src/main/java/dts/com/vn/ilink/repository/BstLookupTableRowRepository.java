@@ -25,7 +25,7 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 	@Query(nativeQuery = true, value = "SELECT r.* " +
 			"FROM bst_lookup_table_row AS r " +
 			"INNER JOIN bst_lookup_table AS tb ON tb.table_id = r.table_id " +
-			"WHERE tb.name = ?1")
+			"WHERE tb.name = ?1 ORDER BY r.row_id DESC")
 	Page<BstLookupTableRow> findAll(String tableName, Pageable pageable);
 
 }

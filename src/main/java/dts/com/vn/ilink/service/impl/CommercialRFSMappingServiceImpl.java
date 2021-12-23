@@ -60,7 +60,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 				repository.saveAndFlush(row);
 				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 				response.setData(row);
-				response.setMessage("Cập nhật dữ liệu thành công");
+				response.setMessage("Cập nhật bản ghi thành công");
 				return response;
 			} else {
 				throw new RuntimeException("Bản ghi không tồn tại trong bảng " + IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING);
@@ -75,13 +75,33 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 			repository.saveAndFlush(row);
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setData(row);
-			response.setMessage("Lưu dữ liệu thành công");
+			response.setMessage("Tạo mới bản ghi thành công");
 			return response;
 		}
 	}
 
 	@Override
 	public ApiResponse deleteMapping(CommercialMapping request) {
-		return null;
+		ApiResponse response = new ApiResponse();
+		if (request.getTableId() != null && request.getRowId() != null) {
+			BstLookupTableRowId id = new BstLookupTableRowId(request.getTableId(), request.getRowId());
+			Optional<BstLookupTableRow> optRow = repository.findById(id);
+			if (optRow.isPresent()) {
+				BstLookupTableRow row = optRow.get();
+				repository.delete(row);
+				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+				response.setData(null);
+				response.setMessage("Xóa bản ghi thành công");
+				return response;
+			} else {
+				throw new RuntimeException("Bản ghi không tồn tại trong bảng " + IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING);
+			}
+		} else {
+			response.setStatus(ApiResponseStatus.FAILED.getValue());
+			response.setData(request);
+			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
+			return response;
+		}
 	}
+
 }

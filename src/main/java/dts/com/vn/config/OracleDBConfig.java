@@ -32,9 +32,9 @@ public class OracleDBConfig {
 	}
 
 	@Bean(name = "oracleEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory
-			(EntityManagerFactoryBuilder builder,
-			 @Qualifier("oracleDatasource") DataSource dataSource) {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+			EntityManagerFactoryBuilder builder,
+			@Qualifier("oracleDatasource") DataSource dataSource) {
 		HashMap<String, Object> properties = new HashMap<>();
 		properties.put("hibernate.dialect", "org.hibernate.dialect.Oracle9iDialect");
 		return builder
@@ -47,8 +47,8 @@ public class OracleDBConfig {
 
 	@Bean(name = "oracleTransactionManager")
 	public PlatformTransactionManager transactionManager(
-			@Qualifier("oracleEntityManagerFactory") EntityManagerFactory barEntityManagerFactory) {
-		return new JpaTransactionManager(barEntityManagerFactory);
+			@Qualifier("oracleEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+		return new JpaTransactionManager(entityManagerFactory);
 	}
 
 }

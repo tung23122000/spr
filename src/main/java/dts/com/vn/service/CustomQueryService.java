@@ -5,7 +5,6 @@ import dts.com.vn.entities.AutoExtendPackage;
 import dts.com.vn.entities.ConstantDeclaration;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.Constant;
-import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.AutoExtendPackageRepository;
 import dts.com.vn.repository.ConstantDeclarationRepository;
 import dts.com.vn.response.ApiResponse;
@@ -55,7 +54,7 @@ public class CustomQueryService {
 		try {
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {
-			throw new RestApiException(new ApiResponse());
+			throw new RuntimeException();
 		}
 	}
 

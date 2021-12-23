@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <property name="LOG_HOME" value="/home/spr/logs-config"/>
+    <property name="LOG_HOME" value="./home/spr/logs-config"/>
     <property name="LOG_INFO" value="log_info"/>
     <property name="LOG_ERROR" value="log_error"/>
     <property name="DATE_FORMAT" value="%d{yyyy-MM-dd}"/>

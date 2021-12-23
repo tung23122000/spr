@@ -1,6 +1,3 @@
-server:
-  port: 9001
-
 spring:
   datasource:
     # Primary database
@@ -9,14 +6,22 @@ spring:
       username: spr
       password: Dts@12345
       driverClassName: org.postgresql.Driver
-
     # Secondary database
     secondary:
       jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
       username: VASP4_SUBS
       password: abcd1234
       driverClassName: oracle.jdbc.OracleDriver
+    # Database ILINK
+    third:
+      jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/ilink
+      username: ilink
+      password: ilink
+      driverClassName: org.postgresql.Driver
+
+app:
+  config-path: /web-admin/config/
+  auto-import: /home/spr/import/
 
 file:
-  upload-dir: D:/DTS/Uploads
-  config-package: D:/Source/spr-config-api/package-file.txt
+  upload-dir: /Users/jacksmacbookpro/Desktop/Upload/

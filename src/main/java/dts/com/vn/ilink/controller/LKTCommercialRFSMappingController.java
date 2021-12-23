@@ -54,18 +54,20 @@ public class LKTCommercialRFSMappingController {
 	@PostMapping("/create-mapping")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> createMapping(@RequestBody @Valid CommercialMapping request) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
 		ApiResponse response;
 		try {
 			response = commercialRFSMappingService.createMapping(request);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
 			return ResponseEntity.ok().body(response);
 		} catch (Exception ex) {
-			logger.error(ex.toString());
-			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
 
-	@ApiOperation(value = "Lấy danh sách mapping gói cước với luồng trong catalog")
+	@ApiOperation(value = "Xóa 1 bản ghi mapping gói cước với luồng trong catalog")
 	@DeleteMapping("/delete-mapping")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> deleteMapping(@RequestBody @Valid CommercialMapping request) {

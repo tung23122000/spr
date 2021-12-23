@@ -1,6 +1,8 @@
 package dts.com.vn.ilink.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -8,6 +10,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "bst_lookup_table_row", schema = "ilink")
 @IdClass(BstLookupTableRowId.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public class BstLookupTableRow {
 
 	@Id
@@ -23,5 +27,12 @@ public class BstLookupTableRow {
 
 	@Column(name = "value")
 	private String value;
+
+	public BstLookupTableRow(CommercialMapping mapping) {
+		this.tableId = mapping.getTableId();
+		this.rowId = mapping.getRowId();
+		this.key = mapping.getCommercialPackageCode();
+		this.value = mapping.getRfsMapping();
+	}
 
 }

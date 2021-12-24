@@ -26,12 +26,12 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 			"FROM bst_lookup_table_row AS r " +
 			"INNER JOIN bst_lookup_table AS tb ON tb.table_id = r.table_id " +
 			"WHERE tb.name = ?1 AND r.key = ?2")
-	Page<BstLookupTableRow> findAllRFSMappingWithSearchQuery(String tableName, String search, Pageable pageable);
+	Page<BstLookupTableRow> findAllWithSearch(String tableName, String search, Pageable pageable);
 
 	@Query(nativeQuery = true, value = "SELECT r.* " +
 			"FROM bst_lookup_table_row AS r " +
 			"INNER JOIN bst_lookup_table AS tb ON tb.table_id = r.table_id " +
 			"WHERE tb.name = ?1 ORDER BY r.row_id DESC")
-	Page<BstLookupTableRow> findAllRFSMappingWithoutSearchQuery(String tableName, Pageable pageable);
+	Page<BstLookupTableRow> findAllWithoutSearch(String tableName, Pageable pageable);
 
 }

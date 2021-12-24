@@ -38,10 +38,9 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 		Page<BstLookupTableRow> page;
 		if (StringUtils.isNotBlank(search)) {
 			String keySearch = "\"" + search.toUpperCase() + "\"";
-			page = repository.findAllRFSMappingWithSearchQuery(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING,
-					keySearch, pageable);
+			page = repository.findAllWithSearch(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, keySearch, pageable);
 		} else {
-			page = repository.findAllRFSMappingWithoutSearchQuery(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, pageable);
+			page = repository.findAllWithoutSearch(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, pageable);
 		}
 		Page<CommercialMapping> data = page.map(CommercialMapping::new);
 		response.setStatus(ApiResponseStatus.SUCCESS.getValue());

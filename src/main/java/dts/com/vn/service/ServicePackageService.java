@@ -9,6 +9,7 @@ import dts.com.vn.repository.*;
 import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.request.SubServicePackageRequest;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.response.ServicePackageFoResponse;
 import dts.com.vn.security.jwt.TokenProvider;
 import dts.com.vn.util.DateTimeUtil;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ServicePackageService {
@@ -356,10 +361,9 @@ public class ServicePackageService {
 	public ApiResponse findAllFOPackage() {
 		ApiResponse response = new ApiResponse();
 		List<ServicePackage> lstServicePackage = servicePackageRepository.findAllFOPackage();
-		List<String> listPackageCode = new ArrayList<>();
-		lstServicePackage.stream()
-				.map(ServicePackage::getCode)
-				.forEachOrdered(listPackageCode::add);
+		List<ServicePackageFoResponse> listPackageCode = lstServicePackage.stream()
+				.map(developer -> new ServicePackageFoResponse(developer.getCode()))
+				.collect(Collectors.toList());
 		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 		response.setData(listPackageCode);
 		response.setMessage("Lấy dữ liệu thành công");

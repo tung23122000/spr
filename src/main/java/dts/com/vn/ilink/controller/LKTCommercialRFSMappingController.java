@@ -3,7 +3,6 @@ package dts.com.vn.ilink.controller;
 import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
-import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.entities.CommercialMapping;
 import dts.com.vn.ilink.service.CommercialRFSMappingService;
 import dts.com.vn.response.ApiResponse;
@@ -36,11 +35,12 @@ public class LKTCommercialRFSMappingController {
 	@ApiOperation(value = "Lấy danh sách mapping gói cước với luồng trong catalog")
 	@GetMapping("/find-all-mapping")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> findAll(Pageable pageable) {
+	public ResponseEntity<ApiResponse> findAll(@RequestParam(required = false) String search,
+	                                           Pageable pageable) {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, pageable);
 		ApiResponse response;
 		try {
-			response = commercialRFSMappingService.findAll(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, pageable);
+			response = commercialRFSMappingService.findAll(search, pageable);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
 			return ResponseEntity.ok().body(response);
 		} catch (Exception ex) {

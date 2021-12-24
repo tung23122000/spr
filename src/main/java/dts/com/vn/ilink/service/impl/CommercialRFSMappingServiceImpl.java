@@ -8,6 +8,7 @@ import dts.com.vn.ilink.entities.CommercialMapping;
 import dts.com.vn.ilink.repository.BstLookupTableRowRepository;
 import dts.com.vn.ilink.service.CommercialRFSMappingService;
 import dts.com.vn.response.ApiResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +27,16 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 	}
 
 	@Override
-	public ApiResponse findAll(String tableName, Pageable pageable) {
+	public ApiResponse findAll(String search, Pageable pageable) {
 		ApiResponse response = new ApiResponse();
-		Page<BstLookupTableRow> page = repository.findAll(tableName, pageable);
+		Page<BstLookupTableRow> page;
+		if (StringUtils.isNotBlank(search)) {
+			String keySearch = "\"" + search + "\"";
+			page = repository.findAllRFSMappingWithSearchQuery(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING,
+					keySearch, pageable);
+		} else {
+			page = repository.findAllRFSMappingWithoutSearchQuery(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, pageable);
+		}
 		Page<CommercialMapping> data = page.map(CommercialMapping::new);
 		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 		response.setData(data);

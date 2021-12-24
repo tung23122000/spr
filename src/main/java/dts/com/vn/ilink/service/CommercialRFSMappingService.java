@@ -9,13 +9,13 @@ public interface CommercialRFSMappingService {
 	/**
 	 * Description - Hàm tìm kiếm phân trang
 	 *
-	 * @param tableName - Tên lookup table
-	 * @param pageable  - Số trang và số bản ghi của 1 trang
+	 * @param search   - Tên lookup table
+	 * @param pageable - Số trang và số bản ghi của 1 trang
 	 * @return any
 	 * @author - giangdh
 	 * @created - 23/12/2021
 	 */
-	ApiResponse findAll(String tableName, Pageable pageable);
+	ApiResponse findAll(String search, Pageable pageable);
 
 	/**
 	 * Description - Hàm tạo mới và update 1 bản ghi cho bảng LKT_COMMERCIAL_RFS_MAPPING

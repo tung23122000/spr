@@ -353,4 +353,17 @@ public class ServicePackageService {
 		servicePackageRepository.save(servicePackage);
 	}
 
+	public ApiResponse findAllFOPackage() {
+		ApiResponse response = new ApiResponse();
+		List<ServicePackage> lstServicePackage = servicePackageRepository.findAllFOPackage();
+		List<String> listPackageCode = new ArrayList<>();
+		lstServicePackage.stream()
+				.map(ServicePackage::getCode)
+				.forEachOrdered(listPackageCode::add);
+		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+		response.setData(listPackageCode);
+		response.setMessage("Lấy dữ liệu thành công");
+		return response;
+	}
+
 }

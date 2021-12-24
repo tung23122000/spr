@@ -1,7 +1,5 @@
 package dts.com.vn.repository;
 
-import dts.com.vn.entities.BucketsInfo;
-import dts.com.vn.entities.NdsTypeParamProgram;
 import dts.com.vn.entities.ServicePackage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -88,4 +86,8 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query("SELECT DISTINCT spa FROM ServicePackage spa " +
 			" WHERE spa.pcrfGroup like CONCAT('%',:pcrfGroupId,'%') AND spa.packageId <> :packageId AND spa.serviceType.serviceTypeId = :serviceTypeId ")
 	List<ServicePackage> findBlockPCRFWithServiceType(Long packageId, String pcrfGroupId, Long serviceTypeId);
+
+	@Query(value = "SELECT sp FROM ServicePackage sp WHERE sp.systemOwner = 'FO'")
+	List<ServicePackage> findAllFOPackage();
+
 }

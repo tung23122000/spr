@@ -3,9 +3,11 @@ package dts.com.vn.ilink.controller;
 import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
+import dts.com.vn.ilink.dto.CommercialMappingRequest;
 import dts.com.vn.ilink.entities.CommercialMapping;
 import dts.com.vn.ilink.service.CommercialRFSMappingService;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.service.ServicePackageService;
 import dts.com.vn.util.LogUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,9 +29,29 @@ public class LKTCommercialRFSMappingController {
 
 	private final CommercialRFSMappingService commercialRFSMappingService;
 
+	private final ServicePackageService servicePackageService;
+
 	@Autowired
-	public LKTCommercialRFSMappingController(CommercialRFSMappingService commercialRFSMappingService) {
+	public LKTCommercialRFSMappingController(CommercialRFSMappingService commercialRFSMappingService,
+	                                         ServicePackageService servicePackageService) {
 		this.commercialRFSMappingService = commercialRFSMappingService;
+		this.servicePackageService = servicePackageService;
+	}
+
+	@ApiOperation(value = "Lấy danh sách các gói cước đã chuyển sang hệ thống flowone")
+	@GetMapping("/find-all-flowone-package")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findAllFOPackage() {
+		ApiResponse response;
+		try {
+			response = servicePackageService.findAllFOPackage();
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
 	}
 
 	@ApiOperation(value = "Lấy danh sách mapping gói cước với luồng trong catalog")
@@ -53,7 +75,7 @@ public class LKTCommercialRFSMappingController {
 	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
 	@PostMapping("/create-mapping")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> createMapping(@RequestBody @Valid CommercialMapping request) {
+	public ResponseEntity<ApiResponse> createMapping(@RequestBody @Valid CommercialMappingRequest request) {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
 		ApiResponse response;
 		try {

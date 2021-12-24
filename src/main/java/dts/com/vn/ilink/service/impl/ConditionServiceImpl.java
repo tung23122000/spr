@@ -117,7 +117,7 @@ public class ConditionServiceImpl implements ConditionService {
 			}
 			// Tạo mới 1 record
 			BstLookupTableRow row = new BstLookupTableRow();
-			Long rowId = bstLookupTableRowRepository.getMaxRowId(702) + 1;
+			Long rowId = bstLookupTableRowRepository.getMaxRowId(702L) + 1;
 			row.setTableId(702L);
 			row.setRowId(rowId);
 			row.setKey(key);

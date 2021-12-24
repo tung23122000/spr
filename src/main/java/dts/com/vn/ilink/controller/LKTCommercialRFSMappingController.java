@@ -90,7 +90,7 @@ public class LKTCommercialRFSMappingController {
 	}
 
 	@ApiOperation(value = "Xóa 1 bản ghi mapping gói cước với luồng trong catalog")
-	@DeleteMapping("/delete-mapping")
+	@PostMapping("/delete-mapping")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> deleteMapping(@RequestBody @Valid CommercialMapping request) {
 		ApiResponse response;
@@ -100,7 +100,7 @@ public class LKTCommercialRFSMappingController {
 		} catch (Exception ex) {
 			logger.error(ex.toString());
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok().body(response);
 		}
 	}
 

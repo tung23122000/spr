@@ -37,7 +37,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 		ApiResponse response = new ApiResponse();
 		Page<BstLookupTableRow> page;
 		if (StringUtils.isNotBlank(search)) {
-			String keySearch = "\"" + search + "\"";
+			String keySearch = "\"" + search.toUpperCase() + "\"";
 			page = repository.findAllRFSMappingWithSearchQuery(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING,
 					keySearch, pageable);
 		} else {

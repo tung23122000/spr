@@ -85,7 +85,7 @@ public class LKTCommercialRFSMappingController {
 		} catch (Exception ex) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
 			LogUtil.writeLog(logger, LogConstants.ERROR, response);
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok().body(response);
 		}
 	}
 

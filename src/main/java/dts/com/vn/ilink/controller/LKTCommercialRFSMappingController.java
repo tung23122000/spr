@@ -11,6 +11,7 @@ import dts.com.vn.service.ServicePackageService;
 import dts.com.vn.util.LogUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class LKTCommercialRFSMappingController {
 	@ResponseBody
 	public ResponseEntity<ApiResponse> findAll(@RequestParam(required = false) String search,
 	                                           Pageable pageable) {
+		if (StringUtils.isNotBlank(search)) LogUtil.writeLog(logger, LogConstants.REQUEST, search);
 		LogUtil.writeLog(logger, LogConstants.REQUEST, pageable);
 		ApiResponse response;
 		try {

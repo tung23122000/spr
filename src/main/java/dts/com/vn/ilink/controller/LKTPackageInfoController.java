@@ -3,6 +3,7 @@ package dts.com.vn.ilink.controller;
 import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.ilink.service.PackageInfoService;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.util.LogUtil;
@@ -46,6 +47,23 @@ public class LKTPackageInfoController {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
 			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
+	@PostMapping("/create-packageInfo")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> createMapping(@RequestBody BstLookupTableRowRequestCustom request) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
+		ApiResponse response;
+		try {
+			response = packageInfoService.createPackageInfo(request);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.ok().body(response);
 		}
 	}
 

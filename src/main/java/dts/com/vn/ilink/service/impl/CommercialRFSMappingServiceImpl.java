@@ -2,7 +2,7 @@ package dts.com.vn.ilink.service.impl;
 
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.constants.IlinkTableName;
-import dts.com.vn.ilink.dto.CommercialMappingRequest;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequest;
 import dts.com.vn.ilink.entities.BstLookupTableRow;
 import dts.com.vn.ilink.entities.BstLookupTableRowId;
 import dts.com.vn.ilink.entities.CommercialMapping;
@@ -50,7 +50,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 	}
 
 	@Override
-	public ApiResponse createMapping(CommercialMappingRequest request) {
+	public ApiResponse createMapping(BstLookupTableRowRequest request) {
 		ApiResponse response = new ApiResponse();
 		// Lấy tableId của bảng từ tên bảng
 		Long tableId = lookupTableRepository.findByName(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING);
@@ -62,7 +62,6 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 				BstLookupTableRowId id = new BstLookupTableRowId(request.getTableId(), request.getRowId());
 				Optional<BstLookupTableRow> optRow = repository.findById(id);
 				if (optRow.isPresent()) {
-					// Update
 					BstLookupTableRow row = optRow.get();
 					row.setKey("\"" + request.getKey() + "\"");
 					row.setValue("\"" + request.getValue() + "\"");

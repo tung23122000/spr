@@ -3,7 +3,7 @@ package dts.com.vn.ilink.controller;
 import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
-import dts.com.vn.ilink.dto.CommercialMappingRequest;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequest;
 import dts.com.vn.ilink.entities.CommercialMapping;
 import dts.com.vn.ilink.service.CommercialRFSMappingService;
 import dts.com.vn.response.ApiResponse;
@@ -77,7 +77,7 @@ public class LKTCommercialRFSMappingController {
 	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
 	@PostMapping("/create-mapping")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> createMapping(@RequestBody @Valid CommercialMappingRequest request) {
+	public ResponseEntity<ApiResponse> createMapping(@RequestBody @Valid BstLookupTableRowRequest request) {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
 		ApiResponse response;
 		try {

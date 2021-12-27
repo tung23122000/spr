@@ -3,7 +3,7 @@ package dts.com.vn.ilink.dto;
 import lombok.Data;
 
 @Data
-public class CommercialMappingRequest {
+public class BstLookupTableRowRequest {
 
 	private Long tableId;
 

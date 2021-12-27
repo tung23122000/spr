@@ -1,7 +1,7 @@
 package dts.com.vn.ilink.service;
 
-import dts.com.vn.ilink.dto.CommercialMappingRequest;
-import dts.com.vn.ilink.entities.CommercialMapping;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequest;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.response.ApiResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -26,7 +26,7 @@ public interface PackageInfoService {
 	 * @author - giangdh
 	 * @created - 24/12/2021
 	 */
-	ApiResponse createMapping(CommercialMappingRequest request);
+	ApiResponse createPackageInfo(BstLookupTableRowRequestCustom request);
 
 	/**
 	 * Description - Hàm xóa 1 bản ghi cho bảng LKT_COMMERCIAL_RFS_MAPLKT_PACKAGE_INFOPING
@@ -36,6 +36,6 @@ public interface PackageInfoService {
 	 * @author - giangdh
 	 * @created - 24/12/2021
 	 */
-	ApiResponse deleteMapping(CommercialMapping request);
+	ApiResponse deletePackageInfo(BstLookupTableRowRequest request);
 
 }

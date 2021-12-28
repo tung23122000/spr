@@ -50,7 +50,7 @@ public class LKTPackageInfoController {
 		}
 	}
 
-	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
+	@ApiOperation(value = "Tạo mới 1 bản ghi trong bảng LKT_PACKAGE_INFO")
 	@PostMapping("/create-packageInfo")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> createPackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {
@@ -67,7 +67,7 @@ public class LKTPackageInfoController {
 		}
 	}
 
-	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
+	@ApiOperation(value = "Xóa 1 bản ghi trong bảng LKT_PACKAGE_INFO")
 	@PostMapping("/delete-packageInfo")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> deletePackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {

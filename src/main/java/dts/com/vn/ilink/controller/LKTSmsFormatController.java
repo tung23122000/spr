@@ -3,6 +3,7 @@ package dts.com.vn.ilink.controller;
 import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
+import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.ilink.service.SmsFormatService;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.util.LogUtil;
@@ -30,7 +31,7 @@ public class LKTSmsFormatController {
 		this.smsFormatService = smsFormatService;
 	}
 
-	@ApiOperation(value = "Lấy thông tin cấu hình của các gói cước trong bảng LKT_PACKAGE_INFO")
+	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
 	@GetMapping("/find-all-sms-format")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> findAll(@RequestParam(required = false) String search,
@@ -46,6 +47,40 @@ public class LKTSmsFormatController {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
 			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Tạo mới 1 bản ghi trong bảng LKT_SMS_FORMAT")
+	@PostMapping("/create-sms")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> createPackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
+		ApiResponse response;
+		try {
+			response = smsFormatService.createSMS(request);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.ok().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Xóa 1 bản ghi trong bảng LKT_SMS_FORMAT")
+	@PostMapping("/delete-sms")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> deletePackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
+		ApiResponse response;
+		try {
+			response = smsFormatService.deleteSMS(request);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.ok().body(response);
 		}
 	}
 

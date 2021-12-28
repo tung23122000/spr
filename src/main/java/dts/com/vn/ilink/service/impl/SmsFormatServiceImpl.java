@@ -4,7 +4,9 @@ import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.ilink.dto.BstLookupTableRowResponse;
+import dts.com.vn.ilink.dto.Value;
 import dts.com.vn.ilink.entities.BstLookupTableRow;
+import dts.com.vn.ilink.entities.BstLookupTableRowId;
 import dts.com.vn.ilink.repository.BstLookupTableRepository;
 import dts.com.vn.ilink.repository.BstLookupTableRowRepository;
 import dts.com.vn.ilink.service.SmsFormatService;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SmsFormatServiceImpl implements SmsFormatService {
@@ -48,11 +52,77 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 
 	@Override
 	public ApiResponse createSMS(BstLookupTableRowRequestCustom request) {
-		return null;
+		ApiResponse response = new ApiResponse();
+		// Lấy tableId của bảng từ tên bảng
+		Long tableId = lookupTableRepository.findByName(IlinkTableName.LKT_SMS_FORMAT);
+		if (tableId == null) {
+			throw new RuntimeException("Không tìm thấy bảng " + IlinkTableName.LKT_PACKAGE_INFO + " trên database ilink");
+		} else {
+			if (request.getTableId() != null && request.getRowId() != null) {
+				// Update
+				BstLookupTableRowId id = new BstLookupTableRowId(request.getTableId(), request.getRowId());
+				Optional<BstLookupTableRow> optRow = lookupTableRowRepository.findById(id);
+				if (optRow.isPresent()) {
+					BstLookupTableRow row = optRow.get();
+					StringBuilder valueBuilder = new StringBuilder();
+					for (Value value : request.getValues()) {
+						valueBuilder.append("\"").append(value.getValue()).append("\"").append(",,");
+					}
+					String value = valueBuilder.substring(0, valueBuilder.length() - 2);
+					row.setKey("\"" + request.getKey() + "\"");
+					row.setValue(value);
+					lookupTableRowRepository.saveAndFlush(row);
+					response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+					response.setData(row);
+					response.setMessage("Cập nhật bản ghi thành công");
+					return response;
+				} else {
+					throw new RuntimeException("Bản ghi không tồn tại trong bảng " + IlinkTableName.LKT_SMS_FORMAT);
+				}
+			} else {
+				// Create
+				Long rowId = lookupTableRowRepository.getMaxRowId(tableId) + 1;
+				StringBuilder valueBuilder = new StringBuilder();
+				for (Value value : request.getValues()) {
+					valueBuilder.append("\"").append(value.getValue()).append("\"").append(",,");
+				}
+				String value = valueBuilder.substring(0, valueBuilder.length() - 2);
+				BstLookupTableRow row = new BstLookupTableRow();
+				row.setTableId(tableId);
+				row.setRowId(rowId);
+				row.setKey("\"" + request.getKey() + "\"");
+				row.setValue(value);
+				lookupTableRowRepository.saveAndFlush(row);
+				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+				response.setData(row);
+				response.setMessage("Tạo mới bản ghi thành công");
+				return response;
+			}
+		}
 	}
 
 	@Override
 	public ApiResponse deleteSMS(BstLookupTableRowRequestCustom request) {
-		return null;
+		ApiResponse response = new ApiResponse();
+		if (request.getTableId() != null && request.getRowId() != null) {
+			BstLookupTableRowId id = new BstLookupTableRowId(request.getTableId(), request.getRowId());
+			Optional<BstLookupTableRow> optRow = lookupTableRowRepository.findById(id);
+			if (optRow.isPresent()) {
+				BstLookupTableRow row = optRow.get();
+				lookupTableRowRepository.delete(row);
+				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+				response.setData(null);
+				response.setMessage("Xóa bản ghi thành công");
+				return response;
+			} else {
+				throw new RuntimeException("Bản ghi không tồn tại trong bảng " + IlinkTableName.LKT_SMS_FORMAT);
+			}
+		} else {
+			response.setStatus(ApiResponseStatus.FAILED.getValue());
+			response.setData(request);
+			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
+			return response;
+		}
 	}
+
 }

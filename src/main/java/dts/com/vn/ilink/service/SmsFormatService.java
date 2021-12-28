@@ -4,37 +4,37 @@ import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.response.ApiResponse;
 import org.springframework.data.domain.Pageable;
 
-public interface PackageInfoService {
+public interface SmsFormatService {
 
 	/**
-	 * Description - Hàm tìm kiếm phân trang cho bảng LKT_PACKAGE_INFO
+	 * Description - Hàm tìm kiếm phân trang cho bảng LKT_SMS_FORMAT
 	 *
 	 * @param search   - Tên lookup table
 	 * @param pageable - Số trang và số bản ghi của 1 trang
 	 * @return any
 	 * @author - giangdh
-	 * @created - 24/12/2021
+	 * @created - 28/12/2021
 	 */
 	ApiResponse findAll(String search, Pageable pageable);
 
 	/**
-	 * Description - Hàm tạo mới và update 1 bản ghi cho bảng LKT_PACKAGE_INFO
+	 * Description - Hàm tạo mới và update 1 bản ghi cho bảng LKT_SMS_FORMAT
 	 *
 	 * @param request - Thông tin mapping gói cước vói luồng trên catalog
 	 * @return any
 	 * @author - giangdh
-	 * @created - 24/12/2021
+	 * @created - 28/12/2021
 	 */
-	ApiResponse createPackageInfo(BstLookupTableRowRequestCustom request);
+	ApiResponse createSMS(BstLookupTableRowRequestCustom request);
 
 	/**
-	 * Description - Hàm xóa 1 bản ghi cho bảng LKT_COMMERCIAL_RFS_MAPLKT_PACKAGE_INFOPING
+	 * Description - Hàm xóa 1 bản ghi cho bảng LKT_SMS_FORMAT
 	 *
 	 * @param request - Thông tin mapping gói cước vói luồng trên catalog
 	 * @return any
 	 * @author - giangdh
-	 * @created - 24/12/2021
+	 * @created - 28/12/2021
 	 */
-	ApiResponse deletePackageInfo(BstLookupTableRowRequestCustom request);
+	ApiResponse deleteSMS(BstLookupTableRowRequestCustom request);
 
 }

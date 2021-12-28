@@ -53,7 +53,7 @@ public class LKTPackageInfoController {
 	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
 	@PostMapping("/create-packageInfo")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> createMapping(@RequestBody BstLookupTableRowRequestCustom request) {
+	public ResponseEntity<ApiResponse> createPackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
 		ApiResponse response;
 		try {
@@ -67,5 +67,21 @@ public class LKTPackageInfoController {
 		}
 	}
 
+	@ApiOperation(value = "Tạo mới 1 bản ghi mapping gói cước với luồng trong catalog")
+	@PostMapping("/delete-packageInfo")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> deletePackageInfo(@RequestBody BstLookupTableRowRequestCustom request) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request);
+		ApiResponse response;
+		try {
+			response = packageInfoService.deletePackageInfo(request);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.ok().body(response);
+		}
+	}
 
 }

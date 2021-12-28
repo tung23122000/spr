@@ -2,7 +2,6 @@ package dts.com.vn.ilink.service.impl;
 
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.constants.IlinkTableName;
-import dts.com.vn.ilink.dto.BstLookupTableRowRequest;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.ilink.dto.BstLookupTableRowResponse;
 import dts.com.vn.ilink.dto.Value;
@@ -103,7 +102,26 @@ public class PackageInfoServiceImpl implements PackageInfoService {
 	}
 
 	@Override
-	public ApiResponse deletePackageInfo(BstLookupTableRowRequest request) {
-		return null;
+	public ApiResponse deletePackageInfo(BstLookupTableRowRequestCustom request) {
+		ApiResponse response = new ApiResponse();
+		if (request.getTableId() != null && request.getRowId() != null) {
+			BstLookupTableRowId id = new BstLookupTableRowId(request.getTableId(), request.getRowId());
+			Optional<BstLookupTableRow> optRow = lookupTableRowRepository.findById(id);
+			if (optRow.isPresent()) {
+				BstLookupTableRow row = optRow.get();
+				lookupTableRowRepository.delete(row);
+				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+				response.setData(null);
+				response.setMessage("Xóa bản ghi thành công");
+				return response;
+			} else {
+				throw new RuntimeException("Bản ghi không tồn tại trong bảng " + IlinkTableName.LKT_PACKAGE_INFO);
+			}
+		} else {
+			response.setStatus(ApiResponseStatus.FAILED.getValue());
+			response.setData(request);
+			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
+			return response;
+		}
 	}
 }

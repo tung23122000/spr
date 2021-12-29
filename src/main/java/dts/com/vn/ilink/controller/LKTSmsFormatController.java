@@ -31,7 +31,7 @@ public class LKTSmsFormatController {
 		this.smsFormatService = smsFormatService;
 	}
 
-	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
+	@ApiOperation(value = "Lấy thông tin transaction trên flowone")
 	@GetMapping("/find-all-fo-flow")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> findAllFlow() {

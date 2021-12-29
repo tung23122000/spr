@@ -32,6 +32,22 @@ public class LKTSmsFormatController {
 	}
 
 	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
+	@GetMapping("/find-all-fo-flow")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findAllFlow() {
+		ApiResponse response;
+		try {
+			response = smsFormatService.findAllFoFlow();
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
 	@GetMapping("/find-all-sms-format")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> findAll(@RequestParam(required = false) String search,

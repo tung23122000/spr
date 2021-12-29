@@ -12,4 +12,6 @@ public class IlinkTableName {
 
 	public static final String LKT_SMS_FORMAT = "LKT_SMS_FORMAT";
 
+	public static final String LKT_ACTIONCODE_MAPPING = "LKT_ACTIONCODE_MAPPING";
+
 }

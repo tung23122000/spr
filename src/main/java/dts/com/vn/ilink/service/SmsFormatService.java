@@ -9,6 +9,15 @@ public interface SmsFormatService {
 	/**
 	 * Description - Hàm tìm kiếm phân trang cho bảng LKT_SMS_FORMAT
 	 *
+	 * @return any
+	 * @author - giangdh
+	 * @created - 28/12/2021
+	 */
+	ApiResponse findAllFoFlow();
+
+	/**
+	 * Description - Hàm tìm kiếm phân trang cho bảng LKT_SMS_FORMAT
+	 *
 	 * @param search   - Tên lookup table
 	 * @param pageable - Số trang và số bản ghi của 1 trang
 	 * @return any

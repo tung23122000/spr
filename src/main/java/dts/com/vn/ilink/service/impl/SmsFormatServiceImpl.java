@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,20 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 	                            BstLookupTableRowRepository lookupTableRowRepository) {
 		this.lookupTableRepository = lookupTableRepository;
 		this.lookupTableRowRepository = lookupTableRowRepository;
+	}
+
+	@Override
+	public ApiResponse findAllFoFlow() {
+		ApiResponse response = new ApiResponse();
+		List<BstLookupTableRow> rows = lookupTableRowRepository.findByTableName(IlinkTableName.LKT_ACTIONCODE_MAPPING);
+		for (BstLookupTableRow row : rows) {
+			row.setKey(row.getKey().replaceAll("\"", ""));
+			row.setValue(row.getValue().replaceAll("\"", ""));
+		}
+		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+		response.setData(rows);
+		response.setMessage("Lấy danh sách từ bảng " + IlinkTableName.LKT_ACTIONCODE_MAPPING + " thành công!");
+		return response;
 	}
 
 	@Override

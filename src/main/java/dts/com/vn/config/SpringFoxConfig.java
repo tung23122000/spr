@@ -21,16 +21,6 @@ import java.util.List;
 @EnableSwagger2
 public class SpringFoxConfig {
 
-	public static final String LKT_CHECK_CONDITIONS_TAG = "LKT_CHECK_CONDITIONS";
-
-	public static final String LKT_COMMERCIAL_RFS_MAPPING_TAG = "LKT_COMMERCIAL_RFS_MAPPING";
-
-	public static final String LKT_PACKAGE_INFO_TAG = "LKT_PACKAGE_INFO";
-
-	public static final String LKT_FETCH_PARAMETERS_TAG = "LKT_FETCH_PARAMETERS";
-
-	public static final String LKT_SMS_FORMAT_TAG = "LKT_SMS_FORMAT";
-
 	@Bean
 	public Docket createRestApi() {
 
@@ -44,11 +34,10 @@ public class SpringFoxConfig {
 				.select()
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.regex("/api/.*")).build()
-				.tags(new Tag(LKT_CHECK_CONDITIONS_TAG, "API cho bảng " + IlinkTableName.LKT_CHECK_CONDITIONS),
-						new Tag(LKT_COMMERCIAL_RFS_MAPPING_TAG, "API cho bảng " + IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING),
-						new Tag(LKT_PACKAGE_INFO_TAG, "API cho bảng " + IlinkTableName.LKT_PACKAGE_INFO),
-						new Tag(LKT_FETCH_PARAMETERS_TAG, "API cho bảng " + IlinkTableName.LKT_FETCH_PARAMETERS),
-						new Tag(LKT_SMS_FORMAT_TAG, "API cho bảng " + IlinkTableName.LKT_SMS_FORMAT)
+				.tags(new Tag(IlinkTableName.LKT_CHECK_CONDITIONS, "API cho bảng " + IlinkTableName.LKT_CHECK_CONDITIONS),
+						new Tag(IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING, "API cho bảng " + IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING),
+						new Tag(IlinkTableName.LKT_PACKAGE_INFO, "API cho bảng " + IlinkTableName.LKT_PACKAGE_INFO),
+						new Tag(IlinkTableName.LKT_SMS_FORMAT, "API cho bảng " + IlinkTableName.LKT_SMS_FORMAT)
 				);
 	}
 

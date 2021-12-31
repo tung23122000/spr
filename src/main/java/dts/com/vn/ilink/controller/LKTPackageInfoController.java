@@ -1,8 +1,8 @@
 package dts.com.vn.ilink.controller;
 
-import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
+import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.ilink.service.PackageInfoService;
 import dts.com.vn.response.ApiResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = {SpringFoxConfig.LKT_PACKAGE_INFO_TAG})
+@Api(tags = {IlinkTableName.LKT_PACKAGE_INFO})
 public class LKTPackageInfoController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LKTCommercialRFSMappingController.class);

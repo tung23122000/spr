@@ -1,8 +1,8 @@
 package dts.com.vn.ilink.controller;
 
-import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
+import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequest;
 import dts.com.vn.ilink.entities.CommercialMapping;
 import dts.com.vn.ilink.service.CommercialRFSMappingService;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = {SpringFoxConfig.LKT_COMMERCIAL_RFS_MAPPING_TAG})
+@Api(tags = {IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING})
 public class LKTCommercialRFSMappingController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LKTCommercialRFSMappingController.class);

@@ -2,8 +2,8 @@ package dts.com.vn.ilink.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dts.com.vn.config.SpringFoxConfig;
 import dts.com.vn.enumeration.ApiResponseStatus;
+import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.service.ConditionService;
 import dts.com.vn.request.ListConditionRequest;
 import dts.com.vn.response.ApiResponse;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = {SpringFoxConfig.LKT_CHECK_CONDITIONS_TAG})
+@Api(tags = {IlinkTableName.LKT_CHECK_CONDITIONS})
 public class LKTCheckConditionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LKTCheckConditionController.class);

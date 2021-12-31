@@ -92,10 +92,17 @@ public class PackageInfoServiceImpl implements PackageInfoService {
 				row.setRowId(rowId);
 				row.setKey("\"" + request.getKey() + "\"");
 				row.setValue(value);
-				lookupTableRowRepository.saveAndFlush(row);
-				response.setStatus(ApiResponseStatus.SUCCESS.getValue());
-				response.setData(row);
-				response.setMessage("Tạo mới bản ghi thành công");
+				BstLookupTableRow duplicate = lookupTableRowRepository.findByTableIdAndKey(tableId, row.getKey());
+				if (duplicate != null) {
+					response.setStatus(ApiResponseStatus.FAILED.getValue());
+					response.setData(null);
+					response.setMessage("Đã tồn tại bản ghi với mã gói cước này");
+				} else {
+					lookupTableRowRepository.saveAndFlush(row);
+					response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+					response.setData(row);
+					response.setMessage("Tạo mới bản ghi thành công");
+				}
 				return response;
 			}
 		}

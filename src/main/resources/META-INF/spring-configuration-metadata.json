@@ -1,0 +1,94 @@
+{
+  "properties": [
+    {
+      "name": "app.name",
+      "type": "java.lang.String",
+      "description": "Description for app.name."
+    },
+    {
+      "name": "app.scan-folder",
+      "type": "java.lang.String",
+      "description": "Description for app.scan-folder."
+    },
+    {
+      "name": "spring.datasource.primary.jdbc-url",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.primary.jdbc-url."
+    },
+    {
+      "name": "spring.datasource.primary.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.primary.username."
+    },
+    {
+      "name": "spring.datasource.primary.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.primary.password."
+    },
+    {
+      "name": "spring.datasource.primary.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.primary.driverClassName."
+    },
+    {
+      "name": "app.config-path",
+      "type": "java.lang.String",
+      "description": "Description for app.config-path."
+    },
+    {
+      "name": "app.auto-import",
+      "type": "java.lang.String",
+      "description": "Description for app.auto-import."
+    },
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "description": "Description for file.upload-dir."
+    },
+    {
+      "name": "security.authentication.jwt.secret-key",
+      "type": "java.lang.String",
+      "description": "Description for security.authentication.jwt.secret-key."
+    },
+    {
+      "name": "security.authentication.jwt.token-validity-in-seconds",
+      "type": "java.lang.String",
+      "description": "Description for security.authentication.jwt.token-validity-in-seconds."
+    },
+    {
+      "name": "security.authentication.jwt.token-validity-in-seconds-for-remember-me",
+      "type": "java.lang.String",
+      "description": "Description for security.authentication.jwt.token-validity-in-seconds-for-remember-me."
+    },
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Description for cors.allowed-origins."
+    },
+    {
+      "name": "cors.allowed-methods",
+      "type": "java.lang.String",
+      "description": "Description for cors.allowed-methods."
+    },
+    {
+      "name": "cors.allowed-headers",
+      "type": "java.lang.String",
+      "description": "Description for cors.allowed-headers."
+    },
+    {
+      "name": "cors.exposed-headers",
+      "type": "java.lang.String",
+      "description": "Description for cors.exposed-headers."
+    },
+    {
+      "name": "cors.allow-credentials",
+      "type": "java.lang.String",
+      "description": "Description for cors.allow-credentials."
+    },
+    {
+      "name": "cors.max-age",
+      "type": "java.lang.String",
+      "description": "Description for cors.max-age."
+    }
+  ]
+}

@@ -42,4 +42,6 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 			"WHERE tb.name = ?1 ORDER BY r.row_id DESC")
 	Page<BstLookupTableRow> findAllWithoutSearch(String tableName, Pageable pageable);
 
+	BstLookupTableRow findByTableIdAndKey(Long tableId, String key);
+
 }

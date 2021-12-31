@@ -1,0 +1,36 @@
+server:
+  port: 9001
+
+spring:
+  datasource:
+    # Database SPR
+    primary:
+      jdbc-url: jdbc:postgresql://10.3.17.133:5432/spr
+      username: spr
+      password: spr
+      driverClassName: org.postgresql.Driver
+
+    # Secondary database
+    secondary:
+      jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
+      username: VASP4_SUBS_TEST
+      password: Dts@1234
+      driverClassName: oracle.jdbc.OracleDriver
+
+    # Database ILINK
+    third:
+      jdbc-url: jdbc:postgresql://10.3.17.133:5432/ilink
+      username: dtsapp1
+      password: dtsapp1
+      driverClassName: org.postgresql.Driver
+
+app:
+  config-path: /web-admin/config/
+  auto-import: /home/spr/import/
+
+file:
+  upload-dir: /home/upload
+
+
+
+

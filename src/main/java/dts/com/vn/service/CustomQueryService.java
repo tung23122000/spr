@@ -47,15 +47,11 @@ public class CustomQueryService {
 
 	@Autowired
 	public CustomQueryService(ConstantDeclarationRepository configRepository,
-	                          FileStorageConfig config, AutoExtendPackageRepository autoExtendPackageRepository) {
+	                          FileStorageConfig config,
+	                          AutoExtendPackageRepository autoExtendPackageRepository) {
 		this.configRepository = configRepository;
 		this.fileStorageLocation = Paths.get(config.getUploadDir()).toAbsolutePath().normalize();
 		this.autoExtendPackageRepository = autoExtendPackageRepository;
-		try {
-			Files.createDirectories(this.fileStorageLocation);
-		} catch (Exception ex) {
-			throw new RuntimeException();
-		}
 	}
 
 	/**

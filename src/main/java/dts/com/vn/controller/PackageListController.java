@@ -27,7 +27,7 @@ public class PackageListController {
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> save(@RequestBody PackageListRequest packageListRequest) {
-        ApiResponse response = null;
+        ApiResponse response;
         try {
             servicePackageListService.save(packageListRequest);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);

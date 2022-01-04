@@ -1,14 +1,15 @@
 package dts.com.vn.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "isdn_list", schema = "public")
+@NoArgsConstructor
 public class IsdnList {
 
 	@Id
@@ -34,10 +35,6 @@ public class IsdnList {
 	@Column(name = "list_type")
 	private String listType;
 
-	public IsdnList() {
-
-	}
-
 	public IsdnList(Long isdnListId, String name, Instant createDate, String cvCodeList, String isDisplay, Instant endDate, String listType) {
 		this.isdnListId = isdnListId;
 		this.name = name;
@@ -47,4 +44,5 @@ public class IsdnList {
 		this.endDate = endDate;
 		this.listType = listType;
 	}
+
 }

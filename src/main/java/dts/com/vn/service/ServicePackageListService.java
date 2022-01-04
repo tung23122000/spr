@@ -48,10 +48,16 @@ public class ServicePackageListService {
 	public void save(PackageListRequest packageListRequest) {
 		if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() > 0) {
 			//	Tạo danh sách đối tượng
-			IsdnList isdnListRequest = new IsdnList(null, packageListRequest.getFileName(), Instant.parse(packageListRequest.getStaDate()),
-					packageListRequest.getIsdnCvCode(), packageListRequest.getIsdnDisplay(), Instant.parse(packageListRequest.getEndDate()), packageListRequest.getIsdnListType());
+			IsdnList isdnListRequest;
+			if (packageListRequest.getStaDate() != null && packageListRequest.getEndDate() != null) {
+				isdnListRequest = new IsdnList(null, packageListRequest.getFileName(), Instant.parse(packageListRequest.getStaDate()),
+						packageListRequest.getIsdnCvCode(), packageListRequest.getIsdnDisplay(), Instant.parse(packageListRequest.getEndDate()), packageListRequest.getIsdnListType());
+			} else {
+				isdnListRequest = new IsdnList(null, packageListRequest.getFileName(), Instant.parse(packageListRequest.getStaDate()),
+						packageListRequest.getIsdnCvCode(), packageListRequest.getIsdnDisplay(), null, packageListRequest.getIsdnListType());
+			}
 			IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
-			//	Create List_detail
+			//	Tạo danh sách chi tiết
 			ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), packageListRequest.getListIsdn());
 			listDetailNewRepository.save(listDetailNew);
 			// Create ServicePackageList or BlacklistPackageList

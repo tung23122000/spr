@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ListDetailNewRepository extends JpaRepository<ListDetailNew, Integer> {
 
+	void deleteByIsdnListId(Long listId);
+
 }

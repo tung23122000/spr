@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BlacklistPackageListRepository extends JpaRepository<BlacklistPackageList, Long> {
+
+	void deleteByIsdnListId(Long listId);
+
 }

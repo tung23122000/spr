@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ServicePackageListRepository extends JpaRepository<ServicePackageList, Long> {
 
+	void deleteByIsdnListId(Long isdnListId);
+
 }

@@ -4,6 +4,7 @@ import dts.com.vn.entities.BlacklistPackageList;
 import dts.com.vn.entities.IsdnList;
 import dts.com.vn.entities.ListDetailNew;
 import dts.com.vn.entities.ServicePackageList;
+import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.BlacklistPackageListRepository;
@@ -13,12 +14,14 @@ import dts.com.vn.repository.ServicePackageListRepository;
 import dts.com.vn.request.MapIsdnList;
 import dts.com.vn.request.MapIsdnListRequest;
 import dts.com.vn.request.PackageListRequest;
+import dts.com.vn.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServicePackageListService {
@@ -60,17 +63,16 @@ public class ServicePackageListService {
 			//	Tạo danh sách chi tiết
 			ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), packageListRequest.getListIsdn());
 			listDetailNewRepository.save(listDetailNew);
-			// Create ServicePackageList or BlacklistPackageList
+			// Tạo danh sách whitelist or blacklist
 			Instant endDate = null;
-			if (packageListRequest.getEndDate() != null)
-				endDate = Instant.parse(packageListRequest.getEndDate());
+			if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate());
 			if (packageListRequest.getIsdnListType().equals("0")) {
-				// Create WhiteList
+				// Tạo WhiteList
 				ServicePackageList servicePackageList = new ServicePackageList(packageListRequest.getPackageId(), isdnListResponse.getIsdnListId(),
 						Instant.parse(packageListRequest.getStaDate()), endDate, packageListRequest.getProgramId(), null);
 				servicePackageListRepository.save(servicePackageList);
 			} else if (packageListRequest.getIsdnListType().equals("1")) {
-				// Create Blacklist
+				// Tạo Blacklist
 				BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
 						isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), Instant.parse(packageListRequest.getEndDate()));
 				blacklistPackageListRepository.save(blacklistPackageList);
@@ -107,4 +109,30 @@ public class ServicePackageListService {
 	public List<IsdnList> getBlackListByProgramId(Long programId) {
 		return isdnListRepository.getBlackListByProgramId(programId);
 	}
+
+	@Transactional
+	public ApiResponse deleteServicePackageList(Long listId, Integer listType) {
+		ApiResponse response = new ApiResponse();
+		// 1. Xóa danh sách đối tượng
+		Optional<IsdnList> optIsdnList = isdnListRepository.findById(listId);
+		if (optIsdnList.isPresent()) {
+			isdnListRepository.delete(optIsdnList.get());
+			// 2. Nếu listType = 0 thì xóa white list, bằng 1 thì xóa black list
+			Long numberRowDelete;
+			if (listType == 0) {
+				servicePackageListRepository.deleteByIsdnListId(listId);
+			} else {
+				blacklistPackageListRepository.deleteByIsdnListId(listId);
+			}
+			// 3. Xóa list detail new
+			listDetailNewRepository.deleteByIsdnListId(listId);
+			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+			response.setData(null);
+			response.setMessage("Xóa dữ liệu thành công");
+			return response;
+		} else {
+			throw new RuntimeException("Bản ghi không tồn tại");
+		}
+	}
+
 }

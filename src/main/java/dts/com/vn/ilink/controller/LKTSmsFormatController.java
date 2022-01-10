@@ -47,6 +47,22 @@ public class LKTSmsFormatController {
 		}
 	}
 
+	@ApiOperation(value = "Lấy danh sách label cho sms")
+	@GetMapping("/find-all-label")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findAllLabel() {
+		ApiResponse response;
+		try {
+			response = smsFormatService.findAllLabel();
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
 	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
 	@GetMapping("/find-all-sms-format")
 	@ResponseBody

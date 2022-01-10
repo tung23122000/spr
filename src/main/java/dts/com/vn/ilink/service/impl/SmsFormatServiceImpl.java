@@ -1,5 +1,6 @@
 package dts.com.vn.ilink.service.impl;
 
+import dts.com.vn.entities.Label;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.ilink.constants.IlinkTableName;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
@@ -10,6 +11,7 @@ import dts.com.vn.ilink.entities.BstLookupTableRowId;
 import dts.com.vn.ilink.repository.BstLookupTableRepository;
 import dts.com.vn.ilink.repository.BstLookupTableRowRepository;
 import dts.com.vn.ilink.service.SmsFormatService;
+import dts.com.vn.repository.LabelRepository;
 import dts.com.vn.response.ApiResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +29,15 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 
 	private final BstLookupTableRowRepository lookupTableRowRepository;
 
+	private final LabelRepository labelRepository;
+
 	@Autowired
 	public SmsFormatServiceImpl(BstLookupTableRepository lookupTableRepository,
-	                            BstLookupTableRowRepository lookupTableRowRepository) {
+	                            BstLookupTableRowRepository lookupTableRowRepository,
+	                            LabelRepository labelRepository) {
 		this.lookupTableRepository = lookupTableRepository;
 		this.lookupTableRowRepository = lookupTableRowRepository;
+		this.labelRepository = labelRepository;
 	}
 
 	@Override
@@ -138,6 +144,16 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
 			return response;
 		}
+	}
+
+	@Override
+	public ApiResponse findAllLabel() {
+		ApiResponse response = new ApiResponse();
+		List<Label> data = labelRepository.findAll();
+		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+		response.setData(data);
+		response.setMessage("Lấy danh sách label thành công");
+		return response;
 	}
 
 }

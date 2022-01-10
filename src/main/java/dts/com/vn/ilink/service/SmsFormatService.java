@@ -46,4 +46,13 @@ public interface SmsFormatService {
 	 */
 	ApiResponse deleteSMS(BstLookupTableRowRequestCustom request);
 
+	/**
+	 * Description - Hàm lấy danh sách label của SMS
+	 *
+	 * @return any
+	 * @author - giangdh
+	 * @created - 28/12/2021
+	 */
+	ApiResponse findAllLabel();
+
 }

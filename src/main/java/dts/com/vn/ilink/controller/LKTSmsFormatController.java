@@ -1,5 +1,6 @@
 package dts.com.vn.ilink.controller;
 
+import dts.com.vn.entities.Label;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.LogConstants;
 import dts.com.vn.ilink.constants.IlinkTableName;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -47,21 +50,6 @@ public class LKTSmsFormatController {
 		}
 	}
 
-	@ApiOperation(value = "Lấy danh sách label cho sms")
-	@GetMapping("/find-all-label")
-	@ResponseBody
-	public ResponseEntity<ApiResponse> findAllLabel() {
-		ApiResponse response;
-		try {
-			response = smsFormatService.findAllLabel();
-			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
-			return ResponseEntity.ok().body(response);
-		} catch (Exception ex) {
-			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
-			LogUtil.writeLog(logger, LogConstants.ERROR, response);
-			return ResponseEntity.badRequest().body(response);
-		}
-	}
 
 	@ApiOperation(value = "Lấy thông tin các bản ghi trong bảng LKT_SMS_FORMAT")
 	@GetMapping("/find-all-sms-format")
@@ -113,6 +101,38 @@ public class LKTSmsFormatController {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
 			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 			return ResponseEntity.ok().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Lấy danh sách label cho sms")
+	@GetMapping("/find-all-label")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findAllLabel() {
+		ApiResponse response;
+		try {
+			response = smsFormatService.findAllLabel();
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@ApiOperation(value = "Thêm danh sách label cho sms")
+	@PostMapping("/add-labels")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> saveListLabels(@RequestBody List<Label> labels) {
+		ApiResponse response;
+		try {
+			response = smsFormatService.saveLabels(labels);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
 		}
 	}
 

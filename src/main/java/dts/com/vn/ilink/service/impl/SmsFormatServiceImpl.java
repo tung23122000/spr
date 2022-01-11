@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -149,10 +150,21 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 	@Override
 	public ApiResponse findAllLabel() {
 		ApiResponse response = new ApiResponse();
-		List<Label> data = labelRepository.findAll();
+		List<Label> data = labelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 		response.setData(data);
 		response.setMessage("Lấy danh sách label thành công");
+		return response;
+	}
+
+	@Override
+	public ApiResponse saveLabels(List<Label> labels) {
+		ApiResponse response = new ApiResponse();
+		labelRepository.saveAll(labels);
+		List<Label> data = labelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+		response.setData(data);
+		response.setMessage("Cập nhật danh sách dữ liệu thành công");
 		return response;
 	}
 

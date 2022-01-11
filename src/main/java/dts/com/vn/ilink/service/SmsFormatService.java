@@ -1,8 +1,11 @@
 package dts.com.vn.ilink.service;
 
+import dts.com.vn.entities.Label;
 import dts.com.vn.ilink.dto.BstLookupTableRowRequestCustom;
 import dts.com.vn.response.ApiResponse;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface SmsFormatService {
 
@@ -54,5 +57,15 @@ public interface SmsFormatService {
 	 * @created - 28/12/2021
 	 */
 	ApiResponse findAllLabel();
+
+	/**
+	 * Description - Hàm thêm và update label của SMS
+	 *
+	 * @param labels - danh sách label
+	 * @return any
+	 * @author - giangdh
+	 * @created - 11/01/2022
+	 */
+	ApiResponse saveLabels(List<Label> labels);
 
 }

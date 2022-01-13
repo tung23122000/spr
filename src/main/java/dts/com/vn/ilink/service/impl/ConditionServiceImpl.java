@@ -10,6 +10,7 @@ import dts.com.vn.ilink.service.ConditionService;
 import dts.com.vn.repository.ListConditionRepository;
 import dts.com.vn.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class ConditionServiceImpl implements ConditionService {
 	public ApiResponse findAllCondition() {
 		ApiResponse response;
 		try {
-			List<ListCondition> listConditions = listConditionRepository.findAll();
+			List<ListCondition> listConditions = listConditionRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listConditions, null, "Lấy danh sách điều kiện thành công");
 		} catch (Exception e) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, null, "Lấy danh sách điều kiện thất bại");

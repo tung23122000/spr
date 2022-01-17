@@ -14,6 +14,6 @@ public class DailyReportResponse {
 
 	private String groupName;
 
-	private List<Object> listPackage;
+	private List<ListPackageResponse> listPackage;
 
 }

@@ -37,4 +37,27 @@ public class ReportController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	/**
+	 * Description - Controller lấy thông tin package
+	 *
+	 * @author - binhDT
+	 * @created - 17/01/2022
+	 */
+	@GetMapping("/dailyReport/find-package")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findByPackageAndTransaction(@RequestParam Long serviceTypeId,
+	                                                               @RequestParam String packageCode,
+	                                                               @RequestParam String transaction,
+	                                                               @RequestParam String date) {
+		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
+		ApiResponse response;
+		try {
+			response = reportService.findByPackageAndTransaction(serviceTypeId, packageCode, transaction, date);
+		} catch (RestApiException ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
 }

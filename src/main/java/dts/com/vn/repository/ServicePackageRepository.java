@@ -55,6 +55,13 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query("SELECT sp FROM ServicePackage sp WHERE sp.serviceType.serviceTypeId = :serviceTypeId ORDER BY sp.systemOwner asc, sp.packageId desc")
 	List<ServicePackage> findAllByServiceTypeId(Long serviceTypeId);
 
+	@Query(nativeQuery = true,
+			value = "SELECT sp.* \n" +
+					"FROM service_package sp\n" +
+					"WHERE sp.service_type_id = :serviceTypeId \n" +
+					"  AND sp.code = :packageCode")
+	ServicePackage findByServiceTypeIdAndCode(Long serviceTypeId, String packageCode);
+
 //	@Query("SELECT bi FROM ServicePackage spa " +
 //			" INNER JOIN ServiceProgram spr ON spr.servicePackage.packageId = spa.packageId " +
 //			" INNER JOIN BucketsInfo bi ON bi.serviceProgram.programId = spr.programId " +

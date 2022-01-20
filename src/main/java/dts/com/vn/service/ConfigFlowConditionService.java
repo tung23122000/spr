@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author BinhDT
@@ -27,7 +29,11 @@ public class ConfigFlowConditionService {
 
 
 	public ApiResponse findAllConditon() {
-		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll();
+		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll()
+				.stream()
+				.sorted(Comparator.comparing(ConfigFlowCondition::getConditionId))
+				.filter(configFlowCondition -> StringUtils.equals(configFlowCondition.getIsConfig().toString(), "1"))
+				.collect(Collectors.toList());
 		ApiResponse response = new ApiResponse();
 		response.setStatus(200);
 		response.setData(flowConditions);

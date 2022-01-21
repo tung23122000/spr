@@ -20,7 +20,7 @@ spring:
       driverClassName: org.postgresql.Driver
     # Database ILARC
     fourth:
-      jdbc-url: jdbc:postgresql://10.3.17.13:5432/ilarc
+      jdbc-url: jdbc:postgresql://10.3.17.139:5432/ilarc
       username: admin_report
       password: admin_report
       driverClassName: org.postgresql.Driver

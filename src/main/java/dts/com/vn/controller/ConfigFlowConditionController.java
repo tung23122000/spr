@@ -25,9 +25,12 @@ public class ConfigFlowConditionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigFlowConditionController.class);
 
-	@Autowired
-	private ConfigFlowConditionService configFlowConditionService;
+	private final ConfigFlowConditionService configFlowConditionService;
 
+	@Autowired
+	public ConfigFlowConditionController(ConfigFlowConditionService configFlowConditionService) {
+		this.configFlowConditionService = configFlowConditionService;
+	}
 
 	@GetMapping("/find-all")
 	public ResponseEntity<ApiResponse> findAll() {
@@ -45,30 +48,30 @@ public class ConfigFlowConditionController {
 	@Transactional
 	@PostMapping("/create-flow")
 	public ResponseEntity<ApiResponse> create(@RequestBody ConfigFlowConditionRequest request) {
-		logger.info("=========> " + "ConfigRequest: " + request.toString());
+		LogUtil.writeLog(logger, LogConstants.REQUEST, request.toString());
 		ApiResponse response;
 		try {
 			response = configFlowConditionService.save(request);
-			logger.info("=========> " + "ConfigResponse: " + response.getData());
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.CONFIG_FLOW_CONDITION_ERROR);
-			logger.error("CONFIG_FLOW_CONDITION_ERROR", response);
+			LogUtil.writeLog(logger, LogConstants.ERROR, ex);
 		}
 		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/delete")
 	public ResponseEntity<ApiResponse> delete(@RequestParam Long id) {
-		logger.info("=========> " + "ConditionId: " + id);
+		LogUtil.writeLog(logger, LogConstants.REQUEST, id);
 		ApiResponse response;
 		try {
 			response = configFlowConditionService.delete(id);
-			logger.info("=========> " + "ConditionId: " + id);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.CONFIG_FLOW_CONDITION_DELETE_ERROR);
-			logger.error("CONFIG_FLOW_CONDITION_DELETE_ERROR", response);
+			LogUtil.writeLog(logger, LogConstants.ERROR, ex);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -76,15 +79,15 @@ public class ConfigFlowConditionController {
 	@Transactional
 	@PostMapping("/update")
 	public ResponseEntity<ApiResponse> update(@RequestBody ConfigFlowConditionRequest flowConditionRequest) {
-		logger.info("=========> " + "ConfigRequest: " + flowConditionRequest);
+		LogUtil.writeLog(logger, LogConstants.REQUEST, flowConditionRequest.toString());
 		ApiResponse response;
 		try {
 			response = configFlowConditionService.update(flowConditionRequest);
-			logger.info("=========> " + "Response: " + response.getData());
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.CONFIG_FLOW_CONDITION_UPDATE_ERROR);
-			logger.error("CONFIG_FLOW_CONDITION_UPDATE_ERROR", response);
+			LogUtil.writeLog(logger, LogConstants.ERROR, ex);
 		}
 		return ResponseEntity.ok().body(response);
 	}

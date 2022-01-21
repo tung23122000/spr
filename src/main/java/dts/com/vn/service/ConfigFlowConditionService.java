@@ -15,25 +15,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * @author BinhDT
- * @version 1
- * @apiNote CRUD for config flow condition
- * @created 19/01/2022
- */
 @Service
 public class ConfigFlowConditionService {
 
+	private final ConfigFlowConditionRepository configFlowConditionRepository;
+
 	@Autowired
-	private ConfigFlowConditionRepository configFlowConditionRepository;
+	public ConfigFlowConditionService(ConfigFlowConditionRepository configFlowConditionRepository) {
+		this.configFlowConditionRepository = configFlowConditionRepository;
+	}
 
-
+	/**
+	 * @author BinhDT
+	 * @version 1
+	 * @apiNote find all flow condition
+	 * @created 19/01/2022
+	 */
 	public ApiResponse findAllConditon() {
-		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll()
-				.stream()
-				.sorted(Comparator.comparing(ConfigFlowCondition::getConditionId))
-				.filter(ConfigFlowCondition::isConfig)
-				.collect(Collectors.toList());
+		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll().stream().sorted(Comparator.comparing(ConfigFlowCondition::getConditionId)).filter(ConfigFlowCondition::isConfig).collect(Collectors.toList());
 		ApiResponse response = new ApiResponse();
 		response.setStatus(200);
 		response.setData(flowConditions);
@@ -41,9 +40,16 @@ public class ConfigFlowConditionService {
 		return response;
 	}
 
+	/**
+	 * @param configFlowCondition - Object configFlowCondition request
+	 * @return apiResponse
+	 * @author BinhDT
+	 * @version 1
+	 * @apiNote Create new Config flow condition
+	 * @created 19/01/2022
+	 */
 	@Transactional
 	public ApiResponse save(ConfigFlowConditionRequest configFlowCondition) {
-
 		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll();
 		for (ConfigFlowCondition flowCondition : flowConditions) {
 			if (StringUtils.equalsIgnoreCase(flowCondition.getFlowName(), configFlowCondition.getFlowName())) {
@@ -54,10 +60,17 @@ public class ConfigFlowConditionService {
 		flowCondition.setFlowName(configFlowCondition.getFlowName());
 		flowCondition.setConfig(configFlowCondition.isConfig());
 		ConfigFlowCondition response = configFlowConditionRepository.save(flowCondition);
-
 		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), response, null, "Tạo mới đối tượng thành công!");
 	}
 
+	/**
+	 * @param id - Id of flow condition
+	 * @return apiResponse
+	 * @author BinhDT
+	 * @version 1
+	 * @apiNote delete condition by id
+	 * @created 19/01/2022
+	 */
 	public ApiResponse delete(Long id) {
 		Optional<ConfigFlowCondition> condition = configFlowConditionRepository.findById(id);
 		if (condition.isPresent()) {
@@ -67,8 +80,15 @@ public class ConfigFlowConditionService {
 		return new ApiResponse(ApiResponseStatus.FAILED.getValue(), condition, null, "Xóa đối tượng không thành công!");
 	}
 
+	/**
+	 * @param configFlowCondition - Object configFlowCondition by request
+	 * @return apiResponse
+	 * @author BinhDT
+	 * @version 1
+	 * @apiNote update flow condition
+	 * @created 19/01/2022
+	 */
 	public ApiResponse update(ConfigFlowConditionRequest configFlowCondition) {
-
 		ConfigFlowCondition condition = new ConfigFlowCondition();
 		condition.setConditionId(configFlowCondition.getRequestId());
 		condition.setFlowName(configFlowCondition.getFlowName());

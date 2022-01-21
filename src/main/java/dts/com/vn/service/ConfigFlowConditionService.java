@@ -26,9 +26,10 @@ public class ConfigFlowConditionService {
 	}
 
 	/**
+	 * * Description find all flow condition
+	 *
+	 * @return apiResponse
 	 * @author BinhDT
-	 * @version 1
-	 * @apiNote find all flow condition
 	 * @created 19/01/2022
 	 */
 	public ApiResponse findAllConditon() {
@@ -41,11 +42,11 @@ public class ConfigFlowConditionService {
 	}
 
 	/**
+	 * * Description Create new Config flow condition
+	 *
 	 * @param configFlowCondition - Object configFlowCondition request
 	 * @return apiResponse
 	 * @author BinhDT
-	 * @version 1
-	 * @apiNote Create new Config flow condition
 	 * @created 19/01/2022
 	 */
 	@Transactional
@@ -64,11 +65,11 @@ public class ConfigFlowConditionService {
 	}
 
 	/**
+	 * * Description delete condition by id
+	 *
 	 * @param id - Id of flow condition
 	 * @return apiResponse
 	 * @author BinhDT
-	 * @version 1
-	 * @apiNote delete condition by id
 	 * @created 19/01/2022
 	 */
 	public ApiResponse delete(Long id) {
@@ -81,11 +82,11 @@ public class ConfigFlowConditionService {
 	}
 
 	/**
+	 * * Description update flow condition
+	 *
 	 * @param configFlowCondition - Object configFlowCondition by request
 	 * @return apiResponse
 	 * @author BinhDT
-	 * @version 1
-	 * @apiNote update flow condition
 	 * @created 19/01/2022
 	 */
 	public ApiResponse update(ConfigFlowConditionRequest configFlowCondition) {

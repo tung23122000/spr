@@ -93,6 +93,11 @@ public enum ErrorCode {
 	// Giang add
 	SERVICE_PACKAGE_ID_REQUIRED("error.null.servicePackageId", "ID gói cước cần clone không được bỏ trống."),
 	CLONE_REQUEST_DATA_FAIL("error.data", "Dữ liệu service hoặc serviceType truyền lên không đúng."),
+
+	//BinhDT add
+	CONFIG_FLOW_CONDITION_ERROR("error.data","Insert data không hợp lệ."),
+	CONFIG_FLOW_CONDITION_DELETE_ERROR("error.data","Xóa data không hợp lệ."),
+	CONFIG_FLOW_CONDITION_UPDATE_ERROR("error.data","Update data không hợp lệ."),
 	;
 	private String errorCode;
 

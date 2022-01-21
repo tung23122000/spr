@@ -26,18 +26,18 @@ public class ConfigFlowConditionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigFlowConditionController.class);
 
-	private final ConfigFlowConditionService configFlowConditionService;
+	private final ConfigFlowConditionService configFlowConditionServiceImpl;
 
 	@Autowired
-	public ConfigFlowConditionController(ConfigFlowConditionService configFlowConditionService) {
-		this.configFlowConditionService = configFlowConditionService;
+	public ConfigFlowConditionController(ConfigFlowConditionService configFlowConditionServiceImpl) {
+		this.configFlowConditionServiceImpl = configFlowConditionServiceImpl;
 	}
 
 	@GetMapping("/find-all")
 	public ResponseEntity<ApiResponse> findAll() {
 		ApiResponse response;
 		try {
-			response = configFlowConditionService.findAllConditon();
+			response = configFlowConditionServiceImpl.findAllConditon();
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
@@ -52,7 +52,7 @@ public class ConfigFlowConditionController {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, request.toString());
 		ApiResponse response;
 		try {
-			response = configFlowConditionService.save(request);
+			response = configFlowConditionServiceImpl.save(request);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
@@ -62,12 +62,12 @@ public class ConfigFlowConditionController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping("/delete")
+	@PostMapping("/delete")
 	public ResponseEntity<ApiResponse> delete(@RequestParam Long id) {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, id);
 		ApiResponse response;
 		try {
-			response = configFlowConditionService.delete(id);
+			response = configFlowConditionServiceImpl.delete(id);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
@@ -83,7 +83,7 @@ public class ConfigFlowConditionController {
 		LogUtil.writeLog(logger, LogConstants.REQUEST, flowConditionRequest.toString());
 		ApiResponse response;
 		try {
-			response = configFlowConditionService.update(flowConditionRequest);
+			response = configFlowConditionServiceImpl.update(flowConditionRequest);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (Exception ex) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());

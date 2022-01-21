@@ -21,6 +21,6 @@ public class ConfigFlowCondition {
 	@Column(name = "flow_name")
 	private String flowName;
 
-	@Column(name = "is_config")
-	private Integer isConfig = 0;
+	@Column(name = "is_config", columnDefinition = "boolean default true")
+	private boolean isConfig;
 }

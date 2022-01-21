@@ -1,5 +1,6 @@
 package dts.com.vn.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -9,6 +10,7 @@ public class ConfigFlowConditionRequest {
 
 	private String flowName;
 
-	private Integer isConfig;
+	@JsonProperty
+	private boolean isConfig;
 
 }

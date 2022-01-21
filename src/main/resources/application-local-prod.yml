@@ -23,6 +23,12 @@ spring:
       username: dtsapp1
       password: dtsapp1
       driverClassName: org.postgresql.Driver
+    # Database ILARC
+    fourth:
+      jdbc-url: jdbc:postgresql://10.3.17.13:5432/ilarc
+      username: admin_repor
+      password: admin_repor
+      driverClassName: org.postgresql.Driver
 
 app:
   config-path: /web-admin/config/

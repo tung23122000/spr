@@ -32,7 +32,7 @@ public class ConfigFlowConditionService {
 		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll()
 				.stream()
 				.sorted(Comparator.comparing(ConfigFlowCondition::getConditionId))
-				.filter(configFlowCondition -> StringUtils.equals(configFlowCondition.getIsConfig().toString(), "1"))
+				.filter(ConfigFlowCondition::isConfig)
 				.collect(Collectors.toList());
 		ApiResponse response = new ApiResponse();
 		response.setStatus(200);
@@ -52,7 +52,7 @@ public class ConfigFlowConditionService {
 		}
 		ConfigFlowCondition flowCondition = new ConfigFlowCondition();
 		flowCondition.setFlowName(configFlowCondition.getFlowName());
-		flowCondition.setIsConfig(configFlowCondition.getIsConfig());
+		flowCondition.setConfig(configFlowCondition.isConfig());
 		ConfigFlowCondition response = configFlowConditionRepository.save(flowCondition);
 
 		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), response, null, "Tạo mới đối tượng thành công!");
@@ -62,7 +62,7 @@ public class ConfigFlowConditionService {
 		Optional<ConfigFlowCondition> condition = configFlowConditionRepository.findById(id);
 		if (condition.isPresent()) {
 			configFlowConditionRepository.delete(condition.get());
-			new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), condition.get(), null, "Xóa đối tượng thành công!");
+			return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), condition.get(), null, "Xóa đối tượng thành công!");
 		}
 		return new ApiResponse(ApiResponseStatus.FAILED.getValue(), condition, null, "Xóa đối tượng không thành công!");
 	}
@@ -72,7 +72,7 @@ public class ConfigFlowConditionService {
 		ConfigFlowCondition condition = new ConfigFlowCondition();
 		condition.setConditionId(configFlowCondition.getRequestId());
 		condition.setFlowName(configFlowCondition.getFlowName());
-		condition.setIsConfig(configFlowCondition.getIsConfig());
+		condition.setConfig(configFlowCondition.isConfig());
 		ConfigFlowCondition flowCondition = configFlowConditionRepository.saveAndFlush(condition);
 		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), flowCondition, null, "Update điều kiện thành công!");
 	}

@@ -1,5 +1,6 @@
 package dts.com.vn.controller;
 
+import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.enumeration.LogConstants;
 import dts.com.vn.exception.RestApiException;
@@ -84,10 +85,10 @@ public class ConfigFlowConditionController {
 		try {
 			response = configFlowConditionService.update(flowConditionRequest);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
-		} catch (RestApiException ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.CONFIG_FLOW_CONDITION_UPDATE_ERROR);
-			LogUtil.writeLog(logger, LogConstants.ERROR, ex);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.ok().body(response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

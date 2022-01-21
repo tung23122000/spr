@@ -90,6 +90,10 @@ public class ConfigFlowConditionService {
 	 * @created 19/01/2022
 	 */
 	public ApiResponse update(ConfigFlowConditionRequest configFlowCondition) {
+		Optional<ConfigFlowCondition> flowConditionOptional = configFlowConditionRepository.findById(configFlowCondition.getRequestId());
+		if (!flowConditionOptional.isPresent()) {
+			throw new RuntimeException("Không tồn tại bản ghi trong bảng: ConfigFlowCondition");
+		}
 		ConfigFlowCondition condition = new ConfigFlowCondition();
 		condition.setConditionId(configFlowCondition.getRequestId());
 		condition.setFlowName(configFlowCondition.getFlowName());

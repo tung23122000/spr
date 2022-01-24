@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author BinhDT
  * @version 1.0.0
@@ -38,6 +40,19 @@ public class ConfigFlowConditionController {
 		ApiResponse response;
 		try {
 			response = configFlowConditionServiceImpl.findAllConditon();
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+		} catch (RestApiException ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-all-is-true")
+	public ResponseEntity<ApiResponse> findConditionIsTrue() {
+		ApiResponse response;
+		try {
+			response = configFlowConditionServiceImpl.findByConditonIsTrue();
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
@@ -79,11 +94,11 @@ public class ConfigFlowConditionController {
 
 	@Transactional
 	@PostMapping("/update")
-	public ResponseEntity<ApiResponse> update(@RequestBody ConfigFlowConditionRequest flowConditionRequest) {
-		LogUtil.writeLog(logger, LogConstants.REQUEST, flowConditionRequest.toString());
+	public ResponseEntity<ApiResponse> update(@RequestBody List<ConfigFlowConditionRequest> flowConditionRequests) {
+		LogUtil.writeLog(logger, LogConstants.REQUEST, flowConditionRequests.toString());
 		ApiResponse response;
 		try {
-			response = configFlowConditionServiceImpl.update(flowConditionRequest);
+			response = configFlowConditionServiceImpl.update(flowConditionRequests);
 			LogUtil.writeLog(logger, LogConstants.RESPONSE, response.getData());
 		} catch (Exception ex) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getLocalizedMessage());

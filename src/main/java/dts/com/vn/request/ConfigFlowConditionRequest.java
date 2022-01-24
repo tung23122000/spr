@@ -6,7 +6,9 @@ import lombok.Data;
 @Data
 public class ConfigFlowConditionRequest {
 
-	private Long requestId;
+	private Long conditionId;
+
+	private String flowKey;
 
 	private String flowName;
 

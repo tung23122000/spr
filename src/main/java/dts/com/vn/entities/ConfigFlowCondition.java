@@ -18,6 +18,9 @@ public class ConfigFlowCondition {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long conditionId;
 
+	@Column(name = "flow_key")
+	private String flowKey;
+
 	@Column(name = "flow_name")
 	private String flowName;
 

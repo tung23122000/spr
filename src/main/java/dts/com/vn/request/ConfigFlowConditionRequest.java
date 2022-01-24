@@ -8,6 +8,8 @@ public class ConfigFlowConditionRequest {
 
 	private Long conditionId;
 
+	private String flowKey;
+
 	private String flowName;
 
 	@JsonProperty

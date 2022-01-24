@@ -4,6 +4,8 @@ package dts.com.vn.service;
 import dts.com.vn.request.ConfigFlowConditionRequest;
 import dts.com.vn.response.ApiResponse;
 
+import java.util.List;
+
 public interface ConfigFlowConditionService {
 
 	/**
@@ -15,6 +17,15 @@ public interface ConfigFlowConditionService {
 	 * @created 19/01/2022
 	 */
 	ApiResponse save(ConfigFlowConditionRequest configFlowCondition);
+
+	/**
+	 * * Description find all flow condition is true
+	 *
+	 * @return apiResponse
+	 * @author BinhDT
+	 * @created 19/01/2022
+	 */
+	ApiResponse findByConditonIsTrue();
 
 	/**
 	 * * Description find all flow condition
@@ -33,7 +44,7 @@ public interface ConfigFlowConditionService {
 	 * @author BinhDT
 	 * @created 19/01/2022
 	 */
-	ApiResponse update(ConfigFlowConditionRequest configFlowCondition);
+	ApiResponse update(List<ConfigFlowConditionRequest> configFlowCondition);
 
 	/**
 	 * * Description delete condition by id

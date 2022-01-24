@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +42,9 @@ public class ConfigFlowConditionServiceImpl implements ConfigFlowConditionServic
 		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), response, null, "Tạo mới đối tượng thành công!");
 	}
 
-	public ApiResponse findAllConditon() {
-		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository.findAll()
+	public ApiResponse findByConditonIsTrue() {
+		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository
+				.findAll()
 				.stream()
 				.sorted(Comparator.comparing(ConfigFlowCondition::getConditionId))
 				.filter(ConfigFlowCondition::isConfig)
@@ -50,21 +52,40 @@ public class ConfigFlowConditionServiceImpl implements ConfigFlowConditionServic
 		ApiResponse response = new ApiResponse();
 		response.setStatus(200);
 		response.setData(flowConditions);
-		response.setMessage("Lấy danh sách luồng điều kiện");
+		response.setMessage("Lấy danh sách luồng điều kiện với status là 1");
 		return response;
 	}
 
-	public ApiResponse update(ConfigFlowConditionRequest configFlowCondition) {
-		Optional<ConfigFlowCondition> flowConditionOptional = configFlowConditionRepository.findById(configFlowCondition.getRequestId());
-		if (!flowConditionOptional.isPresent()) {
-			throw new RuntimeException("Không tồn tại bản ghi trong bảng: ConfigFlowCondition");
-		}
-		ConfigFlowCondition condition = new ConfigFlowCondition();
-		condition.setConditionId(configFlowCondition.getRequestId());
-		condition.setFlowName(configFlowCondition.getFlowName());
-		condition.setConfig(configFlowCondition.isConfig());
-		ConfigFlowCondition flowCondition = configFlowConditionRepository.saveAndFlush(condition);
-		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), flowCondition, null, "Update điều kiện thành công!");
+	public ApiResponse findAllConditon() {
+		List<ConfigFlowCondition> flowConditions = configFlowConditionRepository
+				.findAll()
+				.stream()
+				.sorted(Comparator.comparing(ConfigFlowCondition::getConditionId))
+				.collect(Collectors.toList());
+		ApiResponse response = new ApiResponse();
+		response.setStatus(200);
+		response.setData(flowConditions);
+		response.setMessage("Lấy danh sách luồng điều kiện với tất cả các điều kiện!!");
+		return response;
+	}
+
+
+	public ApiResponse update(List<ConfigFlowConditionRequest> configFlowConditionRequests) {
+		List<ConfigFlowCondition> flowConditions = new ArrayList<>();
+		configFlowConditionRequests.forEach(configFlowConditionRequest -> {
+			Optional<ConfigFlowCondition> flowConditionOptional = configFlowConditionRepository.findById(configFlowConditionRequest.getConditionId());
+			if (!flowConditionOptional.isPresent()) {
+				throw new RuntimeException("Không tồn tại bản ghi trong bảng: ConfigFlowCondition");
+			}
+			ConfigFlowCondition condition = new ConfigFlowCondition();
+			condition.setConditionId(configFlowConditionRequest.getConditionId());
+			condition.setFlowName(configFlowConditionRequest.getFlowName());
+			condition.setConfig(configFlowConditionRequest.isConfig());
+			ConfigFlowCondition flowCondition = configFlowConditionRepository.saveAndFlush(condition);
+			flowConditions.add(flowCondition);
+
+		});
+		return new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), flowConditions.size(), null, "Update điều kiện thành công!");
 	}
 
 	public ApiResponse delete(Long id) {
@@ -75,6 +96,4 @@ public class ConfigFlowConditionServiceImpl implements ConfigFlowConditionServic
 		}
 		return new ApiResponse(ApiResponseStatus.FAILED.getValue(), condition, null, "Xóa đối tượng không thành công!");
 	}
-
-
 }

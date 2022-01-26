@@ -4,11 +4,9 @@ import dts.com.vn.entities.Register;
 import dts.com.vn.oracle.entities.OracleRegister;
 import dts.com.vn.oracle.repository.OracleRegisterRepository;
 import dts.com.vn.repository.RegisterRepository;
-import dts.com.vn.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 

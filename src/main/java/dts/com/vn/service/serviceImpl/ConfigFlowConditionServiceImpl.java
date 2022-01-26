@@ -79,6 +79,7 @@ public class ConfigFlowConditionServiceImpl implements ConfigFlowConditionServic
 			}
 			ConfigFlowCondition condition = new ConfigFlowCondition();
 			condition.setConditionId(configFlowConditionRequest.getConditionId());
+			condition.setFlowKey(configFlowConditionRequest.getFlowKey());
 			condition.setFlowName(configFlowConditionRequest.getFlowName());
 			condition.setConfig(configFlowConditionRequest.isConfig());
 			ConfigFlowCondition flowCondition = configFlowConditionRepository.saveAndFlush(condition);

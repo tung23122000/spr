@@ -25,4 +25,13 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
 	@Modifying
 	@Query("update Register reg set reg.extRetryNum = :extRetryNum where reg.regId = :regId")
 	void saveRegister(Long regId, Long extRetryNum);
+
+
+	@Query(nativeQuery = true,
+			value = "SELECT COUNT(DISTINCT r.isdn)\n" +
+			"FROM register r\n" +
+			"WHERE ((now() BETWEEN r.sta_datetime AND r.end_datetime)\n" +
+			"    OR (r.end_datetime IS NULL AND now() > r.sta_datetime))")
+	Long findAllPhone();
+
 }

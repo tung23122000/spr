@@ -12,7 +12,7 @@ public class ConfigFlowConditionRequest {
 
 	private String flowName;
 
-	@JsonProperty
-	private boolean isConfig;
+	@JsonProperty()
+	private boolean config;
 
 }

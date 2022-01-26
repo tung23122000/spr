@@ -34,10 +34,7 @@ public class ReportService {
 	private final SasReTaskParameterRepository sasReTaskParameterRepository;
 
 	@Autowired
-	public ReportService(ServicePackageRepository servicePackageRepository,
-	                     ServiceTypeRepository serviceTypeRepository,
-	                     RegisterRepository registerRepository,
-	                     SasReTaskParameterRepository sasReTaskParameterRepository) {
+	public ReportService(ServicePackageRepository servicePackageRepository, ServiceTypeRepository serviceTypeRepository, RegisterRepository registerRepository, SasReTaskParameterRepository sasReTaskParameterRepository) {
 		this.servicePackageRepository = servicePackageRepository;
 		this.serviceTypeRepository = serviceTypeRepository;
 		this.registerRepository = registerRepository;
@@ -46,8 +43,11 @@ public class ReportService {
 
 
 	public ApiResponse dailyReport(Long serviceTypeId, String date) {
+		Long phones = registerRepository.findAllPhone();
+
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
+		data.setPhoneNumber(phones);
 		List<CompletableFuture<ListPackageResponse>> result = new ArrayList<>();
 		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
 		optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));

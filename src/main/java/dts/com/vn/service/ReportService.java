@@ -9,25 +9,18 @@ import dts.com.vn.repository.RegisterRepository;
 import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceTypeRepository;
 import dts.com.vn.response.*;
-
-import dts.com.vn.response.ApiResponse;
-import dts.com.vn.response.DailyReportResponse;
-import dts.com.vn.response.ListPackageResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
-
-	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
 	private static final String SOURCE_TYPE = "SOURCE_TYPE";
 
@@ -280,7 +273,7 @@ public class ReportService {
 	}
 
 	private String LongDistance(String date) {
-		String result = new String();
+		String result = "";
 		try {
 			String time1 = date + " 00:00:00";
 			String time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -297,4 +290,9 @@ public class ReportService {
 		}
 		return result;
 	}
+
+	public Long findPhoneNumber() {
+		return registerRepository.findAllPhone();
+	}
+
 }

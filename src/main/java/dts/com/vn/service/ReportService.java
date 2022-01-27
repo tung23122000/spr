@@ -43,11 +43,8 @@ public class ReportService {
 
 
 	public ApiResponse dailyReport(Long serviceTypeId, String date) {
-		Long phones = registerRepository.findAllPhone();
-
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
-		data.setPhoneNumber(phones);
 		List<CompletableFuture<ListPackageResponse>> result = new ArrayList<>();
 		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
 		optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));
@@ -126,6 +123,10 @@ public class ReportService {
 		response.setStatus(200);
 		response.setData(packageResponse);
 		return response;
+	}
+
+	public Long findPhoneNumber() {
+		return registerRepository.findAllPhone();
 	}
 
 }

@@ -7,31 +7,29 @@ import java.io.Serializable;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "sas_re_task_parameter", schema = "ilink")
 public class SasReTaskParameter {
 
-	@EmbeddedId
-	private EmbeddableWithoutId embeddableWithoutId;
+  @EmbeddedId private EmbeddableWithoutId embeddableWithoutId;
 
-	@Column(name = "parameter_Name")
-	private String parameterName;
+  @Column(name = "parameterName")
+  private String parameterName;
 
-	@Column(name = "parameters_Type")
-	private Long parametersType;
+  @Column(name = "parametersType")
+  private Long parametersType;
 
-	@Column(name = "parameter_value")
-	private String parametersValue;
+  @Column(name = "parametersValue")
+  private String parametersValue;
 
-	@Embeddable
-	@Data
-	public static class EmbeddableWithoutId implements Serializable {
+  @Embeddable
+  @Data
+  public static class EmbeddableWithoutId implements Serializable {
 
-		@Column(name = "request_Id")
-		private Long requestId;
+    @Column(name = "requestId")
+    private Long requestId;
 
-		@Column(name = "task_Id")
-		private Long taskId;
-	}
+    @Column(name = "taskId")
+    private Long taskId;
+  }
 }

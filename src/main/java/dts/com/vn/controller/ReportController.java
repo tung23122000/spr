@@ -1,8 +1,12 @@
 package dts.com.vn.controller;
 
+import dts.com.vn.enumeration.ApiResponseStatus;
+import dts.com.vn.enumeration.ErrorCode;
+import dts.com.vn.enumeration.LogConstants;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.response.ApiResponse;
 import dts.com.vn.service.ReportService;
+import dts.com.vn.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +28,7 @@ public class ReportController {
 
 	@GetMapping("/dailyReport")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> dailyReport(@RequestParam Long serviceTypeId,
-	                                               @RequestParam String date) {
+	public ResponseEntity<ApiResponse> dailyReport(@RequestParam Long serviceTypeId, @RequestParam String date) {
 		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
 		ApiResponse response;
 		try {
@@ -33,6 +36,21 @@ public class ReportController {
 		} catch (RestApiException ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/getPhoneNumber")
+	@ResponseBody
+	public ResponseEntity<?> totalPhoneNumer() {
+		ApiResponse response;
+		try {
+			Long totalPhoneNumber = reportService.findPhoneNumber();
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), totalPhoneNumber, null, "Lấy tổng số thuê bao đang hoạt động thành công.");
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+		} catch (Exception e) {
+			response = new ApiResponse(e, ErrorCode.REPORT_TOTAL_PHONE_NUMBER_ERROR);
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -45,10 +63,7 @@ public class ReportController {
 	 */
 	@GetMapping("/dailyReport/find-package")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> findByPackageAndTransaction(@RequestParam Long serviceTypeId,
-	                                                               @RequestParam String packageCode,
-	                                                               @RequestParam String transaction,
-	                                                               @RequestParam String date) {
+	public ResponseEntity<ApiResponse> findByPackageAndTransaction(@RequestParam Long serviceTypeId, @RequestParam String packageCode, @RequestParam String transaction, @RequestParam String date) {
 		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
 		ApiResponse response;
 		try {

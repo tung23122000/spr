@@ -98,6 +98,7 @@ public enum ErrorCode {
 	CONFIG_FLOW_CONDITION_ERROR("error.data","Insert data không hợp lệ."),
 	CONFIG_FLOW_CONDITION_DELETE_ERROR("error.data","Xóa data không hợp lệ."),
 	CONFIG_FLOW_CONDITION_UPDATE_ERROR("error.data","Update data không hợp lệ."),
+	REPORT_TOTAL_PHONE_NUMBER_ERROR("error.data","Dữ liệu tổng số phone lấy ra không thông công."),
 	;
 	private String errorCode;
 

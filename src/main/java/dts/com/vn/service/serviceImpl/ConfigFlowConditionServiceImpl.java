@@ -77,6 +77,9 @@ public class ConfigFlowConditionServiceImpl implements ConfigFlowConditionServic
 			if (!flowConditionOptional.isPresent()) {
 				throw new RuntimeException("Không tồn tại bản ghi trong bảng: ConfigFlowCondition");
 			}
+			if(StringUtils.equals(configFlowConditionRequest.getFlowName(),null) || StringUtils.equals(configFlowConditionRequest.getFlowKey(), null)){
+				throw new RuntimeException("Flow name hoặc flow key trong request là null!!");
+			}
 			ConfigFlowCondition condition = new ConfigFlowCondition();
 			condition.setConditionId(configFlowConditionRequest.getConditionId());
 			condition.setFlowKey(configFlowConditionRequest.getFlowKey());

@@ -14,8 +14,6 @@ public class DailyReportResponse {
 
 	private String groupName;
 
-	private Long phoneNumber;
-
 	private List<ListPackageResponse> listPackage;
 
 }

@@ -1,6 +1,5 @@
 package dts.com.vn.ilarc.entities;
 
-import dts.com.vn.ilink.entities.SasReTaskParameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +16,12 @@ import java.sql.Timestamp;
 public class IlArcTaskParameter {
 
 	@EmbeddedId
-	private SasReTaskParameter.EmbeddableWithoutId embeddableWithoutId;
+	private EmbeddableWithoutId embeddableWithoutId;
 
-	@Column(name = "parameter_Name")
+	@Column(name = "parameter_name")
 	private String parameterName;
 
-	@Column(name = "parameters_Type")
+	@Column(name = "parameter_type")
 	private Long parametersType;
 
 	@Column(name = "parameter_value")
@@ -35,10 +34,10 @@ public class IlArcTaskParameter {
 	@Data
 	public static class EmbeddableWithoutId implements Serializable {
 
-		@Column(name = "request_Id")
+		@Column(name = "request_id")
 		private Long requestId;
 
-		@Column(name = "task_Id")
+		@Column(name = "task_id")
 		private Long taskId;
 	}
 }

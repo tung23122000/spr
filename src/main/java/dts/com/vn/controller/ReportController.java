@@ -75,4 +75,17 @@ public class ReportController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@GetMapping("/daily-top-10-isdn")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> dailyTop10IsdnReport(@RequestParam String date) {
+		logger.info("=========> " + "logger");
+		ApiResponse response;
+		try {
+			response = reportService.dailyTop10IsdnReport(date);
+		} catch (RestApiException ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex);
+		}
+		return ResponseEntity.ok().body(response);
+	}
 }

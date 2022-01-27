@@ -15,4 +15,7 @@ public class ListCommandResponse {
 
 	private Integer requestStatus;
 
+	private String source;
+
 }
+

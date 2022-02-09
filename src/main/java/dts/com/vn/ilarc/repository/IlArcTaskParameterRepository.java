@@ -61,4 +61,32 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
 	String findCommandByReqId(
 			Long reqId
 	);
+
+	@Query(
+			nativeQuery = true,
+			value =
+					"SELECT count(rm.request_id) \n"
+							+ "FROM ilarc.il_arc_task_parameter tp\n"
+							+ "    INNER JOIN ilarc.il_arc_request_message rm ON tp.request_id = rm.request_id\n"
+							+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
+							+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
+							+ "  AND rm.req_status = 9\n"
+							+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n"
+							+ "\n")
+	Integer findAllFailByParameterValueInIlarc(
+			String parameterValue, Timestamp regDate, Timestamp endDate);
+
+	@Query(
+			nativeQuery = true,
+			value =
+					"SELECT count(rm.request_id) \n"
+							+ "FROM ilarc.il_arc_task_parameter tp\n"
+							+ "    INNER JOIN ilarc.il_arc_request_message rm ON tp.request_id = rm.request_id\n"
+							+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
+							+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
+							+ "  AND rm.req_status = 7\n"
+							+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n"
+							+ "\n")
+	Integer findAllSuccessByParameterValueInIlarc(
+			String parameterValue, Timestamp regDate, Timestamp endDate);
 }

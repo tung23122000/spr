@@ -45,7 +45,12 @@ public class ReportService {
 		this.ilArcTaskParameterRepository = ilArcTaskParameterRepository;
 	}
 
-
+	/**
+	 * Description Update by Tinhbdt
+	 * <p>
+	 * api-daily-report
+	 * date-2022/09/13
+	 */
 	public ApiResponse dailyReport(Long serviceTypeId, String date) {
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
@@ -58,9 +63,15 @@ public class ReportService {
 		if (listAllPackageSameGroup.size() > 0) {
 			result = listAllPackageSameGroup.stream().map(servicePackage -> CompletableFuture.supplyAsync(() -> {
 				ListPackageResponse listPackageResponse = new ListPackageResponse();
-				Integer numberRecordSuccess = registerRepository.findAllByPackageIdAndRegDate(servicePackage.getPackageId(), start, end);
-				Integer numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueAndDate(servicePackage.getCode(), start, end);
-
+				Integer numberRecordSuccess;
+				Integer numberRecordFailed;
+				if (!LongDistance(date)) {
+					numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
+					numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
+				} else {
+					numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
+					numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
+				}
 				listPackageResponse.setPackageCode(servicePackage.getCode());
 				listPackageResponse.setPackageName(servicePackage.getName());
 				listPackageResponse.setNumberRecordSuccess(numberRecordSuccess);
@@ -88,48 +99,47 @@ public class ReportService {
 	 * @author - binhDT
 	 * @created - 17/01/2022
 	 */
-	public ApiResponse findByPackageAndTransaction(Long serviceTypeId, String packageCode, String transaction, String date) {
-
-		ApiResponse response = new ApiResponse();
-		ReportServicePackageResponse packageResponse = new ReportServicePackageResponse();
-		List<ListCommandResponse> result = new ArrayList<>();
-		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
-		optServiceType.ifPresent(serviceType -> packageResponse.setServiceGroup(serviceType.getName()));
-		// Lấy thông tin servicePackage thông qua serviceTypeId và packageCode
-		ServicePackage servicePackage = servicePackageRepository.findByServiceTypeIdAndCode(serviceTypeId, packageCode);
-		Timestamp start = Timestamp.valueOf(date + " " + "00:00:00");
-		Timestamp end = Timestamp.valueOf(date + " " + "23:59:59");
-		// Số lượng request thành công
-		Integer numberRecordSuccess = registerRepository.findAllByPackageIdAndRegDate(servicePackage.getPackageId(), start, end);
-		// Số lượng request thất bại
-		Integer numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueAndDate(servicePackage.getCode(), start, end);
-
-		//Set giá trị vào response
-		packageResponse.setPackageCode(servicePackage.getCode());
-		packageResponse.setPackageName(servicePackage.getName());
-		packageResponse.setNumberRecordSuccess(numberRecordSuccess);
-		packageResponse.setNumberRecordFailed(numberRecordFailed);
-
-		// Lấy ra danh sách thông tin request sms_content và trạng thái
-		List<CommandResponse> commandResponseList = sasReTaskParameterRepository.findByListCommand(packageCode, transaction, start, end);
-
-		// Kiểm tra danh sách tin nhắn và map vào list response
-		if (commandResponseList.size() > 0) {
-			result = commandResponseList.stream().map(command -> {
-				ListCommandResponse commandResponse = new ListCommandResponse();
-				commandResponse.setRequestId(command.getRequestId());
-				commandResponse.setRequestCommand(command.getRequestCommand());
-				commandResponse.setRequestStatus(command.getRequestStatus());
-				commandResponse.setSource(getSourceContentIlink(commandResponse.getRequestId()));
-				return commandResponse;
-			}).collect(Collectors.toList());
-		}
-		packageResponse.setListCommand(result);
-		response.setStatus(200);
-		response.setData(packageResponse);
-		return response;
-	}
-
+//	public ApiResponse findByPackageAndTransaction(Long serviceTypeId, String packageCode, String transaction, String date) {
+//
+//		ApiResponse response = new ApiResponse();
+//		ReportServicePackageResponse packageResponse = new ReportServicePackageResponse();
+//		List<ListCommandResponse> result = new ArrayList<>();
+//		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
+//		optServiceType.ifPresent(serviceType -> packageResponse.setServiceGroup(serviceType.getName()));
+//		// Lấy thông tin servicePackage thông qua serviceTypeId và packageCode
+//		ServicePackage servicePackage = servicePackageRepository.findByServiceTypeIdAndCode(serviceTypeId, packageCode);
+//		Timestamp start = Timestamp.valueOf(date + " " + "00:00:00");
+//		Timestamp end = Timestamp.valueOf(date + " " + "23:59:59");
+//		// Số lượng request thành công
+//		Integer numberRecordSuccess = registerRepository.findAllByPackageIdAndRegDate(servicePackage.getPackageId(), start, end);
+//		// Số lượng request thất bại
+//		Integer numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
+//
+//		//Set giá trị vào response
+//		packageResponse.setPackageCode(servicePackage.getCode());
+//		packageResponse.setPackageName(servicePackage.getName());
+//		packageResponse.setNumberRecordSuccess(numberRecordSuccess);
+//		packageResponse.setNumberRecordFailed(numberRecordFailed);
+//
+//		// Lấy ra danh sách thông tin request sms_content và trạng thái
+//		List<CommandResponse> commandResponseList = sasReTaskParameterRepository.findByListCommand(packageCode, transaction, start, end);
+//
+//		// Kiểm tra danh sách tin nhắn và map vào list response
+//		if (commandResponseList.size() > 0) {
+//			result = commandResponseList.stream().map(command -> {
+//				ListCommandResponse commandResponse = new ListCommandResponse();
+//				commandResponse.setRequestId(command.getRequestId());
+//				commandResponse.setRequestCommand(command.getRequestCommand());
+//				commandResponse.setRequestStatus(command.getRequestStatus());
+//				commandResponse.setSource(getSourceContentIlink(commandResponse.getRequestId()));
+//				return commandResponse;
+//			}).collect(Collectors.toList());
+//		}
+//		packageResponse.setListCommand(result);
+//		response.setStatus(200);
+//		response.setData(packageResponse);
+//		return response;
+//	}
 	private String getSourceContentIlink(Long requestId) {
 		Optional<SourcesResponse> sourcesResponse = sasReTaskParameterRepository.findFlowSourceIlink(requestId, SOURCE_TYPE);
 		if (!sourcesResponse.isPresent()) {
@@ -171,16 +181,23 @@ public class ReportService {
 	}
 
 
-	//TinhBdt - xủ lý báo cáo 10 số điện thoại có nhiều bản ghi fail nhất
+	/**
+	 * Description - Xử lý báo cáo 10 số điện thoại có nhiều bản ghi fail nhất
+	 *
+	 * @param date - Ngày cần truy xuất dữ liệu
+	 * @return any
+	 * @author - tinhbdt
+	 * @created - 09/02/2022
+	 */
 	public ApiResponse dailyTop10IsdnReport(String date) {
 		ApiResponse response = new ApiResponse();
 		List<CancelReportResponse> data = new ArrayList<>();
 		List<CancelReportResponse> newData = new ArrayList<>();
-		if (LongDistance(date).equals("false")) {
+		if (!LongDistance(date)) {
 			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
 			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
 			List<String> listISDN = ilArcTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
-			if (listISDN.size()!=0) {
+			if (listISDN.size() != 0) {
 				for (String isdn : listISDN) {
 					List<CommandandSource> listComandSou = new ArrayList<>();
 					CancelReportResponse cancelReportResponse = new CancelReportResponse();
@@ -223,11 +240,11 @@ public class ReportService {
 				response.setData("");
 			}
 		}
-		if (LongDistance(date).equals("true")) {
+		if (LongDistance(date)) {
 			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
 			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
 			List<String> listISDN = sasReTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
-			if (listISDN.size()!=0) {
+			if (listISDN.size() != 0) {
 				for (String isdn : listISDN) {
 					List<CommandandSource> listComandSou = new ArrayList<>();
 					CancelReportResponse cancelReportResponse = new CancelReportResponse();
@@ -272,25 +289,37 @@ public class ReportService {
 		return response;
 	}
 
-	private String LongDistance(String date) {
-		String result = "";
+	/**
+	 * Description -
+	 *
+	 * @param date - Ngày cần kiểm tra
+	 * @return true or false
+	 * @author - tinhbdt
+	 * @created - 09/02/2022
+	 */
+	private Boolean LongDistance(String date) {
+		long timeDistance = 0;
 		try {
 			String time1 = date + " 00:00:00";
 			String time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
 			long difference = date2.getTime() - date1.getTime();
-			long timeDistance = difference / 3600000;
-			if (timeDistance < 48) return result = "true";
-			else return result = "false";
+			timeDistance = difference / 3600000;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return timeDistance < 48;
 	}
 
+	/**
+	 * Description - Tìm tổng số thuê bao đang có gói
+	 *
+	 * @return any
+	 * @author - binhdt
+	 * @created - 09/02/2022
+	 */
 	public Long findPhoneNumber() {
 		return registerRepository.findAllPhone();
 	}

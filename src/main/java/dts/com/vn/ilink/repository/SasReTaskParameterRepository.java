@@ -20,14 +20,28 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 			nativeQuery = true,
 			value =
 					"SELECT count(rm.request_id) \n"
-							+ "FROM sas_re_task_parameter tp\n"
-							+ "    INNER JOIN sas_re_request_message rm ON tp.request_id = rm.request_id\n"
+							+ "FROM ilink.sas_re_task_parameter tp\n"
+							+ "    INNER JOIN ilink.sas_re_request_message rm ON tp.request_id = rm.request_id\n"
 							+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
 							+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
 							+ "  AND rm.req_status = 9\n"
 							+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n"
 							+ "\n")
-	Integer findAllFailByParameterValueAndDate(
+	Integer findAllFailByParameterValueInIlink(
+			String parameterValue, Timestamp regDate, Timestamp endDate);
+
+	@Query(
+			nativeQuery = true,
+			value =
+					"SELECT count(rm.request_id) \n"
+							+ "FROM ilink.sas_re_task_parameter tp\n"
+							+ "    INNER JOIN ilink.sas_re_request_message rm ON tp.request_id = rm.request_id\n"
+							+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
+							+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
+							+ "  AND rm.req_status = 7\n"
+							+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n"
+							+ "\n")
+	Integer findAllSuccessByParameterValueInIlink(
 			String parameterValue, Timestamp regDate, Timestamp endDate);
 
 	@Query(nativeQuery = true,

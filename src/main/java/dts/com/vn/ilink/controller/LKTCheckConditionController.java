@@ -103,7 +103,7 @@ public class LKTCheckConditionController {
 		logger.info("==========>   " + new Gson().toJson(request));
 		ApiResponse response;
 		try {
-			response = conditionService.deleteListCondition(request.getProgramCode(), request.getTransaction());
+			response = conditionService.deleteListCondition(request.getProgramCode(),    request.getTransaction());
 			return ResponseEntity.ok().body(response);
 		} catch (Exception ex) {
 			logger.error(ex.toString());

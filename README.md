@@ -48,7 +48,7 @@ mvn package -DskipTests=true
 
 1. Sửa file **application.yml** thuộc tính spring.active.profile ứng với môi trường cần deploy
 2. Sau đó thực hiện đóng gói project theo câu lệnh trên
-3. Copy file .jar của project lên server
+3. Copy file .jar của project lên server vào đường dẫn /web-admin/api
 4. SSH đến server cần deploy và run ứng dụng dưới dạng 1 service của hệ điều hành bằng command sau
 
 ````shell

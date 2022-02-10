@@ -37,4 +37,5 @@ public class SprConfigApiApplication extends PostgreSQL94Dialect {
 	public SprConfigApiApplication() {
 		this.registerColumnType(Types.JAVA_OBJECT, "jsonb");
 	}
+
 }

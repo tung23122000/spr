@@ -27,7 +27,7 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
 	@Query(nativeQuery = true,
 			value = "SELECT DISTINCT rm.primary_subs_id as isdn\n" +
 					"FROM ilarc.il_arc_request_message rm \n" +
-					"WHERE rm.req_start_time BETWEEN :startDate AND :endDate\n" +
+					"WHERE rm.received_time BETWEEN :startDate AND :endDate\n" +
 					"AND rm.req_status = '9'"
 	)
 	List<String> findIsdnHasFailReq(Timestamp startDate, Timestamp endDate);
@@ -37,7 +37,7 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
 					"FROM ilarc.il_arc_request_message\n" +
 					"WHERE primary_subs_id = :isdn\n" +
 					"AND req_status ='9'\n" +
-					"AND req_start_time BETWEEN :startDate AND :endDate")
+					"AND received_time BETWEEN :startDate AND :endDate")
 	List<Long> findReqIdByIsdn(String isdn, Timestamp startDate, Timestamp endDate);
 
 	@Query(nativeQuery = true, value = "SELECT parameter_value\n" +
@@ -53,7 +53,7 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
 					+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
 					+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
 					+ "  AND rm.req_status = 7\n"
-					+ "AND rm.finished_time BETWEEN :regDate AND :endDate")
+					+ "AND rm.received_time BETWEEN :regDate AND :endDate")
 	Integer findAllSuccessByParameterValueInIlarc(String parameterValue, Timestamp regDate, Timestamp endDate);
 
 	@Query(nativeQuery = true,
@@ -63,7 +63,7 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
 					+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
 					+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
 					+ "  AND rm.req_status = 9\n"
-					+ "AND rm.finished_time BETWEEN :regDate AND :endDate")
+					+ "AND rm.received_time BETWEEN :regDate AND :endDate")
 	Integer findAllFailByParameterValueInIlarc(String parameterValue, Timestamp regDate, Timestamp endDate);
 
 }

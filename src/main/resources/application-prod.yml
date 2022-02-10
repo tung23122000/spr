@@ -3,24 +3,27 @@ server:
 
 spring:
   datasource:
-    # Primary database
+    # Database SPR
     primary:
       jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/spr
       username: spr
       password: spr
       driverClassName: org.postgresql.Driver
-    # Secondary database
+
+    # Database VASP
     secondary:
-      jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
-      username: VASP4_SUBS
-      password: abcd1234
+      jdbc-url: jdbc:oracle:thin:@10.50.9.161:1521:vasp1
+      username: flowone_spr
+      password: fl0wOne$Mbf2021
       driverClassName: oracle.jdbc.OracleDriver
+
     # Database ILINK
     third:
       jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/ilink
       username: ilink
       password: ilink
       driverClassName: org.postgresql.Driver
+
     # Database ILARC
     fourth:
       jdbc-url: jdbc:postgresql://10.3.17.139:5432/ilarc

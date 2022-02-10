@@ -89,6 +89,66 @@
       "name": "cors.max-age",
       "type": "java.lang.String",
       "description": "Description for cors.max-age."
+    },
+    {
+      "name": "spring.datasource.secondary.jdbc-url",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.secondary.jdbc-url."
+    },
+    {
+      "name": "spring.datasource.secondary.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.secondary.username."
+    },
+    {
+      "name": "spring.datasource.secondary.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.secondary.password."
+    },
+    {
+      "name": "spring.datasource.secondary.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.secondary.driverClassName."
+    },
+    {
+      "name": "spring.datasource.third.jdbc-url",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.third.jdbc-url."
+    },
+    {
+      "name": "spring.datasource.third.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.third.username."
+    },
+    {
+      "name": "spring.datasource.third.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.third.password."
+    },
+    {
+      "name": "spring.datasource.third.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.third.driverClassName."
+    },
+    {
+      "name": "spring.datasource.fourth.jdbc-url",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.fourth.jdbc-url."
+    },
+    {
+      "name": "spring.datasource.fourth.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.fourth.username."
+    },
+    {
+      "name": "spring.datasource.fourth.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.fourth.password."
+    },
+    {
+      "name": "spring.datasource.fourth.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.fourth.driverClassName."
     }
   ]
 }

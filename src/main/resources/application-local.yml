@@ -1,13 +1,13 @@
 spring:
   datasource:
-    # Primary database
+    # Database SPR
     primary:
       jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/spr
       username: spr
       password: Dts@12345
       driverClassName: org.postgresql.Driver
 
-    # Secondary database
+    # Database VASP
     secondary:
       jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
       username: VASP4_SUBS

@@ -7,7 +7,7 @@ spring:
       password: Dts@12345
       driverClassName: org.postgresql.Driver
 
-    # Database VASP
+    # Database VASP TEST
     secondary:
       jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
       username: VASP4_SUBS

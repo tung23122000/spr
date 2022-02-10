@@ -22,7 +22,7 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 					+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
 					+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
 					+ "  AND rm.req_status = 7\n"
-					+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n")
+					+ "AND rm.received_time BETWEEN :regDate AND :endDate \n")
 	Integer findAllSuccessByParameterValueInIlink(String parameterValue, Timestamp regDate, Timestamp endDate);
 
 	@Query(nativeQuery = true,
@@ -32,7 +32,7 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 					+ "WHERE tp.parameter_value LIKE CONCAT('%',:parameterValue,'%')\n"
 					+ "  AND tp.parameter_name = 'SMS_CONTENT'\n"
 					+ "  AND rm.req_status = 9\n"
-					+ "AND rm.finished_time BETWEEN :regDate AND :endDate \n")
+					+ "AND rm.received_time BETWEEN :regDate AND :endDate \n")
 	Integer findAllFailByParameterValueInIlink(String parameterValue, Timestamp regDate, Timestamp endDate);
 
 	@Query(nativeQuery = true,
@@ -45,7 +45,7 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 					"WHERE tp.parameter_value LIKE CONCAT('%', :packageCode, '%')\n" +
 					"  AND tp.parameter_value LIKE CONCAT('%', :keytransaction, '%')\n" +
 					"  AND tp.parameter_name = 'SMS_CONTENT'\n" +
-					"  AND rm.finished_time BETWEEN :regDate AND :endDate")
+					"  AND rm.received_time BETWEEN :regDate AND :endDate")
 	List<CommandResponse> findByListCommand(String packageCode, String keytransaction, Timestamp regDate, Timestamp endDate);
 
 	@Query(nativeQuery = true, value = "SELECT tp.request_id AS requestId,\n" +
@@ -59,7 +59,7 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 			nativeQuery = true,
 			value = "SELECT DISTINCT rm.primary_subs_id as isdn\n" +
 					"FROM ilink.sas_re_request_message rm \n" +
-					"WHERE rm.req_start_time BETWEEN :startDate AND :endDate\n" +
+					"WHERE rm.received_time BETWEEN :startDate AND :endDate\n" +
 					"AND rm.req_status = '9'"
 	)
 	List<String> findIsdnHasFailReq(
@@ -73,7 +73,7 @@ public interface SasReTaskParameterRepository extends JpaRepository<SasReTaskPar
 					"FROM ilink.sas_re_request_message\n" +
 					"WHERE primary_subs_id = :isdn\n" +
 					"AND req_status ='9'\n" +
-					"AND req_start_time BETWEEN :startDate AND :endDate"
+					"AND received_time BETWEEN :startDate AND :endDate"
 	)
 	List<Long> findReqIdByIsdn(
 			String isdn,

@@ -65,10 +65,10 @@ public class ReportService {
 				ListPackageResponse listPackageResponse = new ListPackageResponse();
 				Integer numberRecordSuccess;
 				Integer numberRecordFailed;
-				if (!LongDistance(date)) {
+				if (!isTwoDay(date)) {
 					numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
 					numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-				} else {
+				}else {
 					numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
 					numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
 				}
@@ -193,7 +193,7 @@ public class ReportService {
 		ApiResponse response = new ApiResponse();
 		List<CancelReportResponse> data = new ArrayList<>();
 		List<CancelReportResponse> newData = new ArrayList<>();
-		if (!LongDistance(date)) {
+		if (!isTwoDay(date)) {
 			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
 			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
 			List<String> listISDN = ilArcTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
@@ -240,7 +240,7 @@ public class ReportService {
 				response.setData("");
 			}
 		}
-		if (LongDistance(date)) {
+		if (isTwoDay(date)) {
 			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
 			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
 			List<String> listISDN = sasReTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
@@ -297,7 +297,7 @@ public class ReportService {
 	 * @author - tinhbdt
 	 * @created - 09/02/2022
 	 */
-	private Boolean LongDistance(String date) {
+	private Boolean isTwoDay(String date) {
 		long timeDistance = 0;
 		try {
 			String time1 = date + " 00:00:00";

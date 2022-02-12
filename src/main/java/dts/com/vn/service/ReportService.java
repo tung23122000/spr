@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -55,6 +56,7 @@ public class ReportService {
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
 		List<CompletableFuture<ListPackageResponse>> result = new ArrayList<>();
+		Long timeDifference = isTwoDay(date);
 		Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
 		optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));
 		List<ServicePackage> listAllPackageSameGroup = servicePackageRepository.findAllByServiceTypeId(serviceTypeId);
@@ -65,12 +67,19 @@ public class ReportService {
 				ListPackageResponse listPackageResponse = new ListPackageResponse();
 				Integer numberRecordSuccess;
 				Integer numberRecordFailed;
-				if (!isTwoDay(date)) {
+				if (timeDifference > 0) {
 					numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
 					numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-				}else {
+				} else if (timeDifference < 0) {
 					numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
 					numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
+				} else {
+					Integer numberRecordSuccessIlarc = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
+					Integer numberRecordFailedIlarc = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
+					Integer numberRecordSuccessIlink = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
+					Integer numberRecordFailedIlink = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
+					numberRecordFailed = numberRecordFailedIlarc + numberRecordFailedIlink;
+					numberRecordSuccess = numberRecordSuccessIlink + numberRecordSuccessIlarc;
 				}
 				listPackageResponse.setPackageCode(servicePackage.getCode());
 				listPackageResponse.setPackageName(servicePackage.getName());
@@ -193,9 +202,10 @@ public class ReportService {
 		ApiResponse response = new ApiResponse();
 		List<CancelReportResponse> data = new ArrayList<>();
 		List<CancelReportResponse> newData = new ArrayList<>();
-		if (!isTwoDay(date)) {
-			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
-			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
+		Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
+		Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
+		Long timeDifference = isTwoDay(date);
+		if (timeDifference > 0) {
 			List<String> listISDN = ilArcTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
 			if (listISDN.size() != 0) {
 				for (String isdn : listISDN) {
@@ -215,20 +225,14 @@ public class ReportService {
 						commandandSource.setCommand(command);
 						listComandSou.add(commandandSource);
 					}
-					Map<String, Long> result1 = listComandSou.stream()
-							.collect(Collectors.groupingBy(CommandandSource::getSource, Collectors.counting()));
-					result1.entrySet().stream().forEach(r -> cancelReportResponse.setSourceContent(r.getKey()));
-					result1.entrySet().stream().forEach(r -> cancelReportResponse.setQuantity(r.getValue()));
+					Map<String, Long> result1 = listComandSou.stream().collect(Collectors.groupingBy(CommandandSource::getSource, Collectors.counting()));
+					result1.forEach((key2, value2) -> cancelReportResponse.setSourceContent(key2));
+					result1.forEach((key1, value1) -> cancelReportResponse.setQuantity(value1));
 					Map<String, Long> result2 = listComandSou.stream().collect(Collectors.groupingBy(CommandandSource::getCommand, Collectors.counting()));
-					result2.entrySet().stream().forEach(r -> cancelReportResponse.setCommand(r.getKey()));
+					result2.forEach((key, value) -> cancelReportResponse.setCommand(key));
 					data.add(cancelReportResponse);
 				}
-				Collections.sort(data, new Comparator<CancelReportResponse>() {
-					@Override
-					public int compare(CancelReportResponse o1, CancelReportResponse o2) {
-						return o2.getQuantity().compareTo(o1.getQuantity());
-					}
-				});
+				data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
 				for (int i = 0; i < 10; i++) {
 					newData.add(data.get(i));
 				}
@@ -239,10 +243,7 @@ public class ReportService {
 				response.setStatus(200);
 				response.setData("");
 			}
-		}
-		if (isTwoDay(date)) {
-			Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
-			Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
+		} else {
 			List<String> listISDN = sasReTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
 			if (listISDN.size() != 0) {
 				for (String isdn : listISDN) {
@@ -263,18 +264,16 @@ public class ReportService {
 						listComandSou.add(commandandSource);
 					}
 					Map<String, Long> result1 = listComandSou.stream().collect(Collectors.groupingBy(CommandandSource::getSource, Collectors.counting()));
-					result1.entrySet().stream().forEach(r -> cancelReportResponse.setQuantity(r.getValue()));
-					result1.entrySet().stream().forEach(r -> cancelReportResponse.setSourceContent(r.getKey()));
+					result1.forEach((key1, value1) -> cancelReportResponse.setQuantity(value1));
+					result1.forEach((key2, value2) -> cancelReportResponse.setSourceContent(key2));
 					Map<String, Long> result2 = listComandSou.stream().collect(Collectors.groupingBy(CommandandSource::getCommand, Collectors.counting()));
-					result2.entrySet().stream().forEach(r -> cancelReportResponse.setCommand(r.getKey()));
+					result2.forEach((key, value) -> cancelReportResponse.setCommand(key));
 					data.add(cancelReportResponse);
 				}
-				Collections.sort(data, new Comparator<CancelReportResponse>() {
-					@Override
-					public int compare(CancelReportResponse o1, CancelReportResponse o2) {
-						return o2.getQuantity().compareTo(o1.getQuantity());
-					}
-				});
+				data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
+				for (int i = 0; i < 10; i++) {
+					newData.add(data.get(i));
+				}
 				for (int i = 0; i < 10; i++) {
 					newData.add(data.get(i));
 				}
@@ -297,20 +296,19 @@ public class ReportService {
 	 * @author - tinhbdt
 	 * @created - 09/02/2022
 	 */
-	private Boolean isTwoDay(String date) {
+	private Long isTwoDay(String date) {
 		long timeDistance = 0;
+		LocalDate dateminus = LocalDate.now().minusDays(2);
 		try {
-			String time1 = date + " 00:00:00";
-			String time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date1 = format.parse(time1);
+			String time2 = String.valueOf(dateminus);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date date1 = format.parse(date);
 			Date date2 = format.parse(time2);
-			long difference = date2.getTime() - date1.getTime();
-			timeDistance = difference / 3600000;
+			timeDistance = date2.getTime() - date1.getTime();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return timeDistance < 48;
+		return timeDistance;
 	}
 
 	/**

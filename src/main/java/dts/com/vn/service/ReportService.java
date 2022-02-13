@@ -16,8 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +51,7 @@ public class ReportService {
 	 * api-daily-report
 	 * date-2022/09/13
 	 */
-	public ApiResponse dailyReport(Long serviceTypeId, String date) {
+	public ApiResponse dailyReport(Long serviceTypeId, String date) throws InterruptedException {
 		ApiResponse response = new ApiResponse();
 		DailyReportResponse data = new DailyReportResponse();
 		List<CompletableFuture<ListPackageResponse>> result = new ArrayList<>();
@@ -62,41 +61,46 @@ public class ReportService {
 		List<ServicePackage> listAllPackageSameGroup = servicePackageRepository.findAllByServiceTypeId(serviceTypeId);
 		Timestamp start = Timestamp.valueOf(date + " " + "00:00:00");
 		Timestamp end = Timestamp.valueOf(date + " " + "23:59:59");
-		if (listAllPackageSameGroup.size() > 0) {
-			result = listAllPackageSameGroup.stream().map(servicePackage -> CompletableFuture.supplyAsync(() -> {
+		int requestSize = listAllPackageSameGroup.size();
+		if (requestSize > 0) {
+			ExecutorService executorService = Executors.newFixedThreadPool(requestSize);
+			List<Callable<ListPackageResponse>> callables = new ArrayList<>();
+			listAllPackageSameGroup.forEach(servicePackage -> {
 				ListPackageResponse listPackageResponse = new ListPackageResponse();
-				Integer numberRecordSuccess;
-				Integer numberRecordFailed;
-				if (timeDifference > 0) {
-					numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
-					numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-				} else if (timeDifference < 0) {
-					numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
-					numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
-				} else {
-					Integer numberRecordSuccessIlarc = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
-					Integer numberRecordFailedIlarc = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-					Integer numberRecordSuccessIlink = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
-					Integer numberRecordFailedIlink = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
-					numberRecordFailed = numberRecordFailedIlarc + numberRecordFailedIlink;
-					numberRecordSuccess = numberRecordSuccessIlink + numberRecordSuccessIlarc;
+				callables.add(() -> {
+					Integer numberRecordSuccess;
+					Integer numberRecordFailed;
+					if (timeDifference > 0) {
+						numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
+						numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
+					} else if (timeDifference < 0) {
+						numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
+						numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
+					} else {
+						Integer numberRecordSuccessIlarc = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
+						Integer numberRecordFailedIlarc = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
+						Integer numberRecordSuccessIlink = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
+						Integer numberRecordFailedIlink = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
+						numberRecordFailed = numberRecordFailedIlarc + numberRecordFailedIlink;
+						numberRecordSuccess = numberRecordSuccessIlink + numberRecordSuccessIlarc;
+					}
+					listPackageResponse.setPackageCode(servicePackage.getCode());
+					listPackageResponse.setPackageName(servicePackage.getName());
+					listPackageResponse.setNumberRecordSuccess(numberRecordSuccess);
+					listPackageResponse.setNumberRecordFailed(numberRecordFailed);
+					return listPackageResponse;
+				});
+			});
+			List<Future<ListPackageResponse>> futures = executorService.invokeAll(callables);
+			data.setListPackage(futures.stream().map(listPackageResponseFuture -> {
+				try {
+					return listPackageResponseFuture.get();
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 				}
-				listPackageResponse.setPackageCode(servicePackage.getCode());
-				listPackageResponse.setPackageName(servicePackage.getName());
-				listPackageResponse.setNumberRecordSuccess(numberRecordSuccess);
-				listPackageResponse.setNumberRecordFailed(numberRecordFailed);
-				return listPackageResponse;
-			})).collect(Collectors.toList());
+				return null;
+			}).collect(Collectors.toList()));
 		}
-		CompletableFuture.allOf(result.toArray(new CompletableFuture[result.size()])).join();
-		data.setListPackage(result.stream().map(future -> {
-			try {
-				return future.get();
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}).collect(Collectors.toList()));
 		response.setStatus(200);
 		response.setData(data);
 		return response;
@@ -321,5 +325,4 @@ public class ReportService {
 	public Long findPhoneNumber() {
 		return registerRepository.findAllPhone();
 	}
-
 }

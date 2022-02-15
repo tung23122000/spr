@@ -1,5 +1,6 @@
 package dts.com.vn.controller;
 
+import com.google.gson.Gson;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.enumeration.LogConstants;
@@ -28,16 +29,16 @@ public class ReportController {
 
 	@GetMapping("/dailyReport")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> dailyReport(@RequestParam Long serviceTypeId, @RequestParam String date) {
+	public ResponseEntity<ApiResponse> dailyReport1(@RequestParam Long serviceTypeId, @RequestParam String date) {
 		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
-		ApiResponse response;
 		try {
-			response = reportService.dailyReport(serviceTypeId, date);
-		} catch (RestApiException ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex);
+			ApiResponse response = reportService.dailyReport(serviceTypeId, date);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception e) {
+			ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+			logger.error("==========> " + LogConstants.LOG_RESPONSE_FAIL + new Gson().toJson(response));
+			return ResponseEntity.badRequest().body(response);
 		}
-		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/getPhoneNumber")
@@ -74,7 +75,6 @@ public class ReportController {
 //		}
 //		return ResponseEntity.ok().body(response);
 //	}
-
 	@GetMapping("/daily-top-10-isdn")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> dailyTop10IsdnReport(@RequestParam String date) {

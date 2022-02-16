@@ -163,10 +163,14 @@ public class ReportService {
 				return SMS;
 			case "MBF":
 				Optional<SourcesResponse> sasReTaskParameter = sasReTaskParameterRepository.findFlowSourceIlink(sourcesResponse.get().getRequestId(), "SourceSystem");
-				return sasReTaskParameter.get().getParametersValue();
+				if(sasReTaskParameter.isPresent()){
+					return sasReTaskParameter.get().getParametersValue();
+				}
 			case "BATCH":
 				Optional<SourcesResponse> sasReTaskParameter1 = sasReTaskParameterRepository.findFlowSourceIlink(sourcesResponse.get().getRequestId(), "SO1_SOURCE_CODE");
-				return sasReTaskParameter1.get().getParametersValue();
+				if(sasReTaskParameter1.isPresent()){
+					return sasReTaskParameter1.get().getParametersValue();
+				}
 			default:
 				return sourcesResponse.get().getParametersValue();
 		}
@@ -184,10 +188,14 @@ public class ReportService {
 				return SMS;
 			case "MBF":
 				Optional<SourcesResponse> ilarcReTaskParameter = ilArcTaskParameterRepository.findFlowSourceIlarc(sourcesResponse.get().getRequestId(), "SourceSystem");
-				return ilarcReTaskParameter.get().getParametersValue();
+				if(ilarcReTaskParameter.isPresent()){
+					return ilarcReTaskParameter.get().getParametersValue();
+				}
 			case "BATCH":
 				Optional<SourcesResponse> ilarcReTaskParameter1 = ilArcTaskParameterRepository.findFlowSourceIlarc(sourcesResponse.get().getRequestId(), "SO1_SOURCE_CODE");
-				return ilarcReTaskParameter1.get().getParametersValue();
+				if(ilarcReTaskParameter1.isPresent()){
+					return ilarcReTaskParameter1.get().getParametersValue();
+				}
 			default:
 				return sourcesResponse.get().getParametersValue();
 		}
@@ -245,7 +253,7 @@ public class ReportService {
 			} else {
 				response.setMessage("Không có bản ghi nào cả");
 				response.setStatus(200);
-				response.setData("");
+				response.setData(newData);
 			}
 		} else {
 			List<String> listISDN = sasReTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
@@ -286,7 +294,7 @@ public class ReportService {
 			} else {
 				response.setMessage("Không có bản ghi nào cả");
 				response.setStatus(200);
-				response.setData("");
+				response.setData(newData);
 			}
 		}
 		return response;

@@ -245,8 +245,10 @@ public class ReportService {
 					data.add(cancelReportResponse);
 				}
 				data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
-				for (int i = 0; i < 10; i++) {
-					newData.add(data.get(i));
+				for (int i = 0; i < data.size(); i++) {
+					if(i<10){
+						newData.add(data.get(i));
+					}
 				}
 				response.setStatus(200);
 				response.setData(newData);
@@ -283,11 +285,10 @@ public class ReportService {
 					data.add(cancelReportResponse);
 				}
 				data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
-				for (int i = 0; i < 10; i++) {
-					newData.add(data.get(i));
-				}
-				for (int i = 0; i < 10; i++) {
-					newData.add(data.get(i));
+				for (int i = 0; i < data.size(); i++) {
+					if(i<10){
+						newData.add(data.get(i));
+					}
 				}
 				response.setStatus(200);
 				response.setData(newData);

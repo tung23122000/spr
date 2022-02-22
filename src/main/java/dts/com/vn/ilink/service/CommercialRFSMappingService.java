@@ -38,4 +38,13 @@ public interface CommercialRFSMappingService {
 	 */
 	ApiResponse deleteMapping(CommercialMapping request);
 
+	/**
+	 * Description - Hàm tìm một bản ghi bằng packageCode
+	 *
+	 * @param packageCode - Thông tin mapping gói cước vói luồng trên catalog
+	 * @return any
+	 * @author - tinhbdt
+	 * @created - 22/02/2022
+	 */
+	ApiResponse findByPackageCode(String packageCode);
 }

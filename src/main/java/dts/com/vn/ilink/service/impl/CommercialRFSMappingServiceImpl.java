@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -110,6 +111,23 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 			response.setStatus(ApiResponseStatus.FAILED.getValue());
 			response.setData(request);
 			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
+			return response;
+		}
+	}
+
+	@Override
+	public ApiResponse findByPackageCode(String packageCode) {
+		ApiResponse response = new ApiResponse();
+		String flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"");
+		if(flowGroup !=null){
+			response.setStatus(200);
+			response.setData(flowGroup.replaceAll("\"",""));
+			response.setMessage("Tìm bản ghi thành công");
+			return response;
+		}else {
+			response.setStatus(200);
+			response.setData(packageCode);
+			response.setMessage("Gói cước chưa được cấu hình");
 			return response;
 		}
 	}

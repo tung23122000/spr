@@ -106,4 +106,19 @@ public class LKTCommercialRFSMappingController {
 		}
 	}
 
+	@ApiOperation(value = "Tìm luồng của một gói cước trong catalog")
+	@GetMapping("/find-by-package-code")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findByPackageCode(@RequestParam(required = false) String packageCode) {
+		ApiResponse response;
+		try {
+			response = commercialRFSMappingService.findByPackageCode(packageCode.trim());
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
 }

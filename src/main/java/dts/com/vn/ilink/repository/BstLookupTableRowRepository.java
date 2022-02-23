@@ -44,9 +44,9 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 
 	BstLookupTableRow findByTableIdAndKey(Long tableId, String key);
 
-	@Query(nativeQuery = true,value = "SELECT tbr.value\n" +
+	@Query(nativeQuery = true,value = "SELECT *\n" +
 			"FROM bst_lookup_table_row tbr\n" +
 			"WHERE tbr.key LIKE :packageCode\n" +
 			"AND tbr.table_id = 703")
-	String findByPackageCode(String packageCode);
+	BstLookupTableRow findByPackageCode(String packageCode);
 }

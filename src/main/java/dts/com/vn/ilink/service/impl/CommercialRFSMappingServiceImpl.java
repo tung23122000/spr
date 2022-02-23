@@ -117,10 +117,15 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 	@Override
 	public ApiResponse findByPackageCode(String packageCode) {
 		ApiResponse response = new ApiResponse();
-		String flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"");
+		BstLookupTableRow ltr = new BstLookupTableRow();
+		BstLookupTableRow flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"");
 		if(flowGroup !=null){
+			ltr.setValue(flowGroup.getValue().replaceAll("\"",""));
+			ltr.setKey(flowGroup.getKey().replaceAll("\"",""));
+			ltr.setRowId(flowGroup.getRowId());
+			ltr.setTableId(flowGroup.getTableId());
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
-			response.setData(flowGroup.replaceAll("\"",""));
+			response.setData(ltr);
 			response.setMessage("Tìm bản ghi thành công");
 			return response;
 		}else {

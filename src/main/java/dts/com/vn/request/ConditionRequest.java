@@ -3,18 +3,20 @@ package dts.com.vn.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-
 @Getter
 @Setter
 public class ConditionRequest {
-    private Long conditionId;
 
-    private String conditionName;
+	private Long conditionId;
 
-    private Boolean isConfirm;
+	private String conditionName;
 
-    private String messageMt;
+	private Boolean isConfirm;
 
-    private Boolean isSoapConfirm;
+	private String messageMt;
+
+	private Boolean isSoapConfirm;
+
+	private Boolean isChange;
+
 }

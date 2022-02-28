@@ -8,10 +8,11 @@ import java.util.List;
 @Getter
 @Setter
 public class MapConditionServicePackageRequest {
-    private List<ConditionRequest> listCondition;
 
-    private Long packageId;
+	private Long packageId;
 
-    private Long programId;
+	private Long programId;
+
+	private List<ConditionRequest> listCondition;
 
 }

@@ -31,4 +31,8 @@ public class MapConditionServicePackage {
 
     @Column(name = "is_soap_confirm")
     private Boolean isSoapConfirm;
+
+    @Column(name = "is_change")
+    private Boolean isChange;
+
 }

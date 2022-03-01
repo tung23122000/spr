@@ -30,13 +30,17 @@ public class ListDetailNew {
     @Type(type = "jsonb")
     private List<JsonIsdn> details;
 
+    @Column(name="status")
+    private String status;
+
     public ListDetailNew() {
 
     }
 
-    public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data) {
+    public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data,String status) {
         this.listDetailId = listDetailId;
         this.isdnListId = isdnListId;
         this.details = data;
+        this.status = status;
     }
 }

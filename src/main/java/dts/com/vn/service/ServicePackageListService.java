@@ -60,22 +60,28 @@ public class ServicePackageListService {
 						packageListRequest.getIsdnCvCode(), packageListRequest.getIsdnDisplay(), null, packageListRequest.getIsdnListType());
 			}
 			IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
-			//	Tạo danh sách chi tiết
-			ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), packageListRequest.getListIsdn());
-			listDetailNewRepository.save(listDetailNew);
-			// Tạo danh sách whitelist or blacklist
-			Instant endDate = null;
-			if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate());
-			if (packageListRequest.getIsdnListType().equals("0")) {
-				// Tạo WhiteList
-				ServicePackageList servicePackageList = new ServicePackageList(packageListRequest.getPackageId(), isdnListResponse.getIsdnListId(),
-						Instant.parse(packageListRequest.getStaDate()), endDate, packageListRequest.getProgramId(), null);
-				servicePackageListRepository.save(servicePackageList);
-			} else if (packageListRequest.getIsdnListType().equals("1")) {
-				// Tạo Blacklist
-				BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
-						isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), Instant.parse(packageListRequest.getEndDate()));
-				blacklistPackageListRepository.save(blacklistPackageList);
+            //	Tạo danh sách chi tiết
+            ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), packageListRequest.getListIsdn(), packageListRequest.getIsdnDisplay());
+            listDetailNewRepository.save(listDetailNew);
+            // Tạo danh sách whitelist or blacklist
+            Instant endDate = null;
+            if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate());
+            if (packageListRequest.getIsdnListType().equals("0")) {
+                // Tạo WhiteList
+                ServicePackageList servicePackageList = new ServicePackageList(packageListRequest.getPackageId(), isdnListResponse.getIsdnListId(),
+                        Instant.parse(packageListRequest.getStaDate()), endDate, packageListRequest.getProgramId(), null);
+                servicePackageListRepository.save(servicePackageList);
+            } else if (packageListRequest.getIsdnListType().equals("1")) {
+                // Tạo Blacklist
+                if (packageListRequest.getEndDate() != null) {
+                    BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
+                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), Instant.parse(packageListRequest.getEndDate()));
+                    blacklistPackageListRepository.save(blacklistPackageList);
+                }else {
+                    BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
+                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), null);
+                    blacklistPackageListRepository.save(blacklistPackageList);
+                }
 			} else {
 				throw new RestApiException(ErrorCode.DATA_FAILED);
 			}

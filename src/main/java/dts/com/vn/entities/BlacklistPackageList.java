@@ -39,4 +39,8 @@ public class BlacklistPackageList {
 		this.staDate = staDate;
 		this.endDate = endDate;
 	}
+
+	public BlacklistPackageList() {
+
+	}
 }

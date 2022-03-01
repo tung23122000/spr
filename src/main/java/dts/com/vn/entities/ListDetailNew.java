@@ -1,7 +1,6 @@
 package dts.com.vn.entities;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -15,7 +14,7 @@ import java.util.List;
 @Table(name = "list_detail_new")
 //@TypeDef(name = "JsonType", typeClass = JsonType.class)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-
+@NoArgsConstructor
 public class ListDetailNew {
 
     @Id
@@ -33,14 +32,11 @@ public class ListDetailNew {
     @Column(name="status")
     private String status;
 
-    public ListDetailNew() {
-
-    }
-
     public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data,String status) {
         this.listDetailId = listDetailId;
         this.isdnListId = isdnListId;
         this.details = data;
         this.status = status;
     }
+
 }

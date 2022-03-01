@@ -79,10 +79,6 @@ public class BucketsInfo implements Cloneable {
 	@Column(name = "service_in")
 	private String serviceIn;
 
-
-	public BucketsInfo() {
-	}
-
 	public BucketsInfo(AddBucketsInfoRequest request, ServiceProgram serviceProgram) {
 		this.bucName = request.getBucName();
 		this.bucType = request.getBucType();

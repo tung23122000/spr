@@ -123,6 +123,9 @@ public class ServicePackageListService {
 		Optional<IsdnList> optIsdnList = isdnListRepository.findById(listId);
 		if (optIsdnList.isPresent()) {
 			isdnListRepository.delete(optIsdnList.get());
+			if(listType==0){
+				servicePackageListRepository.deleteByIsdnListId(listId);
+			}
 			// 2. Xóa list detail new, đồng thời xóa ở whitelist hoặc blacklist
 			listDetailNewRepository.deleteByIsdnListId(listId);
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());

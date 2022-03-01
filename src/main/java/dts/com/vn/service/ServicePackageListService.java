@@ -123,14 +123,7 @@ public class ServicePackageListService {
 		Optional<IsdnList> optIsdnList = isdnListRepository.findById(listId);
 		if (optIsdnList.isPresent()) {
 			isdnListRepository.delete(optIsdnList.get());
-			// 2. Nếu listType = 0 thì xóa white list, bằng 1 thì xóa black list
-			Long numberRowDelete;
-			if (listType == 0) {
-				servicePackageListRepository.deleteByIsdnListId(listId);
-			} else {
-				blacklistPackageListRepository.deleteByIsdnListId(listId);
-			}
-			// 3. Xóa list detail new
+			// 2. Xóa list detail new, đồng thời xóa ở whitelist hoặc blacklist
 			listDetailNewRepository.deleteByIsdnListId(listId);
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setData(null);

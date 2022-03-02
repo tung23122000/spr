@@ -9,7 +9,7 @@ server:
 
 spring:
   profiles:
-    active: test
+    active: local-prod
   jpa:
     show-sql: false
   servlet:

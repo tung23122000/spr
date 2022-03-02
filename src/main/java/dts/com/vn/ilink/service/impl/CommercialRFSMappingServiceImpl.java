@@ -119,20 +119,19 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 		ApiResponse response = new ApiResponse();
 		BstLookupTableRow ltr = new BstLookupTableRow();
 		BstLookupTableRow flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"");
-		if(flowGroup !=null){
-			ltr.setValue(flowGroup.getValue().replaceAll("\"",""));
-			ltr.setKey(flowGroup.getKey().replaceAll("\"",""));
+		if (flowGroup != null) {
+			ltr.setValue(flowGroup.getValue().replaceAll("\"", ""));
+			ltr.setKey(flowGroup.getKey().replaceAll("\"", ""));
 			ltr.setRowId(flowGroup.getRowId());
 			ltr.setTableId(flowGroup.getTableId());
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setData(ltr);
 			response.setMessage("Tìm bản ghi thành công");
-			return response;
-		}else {
+		} else {
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setMessage("Gói cước chưa được cấu hình");
-			return response;
 		}
+		return response;
 	}
 
 }

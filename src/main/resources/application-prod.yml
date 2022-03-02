@@ -16,9 +16,9 @@ spring:
 
     # Database ILINK
     third:
-      jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/ilink
-      username: ilink
-      password: ilink
+      jdbc-url: jdbc:postgresql://ups-fo-spr-database.mobifone.vn:5432/ilink?currentSchema=ilink
+      username: dtsapp1
+      password: dtsapp1
       driverClassName: org.postgresql.Driver
 
     # Database ILARC

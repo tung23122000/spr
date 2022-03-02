@@ -12,14 +12,14 @@ spring:
 
     # Database VASP
     secondary:
-      jdbc-url: jdbc:oracle:thin:@10.50.9.161:1521:vasp1
-      username: flowone_spr
-      password: fl0wOne$Mbf2021
+      jdbc-url: jdbc:oracle:thin:@10.3.17.153:1521:db01
+      username: VASP4_SUBS_TEST
+      password: Dts@1234
       driverClassName: oracle.jdbc.OracleDriver
 
     # Database ILINK
     third:
-      jdbc-url: jdbc:postgresql://10.3.17.133:5432/ilink
+      jdbc-url: jdbc:postgresql://10.3.17.133:5432/ilink?currentSchema=ilink
       username: dtsapp1
       password: dtsapp1
       driverClassName: org.postgresql.Driver

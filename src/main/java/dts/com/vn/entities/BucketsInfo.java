@@ -104,6 +104,10 @@ public class BucketsInfo implements Cloneable {
 		this.serviceIn = request.getServiceIn();
 	}
 
+	public BucketsInfo() {
+
+	}
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

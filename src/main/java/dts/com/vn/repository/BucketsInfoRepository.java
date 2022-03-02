@@ -13,23 +13,31 @@ import java.util.List;
 @Repository
 public interface BucketsInfoRepository extends JpaRepository<BucketsInfo, Long> {
 
-	@Query("select b from BucketsInfo b where b.serviceProgram.programId is not null order by b.bucketsId desc")
-	Page<BucketsInfo> findAll(Pageable pageable);
+    @Query("select b from BucketsInfo b where b.serviceProgram.programId is not null order by b.bucketsId desc")
+    Page<BucketsInfo> findAll(Pageable pageable);
 
-	@Query("select b from BucketsInfo b where b.serviceProgram.programId is not null "
-			+ "and ((:search is not null and upper(b.serviceProgram.description) like CONCAT('%',upper(:search),'%')) or "
-			+ "(:search is not null and upper(b.bucName) like CONCAT('%',upper(:search),'%')) or "
-			+ "(:search is not null and upper(b.bucType) like CONCAT('%',upper(:search),'%'))) "
-			+ "order by b.bucketsId desc")
-	Page<BucketsInfo> findAll(@Param("search") String search, Pageable pageable);
+    @Query("select b from BucketsInfo b where b.serviceProgram.programId is not null "
+            + "and ((:search is not null and upper(b.serviceProgram.description) like CONCAT('%',upper(:search),'%')) or "
+            + "(:search is not null and upper(b.bucName) like CONCAT('%',upper(:search),'%')) or "
+            + "(:search is not null and upper(b.bucType) like CONCAT('%',upper(:search),'%'))) "
+            + "order by b.bucketsId desc")
+    Page<BucketsInfo> findAll(@Param("search") String search, Pageable pageable);
 
-	@Query("select b from BucketsInfo b where b.serviceProgram.programId is not null and b.serviceProgram.programId = :programId order by b.bucketsId desc")
-	Page<BucketsInfo> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
+    @Query("select b from BucketsInfo b where b.serviceProgram.programId is not null and b.serviceProgram.programId = :programId order by b.bucketsId desc")
+    Page<BucketsInfo> findAllByProgramId(@Param("programId") Long programId, Pageable pageable);
 
-	@Query("SELECT b FROM BucketsInfo b WHERE b.packageId = ?1 AND b.serviceProgram.programId = ?2")
-	List<BucketsInfo> findByPackageIdAndProgramId(Long packageId, Long programId);
+    @Query("SELECT b FROM BucketsInfo b WHERE b.packageId = ?1 AND b.serviceProgram.programId = ?2")
+    List<BucketsInfo> findByPackageIdAndProgramId(Long packageId, Long programId);
 
-	@Query("SELECT bi from BucketsInfo bi WHERE bi.packageId = ?1")
-	List<BucketsInfo> findByPackageId(Long packageId);
+    @Query(nativeQuery = true,
+            value = "SELECT \n" +
+                    "*\n" +
+                    "FROM\n" +
+                    "buckets_info bi\n" +
+                    "INNER JOIN service_program spr ON bi.program_id = spr.program_id \n" +
+                    "INNER JOIN service_package spa ON spr.package_id = spa.package_id\n" +
+                    "WHERE spa.package_id = ?1"
+    )
+    List<BucketsInfo> findByPackageId(Long packageId);
 
 }

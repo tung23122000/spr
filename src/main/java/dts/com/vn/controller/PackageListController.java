@@ -50,7 +50,7 @@ public class PackageListController {
 			LogUtil.writeLog(logger, LogConstants.REQUEST, response);
 		} catch (Exception ex) {
 			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-					ErrorCode.ADD_SERVICE_PACKAGE_LIST_FAILED.getErrorCode(), ErrorCode.ADD_SERVICE_PACKAGE_LIST_FAILED.getMessage());
+					ErrorCode.DELETE_SERVICE_PACKAGE_LIST_FAILED.getErrorCode(), ErrorCode.DELETE_SERVICE_PACKAGE_LIST_FAILED.getMessage());
 			LogUtil.writeLog(logger, LogConstants.ERROR, response);
 		}
 		return ResponseEntity.ok().body(response);

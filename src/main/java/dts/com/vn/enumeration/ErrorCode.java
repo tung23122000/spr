@@ -63,6 +63,7 @@ public enum ErrorCode {
 	SAVE_ISDN_LIST_FAILED("error.save.isdn.list", "Lỗi khi lưu danh sách đối tượng"),
 	ADD_BUCKETS_INFO_FAILED("error.add.buckets.info", "Lỗi khi thêm cấu hình IN"),
 	ADD_SERVICE_PACKAGE_LIST_FAILED("error.add.service.package.list", "Lỗi khi thêm danh sách đối tượng"),
+	DELETE_SERVICE_PACKAGE_LIST_FAILED("error.delete.service.package.list", "Lỗi khi xóa đối tượng trong danh sách"),
 	API_FAILED_UNKNOWN("error.api.failed.unknown", ""),
 	REG_ID_NULL("error.reg.id.null", "Trường REG_ID trong truy vấn có giá trị NULL"),
 	EXT_RETRY_NUM_NULL("error.ext.retry.num.null", "Trường EXT_RETRY_NUM trong truy vấn có giá trị NULL"),

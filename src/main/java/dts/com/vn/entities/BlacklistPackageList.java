@@ -1,6 +1,7 @@
 package dts.com.vn.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -8,6 +9,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "blacklist_package_list", schema = "public")
+@NoArgsConstructor
 public class BlacklistPackageList {
 
 	@Id
@@ -40,7 +42,4 @@ public class BlacklistPackageList {
 		this.endDate = endDate;
 	}
 
-	public BlacklistPackageList() {
-
-	}
 }

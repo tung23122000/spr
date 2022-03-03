@@ -66,4 +66,6 @@ public class AddServiceProgramRequest {
 	private Boolean isOnKtPro;
 
 	private String expireByOldPackage;
+
+	private Boolean isCalculateExpireDate;// Hạn sử dụng riêng cho Roaming
 }

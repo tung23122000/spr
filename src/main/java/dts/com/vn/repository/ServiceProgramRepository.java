@@ -38,4 +38,7 @@ public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, 
 
 	@Query("SELECT sp FROM ServiceProgram sp WHERE sp.servicePackage.packageId = ?1 AND sp.isDefaultProgram = true")
 	List<ServiceProgram> findDefaultProgram(Long packageId);
+
+	@Query(nativeQuery = true,value = "SELECT * FROM service_program WHERE program_id= ?1")
+	ServiceProgram findByProgramId(Long id);
 }

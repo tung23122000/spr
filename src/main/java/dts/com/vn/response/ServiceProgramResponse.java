@@ -72,6 +72,8 @@ public class ServiceProgramResponse {
 
 	private String expireByOldPackage;
 
+	private Boolean isCalculateExpireDate;
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -111,6 +113,7 @@ public class ServiceProgramResponse {
 		this.isDefaultProgram = service.getIsDefaultProgram();
 		this.isOnKtPro = service.getIsOnKtPro();
 		this.expireByOldPackage = service.getExpireByOldPackage();
+		this.isCalculateExpireDate = service.getIsCalculateExpireDate();
 	}
 
 

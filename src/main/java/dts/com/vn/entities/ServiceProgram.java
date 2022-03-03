@@ -150,6 +150,10 @@ public class ServiceProgram implements Cloneable {
 	@Column(name = "condition")
 	private String expireByOldPackage;
 
+	// 03/03/2022: Thêm HSD riêng cho Roaming
+	@Column(name="is_calculate_expire_date")
+	private Boolean isCalculateExpireDate;
+
 	public ServiceProgram() {
 	}
 
@@ -189,6 +193,7 @@ public class ServiceProgram implements Cloneable {
 		this.isDefaultProgram = request.getIsDefaultProgram();
 		this.isOnKtPro = request.getIsOnKtPro();
 		this.expireByOldPackage = request.getExpireByOldPackage();
+		this.isCalculateExpireDate = request.getIsCalculateExpireDate();
 	}
 
 	//	Convert A#B#C

@@ -123,7 +123,7 @@ public class ServiceProgramService {
     }
 
     public ServiceProgram findById(Long id) {
-        return serviceProgramRepository.findById(id).get();
+        return serviceProgramRepository.findByProgramId(id);
     }
 
     public ServiceProgram update(AddServiceProgramRequest request) {
@@ -225,6 +225,8 @@ public class ServiceProgramService {
             servicePr.setIsDefaultProgram(request.getIsDefaultProgram());
             servicePr.setIsOnKtPro(request.getIsOnKtPro());
             servicePr.setExpireByOldPackage(request.getExpireByOldPackage());
+            //Thêm HSD riêng cho roaming
+            servicePr.setIsCalculateExpireDate(request.getIsCalculateExpireDate());
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);

@@ -5,7 +5,6 @@ import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
 import dts.com.vn.repository.*;
-import dts.com.vn.request.AddServicePackageRequest;
 import dts.com.vn.request.AddServiceProgramRequest;
 import dts.com.vn.response.*;
 import dts.com.vn.response.service_package_detail.DetailServicePackageResponse;
@@ -354,6 +353,7 @@ public class ServiceProgramService {
         ApiResponse response = new ApiResponse();
         // 3 Clone chương trình
         ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
+        // a Hải MBF confirm 04/03/2022
         newProgram.setCommandId(newPackageId);
         // Tạo Log Action
         LogAction logAction = new LogAction();

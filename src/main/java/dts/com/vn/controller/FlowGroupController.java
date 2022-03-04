@@ -5,6 +5,7 @@ import dts.com.vn.entities.ServiceProgram;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.response.ApiResponse;
+import dts.com.vn.response.FlowGroupResponse;
 import dts.com.vn.response.ServiceProgramResponse;
 import dts.com.vn.service.FlowGroupService;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ public class FlowGroupController {
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse> findAll() {
         ApiResponse response = null;
-        List<FlowGroup> page = flowGroupService.findAll();
+        List<FlowGroupResponse> page = flowGroupService.findAll();
         response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), page);
         return ResponseEntity.ok().body(response);
     }

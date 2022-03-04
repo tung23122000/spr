@@ -354,6 +354,7 @@ public class ServiceProgramService {
         ApiResponse response = new ApiResponse();
         // 3 Clone chương trình
         ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
+        newProgram.setCommandId(newPackageId);
         // Tạo Log Action
         LogAction logAction = new LogAction();
         logAction.setTableAction("service_program");

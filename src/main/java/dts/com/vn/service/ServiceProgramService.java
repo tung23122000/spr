@@ -409,7 +409,6 @@ public class ServiceProgramService {
         ServiceProgram serviceProgram = (ServiceProgram) oldProgram.clone();
         serviceProgram.setProgramId(null);
         serviceProgram.setServicePackage(servicePackageRepository.findByPackageId(newId));
-        System.out.println(oldProgram.getProgramCode());
         if (oldProgram.getProgramCode() != null)
             serviceProgram.setProgramCode(oldProgram.getProgramCode() + "_copy_" + System.currentTimeMillis());
         // a Hải MBF confirm 04/03/2022

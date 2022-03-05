@@ -353,9 +353,6 @@ public class ServiceProgramService {
         ApiResponse response = new ApiResponse();
         // 3 Clone chương trình
         ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
-        // a Hải MBF confirm 04/03/2022
-        // a Hải MBF confirm 05/03/2022
-        newProgram.setCommandId(oldProgram.getProgramId() + 1000000);
         // Tạo Log Action
         LogAction logAction = new LogAction();
         logAction.setTableAction("service_program");
@@ -415,6 +412,9 @@ public class ServiceProgramService {
         System.out.println(oldProgram.getProgramCode());
         if (oldProgram.getProgramCode() != null)
             serviceProgram.setProgramCode(oldProgram.getProgramCode() + "_copy_" + System.currentTimeMillis());
+        // a Hải MBF confirm 04/03/2022
+        // a Hải MBF confirm 05/03/2022
+        serviceProgram.setCommandId(oldProgram.getProgramId() + 1000000);
         serviceProgramRepository.save(serviceProgram);
         return serviceProgram;
     }

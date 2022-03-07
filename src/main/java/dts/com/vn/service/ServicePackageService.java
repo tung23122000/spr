@@ -262,6 +262,14 @@ public class ServicePackageService {
 		return servicePackageRepository.findAll();
 	}
 
+	/**
+	 * Description - Hàm clone sub_service_package khi clone gói cước
+	 *
+	 * @param listBlock - Danh sách các gói block
+	 * @param packageId - Mã gói cước
+	 * @author - giangdh
+	 * @created - 07/03/2022
+	 */
 	public void saveSubServicePackge(List<SubServicePackageRequest> listBlock, Long packageId) {
 		if (listBlock.size() > 0) {
 			for (SubServicePackageRequest block : listBlock) {
@@ -291,7 +299,7 @@ public class ServicePackageService {
 					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getErrorCode(),
 					ErrorCode.SERVICE_PACKAGE_ID_REQUIRED.getMessage());
 		} else {
-			// 1. Lưu bản ghi clone để lấy ID gói cước mới
+			// 2. Lưu bản ghi clone để lấy ID gói cước mới
 			Services services = servicesRepository.findById(5L).orElse(null);
 			ServiceType serviceType = serviceTypeRepository.findById(request.getServiceTypeId()).orElse(null);
 			if (services == null || serviceType == null) {
@@ -300,9 +308,19 @@ public class ServicePackageService {
 						ErrorCode.CLONE_REQUEST_DATA_FAIL.getMessage());
 			}
 			ServicePackage service = new ServicePackage(request, serviceType, services);
+			// 3. Tạo record gói cước mới
 			ServicePackage servicePackage = servicePackageRepository.save(service);
-
-			// Tạo Log Action CREATE ServicePackage
+			// 4. Lấy id của gói clone
+			Long newPackageId = servicePackage.getPackageId();
+			// 5. Tìm những chương trình của gói cước cũ để clone
+			List<ServiceProgram> listOldServiceProgram = serviceProgramRepository.findAllByPackageId(oldPackageId);
+			// 6. Thực hiện clone với từng chương trình
+			for (ServiceProgram oldProgram : listOldServiceProgram) {
+				serviceProgramService.cloneOneServiceProgram(newPackageId, oldPackageId, service, oldProgram);
+			}
+			// 7. Thực hiện clone chặn gói cước
+			saveSubServicePackge(request.getSubServicePackage(), servicePackage.getPackageId());
+			// 8. Tạo log clone
 			LogAction logAction = new LogAction();
 			logAction.setTableAction("service_package");
 			logAction.setAccount(TokenProvider.account);
@@ -312,17 +330,7 @@ public class ServicePackageService {
 			logAction.setTimeAction(new Date());
 			logAction.setIdAction(servicePackage.getPackageId());
 			logActionService.add(logAction);
-			//
-			Long newPackageId = servicePackage.getPackageId();
-
-			// 2. Tìm những chương trình của gói cước cũ để clone
-			List<ServiceProgram> listOldServiceProgram = serviceProgramRepository.findAllByPackageId(oldPackageId);
-			// 3. Thực hiện clone với từng chương trình
-			for (ServiceProgram oldProgram : listOldServiceProgram) {
-				serviceProgramService.cloneOneServiceProgram(newPackageId, oldPackageId, service, oldProgram);
-			}
-			// 4. Thực hiện chặn gói cước
-			saveSubServicePackge(request.getSubServicePackage(), servicePackage.getPackageId());
+			// 9. Trả về respone
 			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setData(servicePackage);
 			response.setMessage("Clone thông tin gói cước thành công");

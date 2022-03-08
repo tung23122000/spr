@@ -35,4 +35,6 @@ public class MapConditionServicePackage {
     @Column(name = "is_change")
     private Boolean isChange;
 
+    @Column(name = "message_mt_2")
+    private String messageMt2;
 }

@@ -19,4 +19,6 @@ public class ConditionRequest {
 
 	private Boolean isChange;
 
+	private String language;
+
 }

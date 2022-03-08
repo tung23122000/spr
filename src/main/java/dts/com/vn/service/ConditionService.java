@@ -33,8 +33,14 @@ public class ConditionService {
 		mapConditionServicePackage.setPackageId(packageId);
 		mapConditionServicePackage.setProgramId(programId);
 		mapConditionServicePackage.setCondition(conditionRepository.getOne(input.getConditionId()));
+		if(input.getLanguage().equals("en")){
+			mapConditionServicePackage.setMessageMt(null);
+			mapConditionServicePackage.setMessageMt2(input.getMessageMt());
+		}else{
+			mapConditionServicePackage.setMessageMt(input.getMessageMt());
+			mapConditionServicePackage.setMessageMt2(null);
+		}
 		mapConditionServicePackage.setIsConfirm(input.getIsConfirm());
-		mapConditionServicePackage.setMessageMt(input.getMessageMt());
 		mapConditionServicePackage.setIsSoapConfirm(input.getIsSoapConfirm());
 		mapConditionServicePackage.setIsChange(input.getIsChange());
 		return mapConditionServicePackageRepository.save(mapConditionServicePackage);

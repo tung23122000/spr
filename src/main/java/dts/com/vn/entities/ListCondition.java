@@ -25,4 +25,9 @@ public class ListCondition {
 	@Column(name = "description")
 	String description;
 
+	@Column(name="is_package")
+	Boolean isPackage;
+
+	@Column(name = "status")
+	Boolean status;
 }

@@ -8,33 +8,35 @@ import javax.persistence.*;
 @Entity
 @Table(name = "map_condition_service_package", schema = "public")
 public class MapConditionServicePackage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 
-    @Column(name = "package_id")
-    private Long packageId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id;
 
-    @Column(name = "program_id")
-    private Long programId;
+	@Column(name = "package_id")
+	private Long packageId;
 
-    @ManyToOne
-    @JoinColumn(name = "condition_id")
-    private Condition condition;
+	@Column(name = "program_id")
+	private Long programId;
 
-    @Column(name = "is_confirm")
-    private Boolean isConfirm;
+	@ManyToOne
+	@JoinColumn(name = "condition_id")
+	private Condition condition;
 
-    @Column(name = "message_mt")
-    private String messageMt;
+	@Column(name = "is_confirm")
+	private Boolean isConfirm;
 
-    @Column(name = "is_soap_confirm")
-    private Boolean isSoapConfirm;
+	@Column(name = "message_mt")
+	private String messageMt;
 
-    @Column(name = "is_change")
-    private Boolean isChange;
+	@Column(name = "is_soap_confirm")
+	private Boolean isSoapConfirm;
 
-    @Column(name = "message_mt_2")
-    private String messageMt2;
+	@Column(name = "is_change")
+	private Boolean isChange;
+
+	@Column(name = "message_mt_2")
+	private String messageMt2;
+
 }

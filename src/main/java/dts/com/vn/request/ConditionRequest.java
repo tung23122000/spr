@@ -1,10 +1,8 @@
 package dts.com.vn.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class ConditionRequest {
 
 	private Long conditionId;
@@ -15,10 +13,10 @@ public class ConditionRequest {
 
 	private String messageMt;
 
+	private String messageMt2;
+
 	private Boolean isSoapConfirm;
 
 	private Boolean isChange;
-
-	private String language;
 
 }

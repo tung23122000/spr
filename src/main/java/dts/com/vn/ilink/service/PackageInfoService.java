@@ -37,4 +37,14 @@ public interface PackageInfoService {
 	 */
 	ApiResponse deletePackageInfo(BstLookupTableRowRequestCustom request);
 
+	/**
+	 * Description - Hàm tìm 1 bản ghi trong bảng bảng LKT_COMMERCIAL_RFS_MAPLKT_PACKAGE_INFOPING bằng key
+	 *
+	 * @param - PackageCode
+	 * @return any
+	 * @author - tinhbdt
+	 * @created - 10/03/2022
+	 */
+	ApiResponse getPackageInfoByKey(String packageCode);
+
 }

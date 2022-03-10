@@ -84,4 +84,20 @@ public class LKTPackageInfoController {
 		}
 	}
 
+	@ApiOperation(value = "Lấy thông tin cấu hình của 1 gói cước trong bảng LKT_PACKAGE_INFO")
+	@GetMapping("/find-by-package-code/{packageCode}")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> findByCode(@PathVariable("packageCode") String packageCode) {
+		if (StringUtils.isNotBlank(packageCode)) LogUtil.writeLog(logger, LogConstants.REQUEST, packageCode);
+		ApiResponse response;
+		try {
+			response = packageInfoService.getPackageInfoByKey(packageCode);
+			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());
+			LogUtil.writeLog(logger, LogConstants.ERROR, response);
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
 }

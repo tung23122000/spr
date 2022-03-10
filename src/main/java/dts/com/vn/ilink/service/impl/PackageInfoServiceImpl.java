@@ -17,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -130,5 +133,27 @@ public class PackageInfoServiceImpl implements PackageInfoService {
 			response.setMessage("Thiếu tham số truyền lên tableId hoặc rowId");
 			return response;
 		}
+	}
+
+	@Override
+	public ApiResponse getPackageInfoByKey(String packageCode) {
+		ApiResponse response = new ApiResponse();
+		BstLookupTableRowResponse bstResponse = new BstLookupTableRowResponse();
+		BstLookupTableRow bstLookupTableRow = lookupTableRowRepository.findPackgeInfoByPackageCode("\"" + packageCode.toUpperCase() + "\"");
+		List<String> request = Arrays.asList(bstLookupTableRow.getValue().split(",,"));
+		List<Value> newList = new ArrayList<>();
+		for (int i = 0; i < request.size(); i++) {
+			Value value = new Value();
+			value.setValue(request.get(i).replaceAll("\"",""));
+			newList.add(value);
+		}
+		bstResponse.setKey(bstLookupTableRow.getKey().replaceAll("\"",""));
+		bstResponse.setRowId(bstLookupTableRow.getRowId());
+		bstResponse.setTableId(bstLookupTableRow.getTableId());
+		bstResponse.setValues(newList);
+		response.setData(bstResponse);
+		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
+		response.setMessage("Lấy danh sách từ bảng " + IlinkTableName.LKT_PACKAGE_INFO + " thành công!");
+		return response;
 	}
 }

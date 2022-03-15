@@ -19,7 +19,8 @@ public class ConditionService {
 	private final MapConditionServicePackageRepository mapConditionServicePackageRepository;
 
 	@Autowired
-	public ConditionService(ConditionRepository conditionRepository, MapConditionServicePackageRepository mapConditionServicePackageRepository) {
+	public ConditionService(ConditionRepository conditionRepository,
+	                        MapConditionServicePackageRepository mapConditionServicePackageRepository) {
 		this.conditionRepository = conditionRepository;
 		this.mapConditionServicePackageRepository = mapConditionServicePackageRepository;
 	}
@@ -50,7 +51,8 @@ public class ConditionService {
 	public void deleteAllMap(Long packageId, Long programId) {
 		List<MapConditionServicePackage> list = mapConditionServicePackageRepository.getCondition(packageId, programId);
 		for (MapConditionServicePackage item : list) {
-			mapConditionServicePackageRepository.delete(item);
+			mapConditionServicePackageRepository.deleteById(item.getId());
 		}
 	}
+
 }

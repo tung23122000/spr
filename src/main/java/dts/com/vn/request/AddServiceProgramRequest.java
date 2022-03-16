@@ -67,5 +67,7 @@ public class AddServiceProgramRequest {
 
 	private String expireByOldPackage;
 
-	private Boolean isCalculateExpireDate;// Hạn sử dụng riêng cho Roaming
+	private Boolean isCalculateExpireDate;// Hạn sử dụng riêng cho Roaming'
+
+	private String msgBeforeRenewEn;// Message trước gia hạn tiếng anh
 }

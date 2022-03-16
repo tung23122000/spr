@@ -154,6 +154,10 @@ public class ServiceProgram implements Cloneable {
 	@Column(name="is_calculate_expire_date")
 	private Boolean isCalculateExpireDate;
 
+	// 16/03/2022: Thêm message English
+	@Column(name="msg_before_renew_en")
+	private String msgBeforeRenewEn;
+
 	public ServiceProgram() {
 	}
 

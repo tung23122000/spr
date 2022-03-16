@@ -226,6 +226,8 @@ public class ServiceProgramService {
             servicePr.setExpireByOldPackage(request.getExpireByOldPackage());
             //Thêm HSD riêng cho roaming
             servicePr.setIsCalculateExpireDate(request.getIsCalculateExpireDate());
+            //Thêm ngôn ngữ cho tin nhắn trước gia hạn
+            servicePr.setMsgBeforeRenewEn(request.getMsgBeforeRenewEn());
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);

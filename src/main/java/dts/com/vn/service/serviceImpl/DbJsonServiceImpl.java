@@ -65,7 +65,6 @@ public class DbJsonServiceImpl implements DbJsonFeService {
 
     //Ghi file backup
     private void writeFileBackUp(JsonObject obj) {
-        ApiResponse response = new ApiResponse();
         try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String path = "/web-admin/frontend/dist/spr-extension-config/assets/db_json_backup" + timeStamp + ".json";
@@ -159,6 +158,7 @@ public class DbJsonServiceImpl implements DbJsonFeService {
                     result.add(file);
                 }
             }
+            result.sort((o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), result,
                     null, "Lấy danh sách thành công!");
         } catch (FileNotFoundException e) {

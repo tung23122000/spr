@@ -107,9 +107,9 @@ public class LKTCommercialRFSMappingController {
 	}
 
 	@ApiOperation(value = "Tìm luồng của một gói cước trong catalog")
-	@GetMapping("/find-by-package-code")
+	@GetMapping("/find-flow-by-package-code")
 	@ResponseBody
-	public ResponseEntity<ApiResponse> findByPackageCode(@RequestParam(required = false) String packageCode) {
+	public ResponseEntity<ApiResponse> findByPackageCode(@RequestParam String packageCode) {
 		ApiResponse response;
 		try {
 			response = commercialRFSMappingService.findByPackageCode(packageCode.trim());

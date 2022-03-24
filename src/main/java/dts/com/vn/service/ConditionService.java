@@ -29,7 +29,11 @@ public class ConditionService {
 		return conditionRepository.findAll(Sort.by(Sort.Direction.ASC, "conditionId"));
 	}
 
-	public MapConditionServicePackage saveCondition(ConditionRequest input, Long packageId, Long programId) {
+	public List<MapConditionServicePackage> getCondition(Long packageId, Long programId) {
+		return mapConditionServicePackageRepository.getCondition(packageId, programId);
+	}
+
+	public void saveCondition(ConditionRequest input, Long packageId, Long programId) {
 		MapConditionServicePackage mapConditionServicePackage = new MapConditionServicePackage();
 		mapConditionServicePackage.setPackageId(packageId);
 		mapConditionServicePackage.setProgramId(programId);
@@ -41,11 +45,7 @@ public class ConditionService {
 		mapConditionServicePackage.setMessageMt(input.getMessageMt());
 		// Message tiếng anh
 		mapConditionServicePackage.setMessageMt2(input.getMessageMt2());
-		return mapConditionServicePackageRepository.save(mapConditionServicePackage);
-	}
-
-	public List<MapConditionServicePackage> getCondition(Long packageId, Long programId) {
-		return mapConditionServicePackageRepository.getCondition(packageId, programId);
+		mapConditionServicePackageRepository.save(mapConditionServicePackage);
 	}
 
 	public void deleteAllMap(Long packageId, Long programId) {

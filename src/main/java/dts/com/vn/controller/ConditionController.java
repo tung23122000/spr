@@ -45,24 +45,23 @@ public class ConditionController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@PostMapping("/save-condition")
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public ResponseEntity<?> saveCondition(@RequestBody MapConditionServicePackageRequest request) {
 		ApiResponse response;
 		List<ConditionRequest> listInput;
-		List<MapConditionServicePackage> listResponse = new ArrayList<>();
 		try {
 			// Xoá toàn bộ điều kiện cũ của chương trình
 			conditionService.deleteAllMap(request.getPackageId(), request.getProgramId());
 			listInput = request.getListCondition();
 			for (ConditionRequest input : listInput) {
-				MapConditionServicePackage item = conditionService.saveCondition(input, request.getPackageId(), request.getProgramId());
-				listResponse.add(item);
+				conditionService.saveCondition(input, request.getPackageId(), request.getProgramId());
 			}
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), listResponse);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), "Thêm mới điều kiện cho chương trình thành công");
+			logger.info(response.toString());
 		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.SAVE_CONDITION_FAILED);
-			logger.error(e.getMessage());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), e.getLocalizedMessage());
+			logger.error(response.toString());
 		}
 		return ResponseEntity.ok().body(response);
 	}

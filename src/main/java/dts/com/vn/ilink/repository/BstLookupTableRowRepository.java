@@ -45,14 +45,16 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 	BstLookupTableRow findByTableIdAndKey(Long tableId, String key);
 
 	@Query(nativeQuery = true,value = "SELECT *\n" +
-			"FROM bst_lookup_table_row tbr\n" +
-			"WHERE tbr.key LIKE :packageCode\n" +
-			"AND tbr.table_id = 703")
-	BstLookupTableRow findByPackageCode(String packageCode);
+			"FROM bst_lookup_table_row r\n" +
+			"INNER JOIN bst_lookup_table AS tb ON tb.table_id = r.table_id\n" +
+			"WHERE r.key LIKE ?2\n" +
+			"AND tb.name= ?1")
+	BstLookupTableRow findByPackageCode(String  tableName, String packageCode);
 
 	@Query(nativeQuery = true,value = "SELECT *\n" +
-			"FROM bst_lookup_table_row tbr\n" +
-			"WHERE tbr.key LIKE :packageCode\n" +
-			"AND tbr.table_id = 713")
-	BstLookupTableRow findPackgeInfoByPackageCode(String packageCode);
+			"FROM bst_lookup_table_row r\n" +
+			"INNER JOIN bst_lookup_table AS tb ON tb.table_id = r.table_id\n" +
+			"WHERE r.key LIKE ?2\n" +
+			"AND tb.name = ?1")
+	BstLookupTableRow findPackgeInfoByPackageCode(String tableName, String packageCode);
 }

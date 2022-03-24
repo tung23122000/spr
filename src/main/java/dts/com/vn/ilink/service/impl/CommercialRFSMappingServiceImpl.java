@@ -118,7 +118,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 	public ApiResponse findByPackageCode(String packageCode) {
 		ApiResponse response = new ApiResponse();
 		BstLookupTableRow ltr = new BstLookupTableRow();
-		BstLookupTableRow flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"");
+		BstLookupTableRow flowGroup = repository.findByPackageCode("\"" + packageCode.toUpperCase() + "\"", IlinkTableName.LKT_COMMERCIAL_RFS_MAPPING);
 		if (flowGroup != null) {
 			ltr.setValue(flowGroup.getValue().replaceAll("\"", ""));
 			ltr.setKey(flowGroup.getKey().replaceAll("\"", ""));

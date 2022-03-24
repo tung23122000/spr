@@ -27,12 +27,12 @@ public class ListDetailNew {
 
     @Column(name = "details")
     @Type(type = "jsonb")
-    private List<JsonIsdn> details;
+    private Object details;
 
     @Column(name="status")
     private String status;
 
-    public ListDetailNew(Long listDetailId, Long isdnListId, List<JsonIsdn> data,String status) {
+    public ListDetailNew(Long listDetailId, Long isdnListId, Object data,String status) {
         this.listDetailId = listDetailId;
         this.isdnListId = isdnListId;
         this.details = data;

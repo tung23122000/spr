@@ -49,7 +49,7 @@ public class ServicePackageListService {
 
 	@Transactional
 	public void save(PackageListRequest packageListRequest) {
-		if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() > 0) {
+		if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().equals("")) {
 			//	Tạo danh sách đối tượng
 			IsdnList isdnListRequest;
 			if (packageListRequest.getStaDate() != null && packageListRequest.getEndDate() != null) {

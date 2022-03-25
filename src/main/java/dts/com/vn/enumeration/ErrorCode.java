@@ -19,7 +19,7 @@ public enum ErrorCode {
 	FIND_CONSTANT_FAILED("error.constant.find", "Tìm kiếm hằng số lỗi"),
 	FIND_SUB_SERVICE_PACKAGE_FAILED("error.sub.service.package.find", "Lỗi trong quá trình tìm gói cước chặn"),
 	ADD_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
-	UPDATE_COMMAND_ALIAS_FAILED("error.command.alias", "Thêm command alias lỗi"),
+	TRANSCODE_NOT_EXIST("error.command.alias","Transaction code không hợp lệ, Transation Code chỉ có thể là DK, ADDM, DELM"),
 	EXTERNAL_SYSTEM_NOT_FOUND("error.external.system.not.found", "Nguồn dữ liệu lỗi"),
 	MAP_SERVICE_PACKAGE_NOT_FOUND("error.map.service.package.not.found", "Không tải được dữ liệu billing"),
 	GET_PERMISSION_FAILED("error.permission.failed", "Không tải được quyền của người dùng"),

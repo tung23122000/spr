@@ -68,7 +68,6 @@ public class MapCommandAliasController {
 	@Transactional
 	@PostMapping("/update")
 	public ResponseEntity<ApiResponse> update(@RequestBody MapCommandAliasRequest request) {
-		ApiResponse response;
 		try {
 			// Tạo Log Action
 			LogAction logAction = new LogAction();
@@ -84,13 +83,14 @@ public class MapCommandAliasController {
 			logActionService.add(logAction);
 			// Trả về response
 			MapCommandAliasResponse mcaResponse = new MapCommandAliasResponse(entity);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mcaResponse);
+			ApiResponse response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), mcaResponse);
 			logger.info("Response: " + response);
+			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
-			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), e.getLocalizedMessage());
+			ApiResponse response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,"00",e.getMessage());
 			logger.error("Response error: " + response);
+			return ResponseEntity.ok().body(response);
 		}
-		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/get-all/{programId}")

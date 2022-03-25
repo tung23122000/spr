@@ -33,7 +33,7 @@ public class PackageListController {
 		ApiResponse response;
 		try {
 			servicePackageListService.save(packageListRequest);
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null,"00","Thêm mới danh sách số điện thoại thành công!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.ADD_SERVICE_PACKAGE_LIST_FAILED);

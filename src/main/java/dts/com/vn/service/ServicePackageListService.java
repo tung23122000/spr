@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class ServicePackageListService {
 
 	@Transactional
 	public void save(PackageListRequest packageListRequest) {
-		if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().equals("")) {
+		if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size()!=0) {
 			//	Tạo danh sách đối tượng
 			IsdnList isdnListRequest;
 			if (packageListRequest.getStaDate() != null && packageListRequest.getEndDate() != null) {
@@ -59,11 +60,15 @@ public class ServicePackageListService {
 				isdnListRequest = new IsdnList(null, packageListRequest.getFileName(), Instant.parse(packageListRequest.getStaDate()),
 						packageListRequest.getIsdnCvCode(), packageListRequest.getIsdnDisplay(), null, packageListRequest.getIsdnListType());
 			}
+			LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+			for (int i = 0; i < packageListRequest.getListIsdn().size(); i++) {
+				map.put(packageListRequest.getListIsdn().get(i).replaceAll("\r",""),1);
+			}
 			IsdnList isdnListResponse = isdnListService.save(isdnListRequest);
             //	Tạo danh sách chi tiết
-            ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), packageListRequest.getListIsdn(), packageListRequest.getIsdnDisplay());
+            ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
             listDetailNewRepository.save(listDetailNew);
-            // Tạo danh sách whitelist or blacklist
+           // Tạo danh sách whitelist or blacklist
             Instant endDate = null;
             if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate());
             if (packageListRequest.getIsdnListType().equals("0")) {
@@ -72,7 +77,7 @@ public class ServicePackageListService {
                         Instant.parse(packageListRequest.getStaDate()), endDate, packageListRequest.getProgramId(), null);
                 servicePackageListRepository.save(servicePackageList);
             } else if (packageListRequest.getIsdnListType().equals("1")) {
-                // Tạo Blacklist
+                //Tạo Blacklist
                 if (packageListRequest.getEndDate() != null) {
                     BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
                             isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), Instant.parse(packageListRequest.getEndDate()));

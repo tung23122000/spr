@@ -10,7 +10,7 @@ public class PackageListRequest {
 
 	private String fileName; // file import isdn
 
-	private Object listIsdn; // list isdn
+	private List<String> listIsdn; // list isdn
 
 	private Long packageId;
 

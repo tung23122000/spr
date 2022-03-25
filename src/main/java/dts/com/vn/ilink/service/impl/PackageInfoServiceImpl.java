@@ -139,7 +139,7 @@ public class PackageInfoServiceImpl implements PackageInfoService {
 	public ApiResponse getPackageInfoByKey(String packageCode) {
 		ApiResponse response = new ApiResponse();
 		BstLookupTableRowResponse bstResponse = new BstLookupTableRowResponse();
-		BstLookupTableRow bstLookupTableRow = lookupTableRowRepository.findPackgeInfoByPackageCode("\"" + packageCode.toUpperCase() + "\"",IlinkTableName.LKT_PACKAGE_INFO);
+		BstLookupTableRow bstLookupTableRow = lookupTableRowRepository.findByTableNameAndKey(IlinkTableName.LKT_PACKAGE_INFO,"\"" + packageCode.toUpperCase() + "\"");
 		if(bstLookupTableRow!=null) {
 			List<String> request = Arrays.asList(bstLookupTableRow.getValue().split(",,"));
 			List<Value> newList = new ArrayList<>();
@@ -153,12 +153,13 @@ public class PackageInfoServiceImpl implements PackageInfoService {
 			bstResponse.setTableId(bstLookupTableRow.getTableId());
 			bstResponse.setValues(newList);
 			response.setData(bstResponse);
+			response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 			response.setMessage("Lấy danh sách từ bảng " + IlinkTableName.LKT_PACKAGE_INFO + " thành công!");
 		}else{
+			response.setStatus(ApiResponseStatus.FAILED.getValue());
 			response.setData(bstResponse);
 			response.setMessage("Không tồn tại bản ghi nào!");
 		}
-		response.setStatus(ApiResponseStatus.SUCCESS.getValue());
 		return response;
 	}
 }

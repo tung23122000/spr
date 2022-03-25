@@ -73,8 +73,8 @@ public class MapCommandAliasService {
                 .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
         // Update 22/11/2021
         if (request.getSoapRequest() == null) {
-            if (request.getCmdTransCode() != "DK" && request.getCmdTransCode() != "ADDM" && request.getCmdTransCode() != "DELM") {
-                throw new RestApiException(ErrorCode.ADD_COMMAND_ALIAS_FAILED);
+            if (!request.getCmdTransCode().equalsIgnoreCase("DK") && !request.getCmdTransCode().equalsIgnoreCase("ADDM") && !request.getCmdTransCode().equalsIgnoreCase("DELM")) {
+                throw new RuntimeException(ErrorCode.TRANSCODE_NOT_EXIST.getMessage());
             }
         }
         // Tìm ra tất cả serviceProgram trùng smsMo

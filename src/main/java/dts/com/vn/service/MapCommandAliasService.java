@@ -1,6 +1,5 @@
 package dts.com.vn.service;
 
-import dts.com.vn.entities.Condition;
 import dts.com.vn.entities.MapCommandAlias;
 import dts.com.vn.entities.ServiceProgram;
 import dts.com.vn.enumeration.ErrorCode;
@@ -11,10 +10,8 @@ import dts.com.vn.request.MapCommandAliasRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -80,7 +77,6 @@ public class MapCommandAliasService {
                 throw new RestApiException(ErrorCode.ADD_COMMAND_ALIAS_FAILED);
             }
         }
-
         // Tìm ra tất cả serviceProgram trùng smsMo
         List<ServiceProgram> list = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(request.getSmsMo(), request.getCmdAliasId());
         // Check trùng khoảng thời gian

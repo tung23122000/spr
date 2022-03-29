@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -90,7 +91,9 @@ public class ServicePackageListService {
             } else {
                 LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                 for (int i = 0; i < packageListRequest.getListIsdn().size(); i++) {
-                    map.put(packageListRequest.getListIsdn().get(i).replaceAll("\r", ""), 1);
+                    if(packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 9){
+                        map.put(packageListRequest.getListIsdn().get(i).replaceAll("\r", ""), 1);
+                    }
                 }
                 //	Tạo danh sách chi tiết
                 ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
@@ -98,21 +101,21 @@ public class ServicePackageListService {
             }
             //Tạo danh sách whitelist or blacklist
             Instant endDate = null;
-            if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate());
+            if (packageListRequest.getEndDate() != null) endDate = Instant.parse(packageListRequest.getEndDate()).with(ChronoField.NANO_OF_SECOND, 0);
             if (packageListRequest.getIsdnListType().equals("0")) {
                 // Tạo WhiteList
                 ServicePackageList servicePackageList = new ServicePackageList(packageListRequest.getPackageId(), isdnListResponse.getIsdnListId(),
-                        Instant.parse(packageListRequest.getStaDate()), endDate, packageListRequest.getProgramId(), null);
+                        Instant.parse(packageListRequest.getStaDate()).with(ChronoField.NANO_OF_SECOND, 0), endDate, packageListRequest.getProgramId(), null);
                 servicePackageListRepository.save(servicePackageList);
             } else if (packageListRequest.getIsdnListType().equals("1")) {
                 //Tạo Blacklist
                 if (packageListRequest.getEndDate() != null) {
                     BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
-                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), Instant.parse(packageListRequest.getEndDate()));
+                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()).with(ChronoField.NANO_OF_SECOND, 0), Instant.parse(packageListRequest.getEndDate()).with(ChronoField.NANO_OF_SECOND, 0));
                     blacklistPackageListRepository.save(blacklistPackageList);
                 } else {
                     BlacklistPackageList blacklistPackageList = new BlacklistPackageList(null, packageListRequest.getPackageId(), packageListRequest.getProgramId(),
-                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()), null);
+                            isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()).with(ChronoField.NANO_OF_SECOND, 0), null);
                     blacklistPackageListRepository.save(blacklistPackageList);
                 }
             } else {

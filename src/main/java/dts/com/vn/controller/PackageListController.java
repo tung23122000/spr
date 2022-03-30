@@ -36,7 +36,7 @@ public class PackageListController {
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null,"00","Thêm mới danh sách số điện thoại thành công!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			response = new ApiResponse(ex, ErrorCode.ADD_SERVICE_PACKAGE_LIST_FAILED);
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00","Danh sách truyền vào bị sai dữ liệu!");
 			logger.error("ADD_SERVICE_PACKAGE_LIST_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);

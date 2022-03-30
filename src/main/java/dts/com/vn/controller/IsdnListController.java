@@ -46,7 +46,6 @@ public class IsdnListController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Transactional
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> save(@RequestBody IsdnListRequest request) {
         ApiResponse response;

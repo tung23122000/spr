@@ -54,7 +54,8 @@ public class ServicePackageListService {
 
     @Transactional
     public void save(PackageListRequest packageListRequest) throws InterruptedException {
-        if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() != 0) {
+        ApiResponse response= new ApiResponse();
+        if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() != 0&& checkRequestIsdnListd(packageListRequest.getListIsdn())) {
             //	Tạo danh sách đối tượng
             IsdnList isdnListRequest;
             if (packageListRequest.getStaDate() != null && packageListRequest.getEndDate() != null) {
@@ -118,10 +119,24 @@ public class ServicePackageListService {
                             isdnListResponse.getIsdnListId(), Instant.parse(packageListRequest.getStaDate()).with(ChronoField.NANO_OF_SECOND, 0), null);
                     blacklistPackageListRepository.save(blacklistPackageList);
                 }
-            } else {
-                throw new RestApiException(ErrorCode.DATA_FAILED);
+            }
+        } else {
+            response.setMessage("Dữ liệu truyền vào sai!");
+            throw new RestApiException(ErrorCode.DATA_FAILED);
+        }
+    }
+
+    private Boolean checkRequestIsdnListd(List<String> list){
+        Boolean check= null;
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).trim().replaceAll("\r","").length()<9){
+                check = false;
+                break;
+            }else {
+                check = true;
             }
         }
+        return  check;
     }
 
     public void mapIsdnList(MapIsdnListRequest request) {

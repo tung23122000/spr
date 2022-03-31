@@ -1,5 +1,6 @@
 package dts.com.vn.config;
 
+import dts.com.vn.service.AutoImportService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -7,6 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 public class SchedulerConfiguration {
+
+	private final AutoImportService autoImportService;
+
+	public SchedulerConfiguration(AutoImportService autoImportService) {this.autoImportService = autoImportService;}
 
 	/**
 	 * Description - 1.Cron job query lấy data Báo cáo tổng hợp gói cước
@@ -60,9 +65,9 @@ public class SchedulerConfiguration {
 	 * @author - giangdh
 	 * @created - 07/03/2022
 	 */
-	@Scheduled(cron = "0/15 * * * * *")
+	@Scheduled(fixedDelay= 10000,initialDelay= 3000)
 	private void queryDataReport5() {
-
+		autoImportService.autoImport();
 	}
 
 }

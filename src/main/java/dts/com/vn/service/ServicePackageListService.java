@@ -76,20 +76,23 @@ public class ServicePackageListService {
                 List<Callable<ListDetailNew>> callables = new ArrayList<>();
                 for (List<String> item : result) {
                     callables.add(() -> {
-                        ListDetailNew listDetailNew;
+                        ListDetailNew listDetailNew = null;
                         LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                         for (int i = 0; i < item.size(); i++) {
                             if(item.get(i).replaceAll("\r", "").length() == 9){
                                 map.put(item.get(i).replaceAll("\r", ""), 1);
                             }
                         }
-                        listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
-                        listDetailNewRepository.save(listDetailNew);
+                        if(map.size()>0){
+                            listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
+                            listDetailNewRepository.save(listDetailNew);
+                        }
                         return listDetailNew;
                     });
                 }
                 executorService.invokeAll(callables);
             } else {
+                ListDetailNew listDetailNew;
                 LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                 for (int i = 0; i < packageListRequest.getListIsdn().size(); i++) {
                     if(packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 9){
@@ -97,8 +100,10 @@ public class ServicePackageListService {
                     }
                 }
                 //	Tạo danh sách chi tiết
-                ListDetailNew listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
-                listDetailNewRepository.save(listDetailNew);
+                if(map.size()>0){
+                    listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
+                    listDetailNewRepository.save(listDetailNew);
+                }
             }
             //Tạo danh sách whitelist or blacklist
             Instant endDate = null;

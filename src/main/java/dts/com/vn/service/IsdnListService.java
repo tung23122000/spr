@@ -63,26 +63,29 @@ public class IsdnListService {
                 }
             }
         }
-        if (request.getListType().equals("0")) {
-            // Cập nhật WhiteList
-            if (request.getEndDate() != null) {
-                servicePackageListRepository.updateWhiteListByIsdnListId(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
-            } else {
-                servicePackageListRepository.updateWhiteListByIsdnListIdByStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
-            }
-        } else {
-            //Cập nhật Blacklist
-            if (request.getEndDate() != null) {
-                blacklistPackageListRepository.updateBlackListByIsdnListId(request.getIsdnListId(),DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
-            } else {
-                blacklistPackageListRepository.updateBlackListByIsdnListIdAndStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
-            }
-        }
+
         IsdnList isdnList = new IsdnList();
+        //Trường hợp cập nhật lại list isdn
         if (request.getIsdnListId() != null) {
             isdnList.setIsdnListId(request.getIsdnListId());
+            if (request.getListType().equals("0")) {
+                // Cập nhật WhiteList
+                if (request.getEndDate() != null) {
+                    servicePackageListRepository.updateWhiteListByIsdnListId(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+                } else {
+                    servicePackageListRepository.updateWhiteListByIsdnListIdByStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
+                }
+            } else {
+                //Cập nhật Blacklist
+                if (request.getEndDate() != null) {
+                    blacklistPackageListRepository.updateBlackListByIsdnListId(request.getIsdnListId(),DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+                } else {
+                    blacklistPackageListRepository.updateBlackListByIsdnListIdAndStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
+                }
+            }
+            // Cập nhật status cho list_detail_new
+            listDetailNewRepository.updateListDetailNewStatus(request.getIsdnListId(), request.getIsDisplay());
         }
-        listDetailNewRepository.updateListDetailNewStatus(request.getIsdnListId(), request.getIsDisplay());
         isdnList.setName(request.getName());
         isdnList.setCvCodeList(request.getCvCodeList());
         isdnList.setIsDisplay(request.getIsDisplay());

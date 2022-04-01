@@ -44,6 +44,7 @@ public class AutoImportServiceImpl implements AutoImportService {
             List<File> files = Files.list(Paths.get("/home/spr/import"))
                     .map(Path::toFile)
                     .collect(Collectors.toList());
+            files.stream().close();
             if (files.size() > 0) {
                 for (File file : files) {
                     Optional<IsdnList> isdnList = isdnListRepository.findById(Long.valueOf(file.getName()));
@@ -68,6 +69,7 @@ public class AutoImportServiceImpl implements AutoImportService {
             List<File> files = Files.list(Paths.get("/home/spr/import/" + fileName))
                     .map(Path::toFile)
                     .collect(Collectors.toList());
+            files.stream().close();
             if (files.size() > 0) {
                 for (File file : files) {
                     //Chỉ lấy những file có đuôi .txt, bỏ những file có đuôi "-used.txt" đã được insert

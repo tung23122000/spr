@@ -65,8 +65,19 @@ public class SchedulerConfiguration {
 	 * @author - giangdh
 	 * @created - 07/03/2022
 	 */
-	@Scheduled(fixedDelay= 10000,initialDelay= 3000)
+	@Scheduled(cron = "0/15 * * * * *")
 	private void queryDataReport5() {
+
+	}
+
+	/**
+	 * Description - AutoImport file từ thư mục home/spr/import
+	 *
+	 * @author - tinhbdt
+	 * @created - 31/03/2022
+	 */
+	@Scheduled(fixedDelay= 60000,initialDelay= 3000)
+	private void autoImport() {
 		autoImportService.autoImport();
 	}
 

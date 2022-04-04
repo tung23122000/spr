@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,15 +64,18 @@ public class CustomQueryService {
 	 * @created - 9/8/2021
 	 */
 	public String storeFileToServer(MultipartFile file) throws IOException {
+		InputStream getInput = file.getInputStream();
 		// Normalize file name
 		String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 		try {
 			// Copy file to the target location (Replacing existing file with the same name)
 			Path targetLocation = this.fileStorageLocation.resolve(fileName);
-			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(getInput, targetLocation, StandardCopyOption.REPLACE_EXISTING);
 			return fileName;
 		} catch (IOException ex) {
 			throw new IOException("Could not store file " + fileName + ". Please try again!", ex);
+		}finally {
+			getInput.close();
 		}
 	}
 

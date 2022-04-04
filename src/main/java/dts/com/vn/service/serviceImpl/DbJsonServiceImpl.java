@@ -32,9 +32,10 @@ public class DbJsonServiceImpl implements DbJsonFeService {
         ApiResponse response;
         if (request.getListServicePackage().size() != 0 && request.getListServicePcrf().size() != 0 && request.getListCatalogFlow().size() != 0 && request.getListConditionConfig().size() != 0 && request.getServiceProgramCode().size() != 0) {
             if (validationRequest(request)) {
+                FileReader reader = null;
                 JsonObject obj;
                 try {
-                    FileReader reader = new FileReader("/web-admin/frontend/dist/spr-extension-config/assets/db.json");
+                    reader = new FileReader("/web-admin/frontend/dist/spr-extension-config/assets/db.json");
                     //Read JSON file
                     obj = (JsonObject) JsonParser.parseReader(reader);
                     try {
@@ -43,22 +44,28 @@ public class DbJsonServiceImpl implements DbJsonFeService {
                         //ghi đè file db.json
                         writeFile(request);
                         response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), request,
-                                null, "Ghi dữ liệu và tạo file back-up thành công!");
-                    }catch (Exception e){
+                                                   null, "Ghi dữ liệu và tạo file back-up thành công!");
+                    } catch (Exception e) {
                         response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), request,
-                                null, "Có lỗi xảy ra khi tạo bản ghi và ghi đè dữ liệu!");
+                                                   null, "Có lỗi xảy ra khi tạo bản ghi và ghi đè dữ liệu!");
                     }
                 } catch (FileNotFoundException e) {
                     response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-                            null, "Không tìm thấy file này!");
+                                               null, "Không tìm thấy file này!");
+                } finally {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        logger.error(e.getMessage());
+                    }
                 }
             } else {
                 response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-                        null, "Key hoặc name hoặc value bị thiếu!");
+                                           null, "Key hoặc name hoặc value bị thiếu!");
             }
         } else {
             response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-                    null, "Danh sách truyền lên không được để trống!");
+                                       null, "Danh sách truyền lên không được để trống!");
         }
         return response;
     }
@@ -94,7 +101,8 @@ public class DbJsonServiceImpl implements DbJsonFeService {
             // create Gson instance with pretty-print
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             // create a writer
-            Writer writer = Files.newBufferedWriter(Paths.get("/web-admin/frontend/dist/spr-extension-config/assets/db.json"));
+            Writer writer = Files.newBufferedWriter(
+                    Paths.get("/web-admin/frontend/dist/spr-extension-config/assets/db.json"));
             // convert user object to JSON file
             gson.toJson(map, writer);
             // close the writer
@@ -148,6 +156,7 @@ public class DbJsonServiceImpl implements DbJsonFeService {
             List<File> files = Files.list(Paths.get("/web-admin/frontend/dist/spr-extension-config/assets/"))
                     .map(Path::toFile)
                     .collect(Collectors.toList());
+            files.stream().close();
             for (File item : files) {
                 if (item.getName().startsWith("db") && item.getName().endsWith(".json")) {
                     DbJsonFileResponse file = new DbJsonFileResponse();
@@ -160,10 +169,10 @@ public class DbJsonServiceImpl implements DbJsonFeService {
             }
             result.sort((o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), result,
-                    null, "Lấy danh sách thành công!");
+                                       null, "Lấy danh sách thành công!");
         } catch (FileNotFoundException e) {
             response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-                    null, "Không tìm thấy file này!");
+                                       null, "Không tìm thấy file này!");
         }
         return response;
     }
@@ -173,17 +182,24 @@ public class DbJsonServiceImpl implements DbJsonFeService {
         ApiResponse response;
         JsonObject obj;
         Gson gson = new Gson();
+        FileReader reader = null;
         try {
             String path = "/web-admin/frontend/dist/spr-extension-config/assets/" + name;
-            FileReader reader = new FileReader(path);
+            reader = new FileReader(path);
             //Read JSON file
             obj = (JsonObject) JsonParser.parseReader(reader);
             String gjson = gson.toJson(obj);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), gjson,
-                    null, "Lấy chi tiết dữ liệu file " + name + " thành công!");
+                                       null, "Lấy chi tiết dữ liệu file " + name + " thành công!");
         } catch (FileNotFoundException e) {
             response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null,
-                    null, "Không tìm thấy file này!");
+                                       null, "Không tìm thấy file này!");
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         }
         return response;
     }

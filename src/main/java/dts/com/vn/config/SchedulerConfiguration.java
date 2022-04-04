@@ -76,7 +76,7 @@ public class SchedulerConfiguration {
 	 * @author - tinhbdt
 	 * @created - 31/03/2022
 	 */
-	@Scheduled(fixedDelay= 60000,initialDelay= 3000)
+	@Scheduled(fixedDelay= 10000,initialDelay= 3000)
 	private void autoImport() {
 		autoImportService.autoImport();
 	}

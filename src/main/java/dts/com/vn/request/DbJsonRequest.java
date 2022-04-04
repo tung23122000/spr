@@ -1,5 +1,5 @@
 package dts.com.vn.request;
-;
+
 import dts.com.vn.entities.KeyAndNameDbJson;
 import dts.com.vn.entities.Value;
 import lombok.Data;

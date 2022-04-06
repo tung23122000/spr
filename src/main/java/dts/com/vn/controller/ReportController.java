@@ -18,74 +18,58 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ReportController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
-	private final ReportService reportService;
+    private final ReportService reportService;
 
-	@Autowired
-	public ReportController(ReportService reportService) {
-		this.reportService = reportService;
-	}
+    @Autowired
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
-	@GetMapping("/dailyReport")
-	@ResponseBody
-	public ResponseEntity<ApiResponse> dailyReport1(@RequestParam Long serviceTypeId, @RequestParam String date) {
-		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
-		try {
-			ApiResponse response = reportService.dailyReport(serviceTypeId, date);
-			return ResponseEntity.ok().body(response);
-		} catch (Exception e) {
-			ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);
-			logger.error("==========> " + LogConstants.LOG_RESPONSE_FAIL + new Gson().toJson(response));
-			return ResponseEntity.badRequest().body(response);
-		}
-	}
 
-	@GetMapping("/getPhoneNumber")
-	@ResponseBody
-	public ResponseEntity<?> totalPhoneNumer() {
-		ApiResponse response;
-		try {
-			Long totalPhoneNumber = reportService.findPhoneNumber();
-			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), totalPhoneNumber, null, "Lấy tổng số thuê bao đang hoạt động thành công.");
-			LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
-		} catch (Exception e) {
-			response = new ApiResponse(e, ErrorCode.REPORT_TOTAL_PHONE_NUMBER_ERROR);
-			LogUtil.writeLog(logger, LogConstants.ERROR, response);
-		}
-		return ResponseEntity.ok().body(response);
-	}
+    @GetMapping("/getPhoneNumber")
+    @ResponseBody
+    public ResponseEntity<?> totalPhoneNumer() {
+        ApiResponse response;
+        try {
+            Long totalPhoneNumber = reportService.findAllPhoneNumberHaveActivePackage();
+            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), totalPhoneNumber, null, "Lấy tổng số thuê bao đang hoạt động thành công.");
+            LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
+        } catch (Exception e) {
+            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), ErrorCode.REPORT_TOTAL_PHONE_NUMBER_ERROR.getMessage());
+            LogUtil.writeLog(logger, LogConstants.ERROR, response);
+        }
+        return ResponseEntity.ok().body(response);
+    }
 
-	/**
-	 * Description - Controller lấy thông tin package
-	 *
-	 * @author - binhDT
-	 * @created - 17/01/2022
-	 */
-//	@GetMapping("/dailyReport/find-package")
-//	@ResponseBody
-//	public ResponseEntity<ApiResponse> findByPackageAndTransaction(@RequestParam Long serviceTypeId, @RequestParam String packageCode, @RequestParam String transaction, @RequestParam String date) {
-//		logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
-//		ApiResponse response;
-//		try {
-//			response = reportService.findByPackageAndTransaction(serviceTypeId, packageCode, transaction, date);
-//		} catch (RestApiException ex) {
-//			ex.printStackTrace();
-//			response = new ApiResponse(ex);
-//		}
-//		return ResponseEntity.ok().body(response);
-//	}
-	@GetMapping("/daily-top-10-isdn")
-	@ResponseBody
-	public ResponseEntity<ApiResponse> dailyTop10IsdnReport(@RequestParam String date) {
-		logger.info("=========> " + "logger");
-		ApiResponse response;
-		try {
-			response = reportService.dailyTop10IsdnReport(date);
-		} catch (RestApiException ex) {
-			ex.printStackTrace();
-			response = new ApiResponse(ex);
-		}
-		return ResponseEntity.ok().body(response);
-	}
+
+    @GetMapping("/dailyReport")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam Long serviceTypeId, @RequestParam String date) {
+        logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
+        try {
+            ApiResponse response = reportService.dailyReport(serviceTypeId, date);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);
+            logger.error("==========> " + LogConstants.LOG_RESPONSE_FAIL + new Gson().toJson(response));
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+
+    @GetMapping("/daily-top-10-isdn")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> dailyTop10IsdnReport(@RequestParam String date) {
+        logger.info("=========> " + "logger");
+        ApiResponse response;
+        try {
+            response = reportService.dailyTop10IsdnReport(date);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        }
+        return ResponseEntity.ok().body(response);
+    }
 }

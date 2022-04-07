@@ -2,6 +2,7 @@ package dts.com.vn.service.serviceImpl;
 
 import com.google.gson.*;
 import dts.com.vn.controller.ExternalSystemController;
+import dts.com.vn.entities.FoNameValue;
 import dts.com.vn.entities.KeyAndNameDbJson;
 import dts.com.vn.entities.Value;
 import dts.com.vn.enumeration.ApiResponseStatus;
@@ -30,7 +31,11 @@ public class DbJsonServiceImpl implements DbJsonFeService {
     @Override
     public ApiResponse changeDbJson(DbJsonRequest request) {
         ApiResponse response;
-        if (request.getListServicePackage().size() != 0 && request.getListServicePcrf().size() != 0 && request.getListCatalogFlow().size() != 0 && request.getListConditionConfig().size() != 0 && request.getServiceProgramCode().size() != 0) {
+        if (request.getListServicePackage().size() != 0 && request.getListServicePcrf()
+                                                                  .size() != 0 && request.getListCatalogFlow()
+                                                                                         .size() != 0 && request.getListConditionConfig()
+                                                                                                                .size() != 0 && request.getServiceProgramCode()
+                                                                                                                                       .size() != 0) {
             if (validationRequest(request)) {
                 FileReader reader = null;
                 JsonObject obj;
@@ -74,7 +79,9 @@ public class DbJsonServiceImpl implements DbJsonFeService {
     private void writeFileBackUp(JsonObject obj) {
         try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            String path = "/web-admin/frontend/dist/spr-extension-config/assets/db_json_backup" + timeStamp + ".json";
+            String path =
+                    "/web-admin/frontend/dist/spr-extension-config/assets/db_json_backup" + timeStamp +
+                            ".json";
             // create Gson instance with pretty-print
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             // create a writer
@@ -98,6 +105,7 @@ public class DbJsonServiceImpl implements DbJsonFeService {
             map.put("listServicePackage", request.getListServicePackage());
             map.put("serviceProgramCode", request.getServiceProgramCode());
             map.put("listConditionConfig", request.getListConditionConfig());
+            map.put("listFoName", request.getListFoName());
             // create Gson instance with pretty-print
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             // create a writer
@@ -119,7 +127,8 @@ public class DbJsonServiceImpl implements DbJsonFeService {
         Boolean isValidValue = validateValue(request.getServiceProgramCode());
         Boolean isValidValue2 = validateValue(request.getListCatalogFlow());
         Boolean isValidValue3 = validateValue(request.getListConditionConfig());
-        return isValidKeyAndName && isValidValue2 && isValidKeyAndName2 && isValidValue && isValidValue3;
+        Boolean isValidValue4 = validateFoName(request.getListFoName());
+        return isValidKeyAndName && isValidValue2 && isValidKeyAndName2 && isValidValue && isValidValue3 && isValidValue4;
     }
 
     private Boolean validateKeyAndName(List<KeyAndNameDbJson> lst) {
@@ -148,14 +157,27 @@ public class DbJsonServiceImpl implements DbJsonFeService {
         return isTrue;
     }
 
+    private Boolean validateFoName(List<FoNameValue> lst) {
+        Boolean isTrue = null;
+        for (FoNameValue foValue : lst) {
+            if (foValue.getFoNameValue().length() != 0) {
+                isTrue = true;
+            } else {
+                isTrue = false;
+                break;
+            }
+        }
+        return isTrue;
+    }
+
     @Override
     public ApiResponse getListDbJson() throws IOException {
         ApiResponse response;
         List<DbJsonFileResponse> result = new ArrayList<>();
         try {
-            List<File> files = Files.list(Paths.get("/web-admin/frontend/dist/spr-extension-config/assets/"))
-                    .map(Path::toFile)
-                    .collect(Collectors.toList());
+            List<File> files = Files.list(Paths.get("/web-admin/frontend/dist/spr-extension-config/assets"))
+                                    .map(Path::toFile)
+                                    .collect(Collectors.toList());
             files.stream().close();
             for (File item : files) {
                 if (item.getName().startsWith("db") && item.getName().endsWith(".json")) {
@@ -184,7 +206,7 @@ public class DbJsonServiceImpl implements DbJsonFeService {
         Gson gson = new Gson();
         FileReader reader = null;
         try {
-            String path = "/web-admin/frontend/dist/spr-extension-config/assets/" + name;
+            String path = "/web-admin/frontend/dist/spr-extension-config/assets/" + name.replaceAll("\"","");
             reader = new FileReader(path);
             //Read JSON file
             obj = (JsonObject) JsonParser.parseReader(reader);

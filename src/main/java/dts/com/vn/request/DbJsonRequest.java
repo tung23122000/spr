@@ -1,5 +1,6 @@
 package dts.com.vn.request;
 
+import dts.com.vn.entities.FoNameValue;
 import dts.com.vn.entities.KeyAndNameDbJson;
 import dts.com.vn.entities.Value;
 import lombok.Data;
@@ -18,5 +19,7 @@ public class DbJsonRequest {
     private List<Value> listConditionConfig;
 
     private List<KeyAndNameDbJson> listServicePcrf;
+
+    private List<FoNameValue> listFoName;
 
 }

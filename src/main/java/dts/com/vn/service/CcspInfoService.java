@@ -38,27 +38,6 @@ public class CcspInfoService {
             // SERVICE_PROGRAM_NOT_FOUND
             throw new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND);
         } else {
-            CcspInfo ccspInfo = null, existCcspValue = null;
-            if (ccspInfoRequest.getCcspInfoId() == null) {
-                // Case CREATE
-                // DUPLICATE_CCSP_INFO with FO_NAME AND PROGRAM_ID
-                ccspInfo = ccspInfoRepository.findByProgramIdAndFoName(ccspInfoRequest.getServiceProgramId(), ccspInfoRequest.getFoName());
-                // EXIST CCSP VALUE
-                existCcspValue = ccspInfoRepository.findByCcspValue(ccspInfoRequest.getCcspValue());
-            } else {
-                // Case EDIT
-                // DUPLICATE_CCSP_INFO with FO_NAME AND PROGRAM_ID
-                ccspInfo = ccspInfoRepository.findByProgramIdAndFoName(ccspInfoRequest.getServiceProgramId(), ccspInfoRequest.getFoName(), ccspInfoRequest.getCcspInfoId());
-                // EXIST CCSP VALUE
-                existCcspValue = ccspInfoRepository.findByCcspValue(ccspInfoRequest.getCcspValue(), ccspInfoRequest.getCcspInfoId());
-            }
-
-            if (ccspInfo != null) {
-                throw new RestApiException(ErrorCode.DUPLICATE_CCSP_INFO);
-            }
-            if (existCcspValue != null) {
-                throw new RestApiException(ErrorCode.EXIST_CCSP_VALUE);
-            }
             // SAVE CCSP_INFO
             ccspInfoReturn = ccspInfoRepository.save(new CcspInfo(ccspInfoRequest, servicePackage, serviceProgram));
 

@@ -1,6 +1,7 @@
 package dts.com.vn.service;
 
 import dts.com.vn.entities.CommandandSource;
+import dts.com.vn.entities.Register;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.entities.ServiceType;
 import dts.com.vn.ilarc.repository.IlArcTaskParameterRepository;
@@ -12,12 +13,15 @@ import dts.com.vn.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ReportService {
@@ -35,6 +39,9 @@ public class ReportService {
     private final SasReTaskParameterRepository sasReTaskParameterRepository;
 
     private final IlArcTaskParameterRepository ilArcTaskParameterRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public ReportService(ServicePackageRepository servicePackageRepository,
@@ -58,7 +65,23 @@ public class ReportService {
      * @created - 07/04/2022
      */
     public Long findAllPhoneNumberHaveActivePackage() {
-        return registerRepository.findAllPhone("\"" + "PART1" + "\"");
+        Register reg = new Register();
+        List<CompletableFuture<Long>> listCount = new ArrayList<>();
+        CompletableFuture<Long> future;
+        for (int i = 1; i < 10; i++) {
+            int numberOfPartition = i;
+            future = CompletableFuture.supplyAsync(() -> reg.getPhoneNumber(entityManager, "\"" + "PART" + numberOfPartition + "\""));
+            listCount.add(future);
+        }
+        List<Long> listResponse = listCount.stream()
+                                      .map(CompletableFuture::join)
+                                      .collect(Collectors.toList());
+        long amout = 0L;
+        for (Long aLong : listResponse) {
+            amout += aLong;
+        }
+        return amout;
+
     }
 
 

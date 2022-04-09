@@ -3,7 +3,9 @@ package dts.com.vn.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -119,4 +121,24 @@ public class Register {
 	@ManyToOne
 	@JoinColumn(name = "package_id")
 	private ServicePackage servicePackage;
+
+	public Long getPhoneNumber(EntityManager entityManager,String partition) {
+
+		String queryStr = "SELECT COUNT(DISTINCT isdn)\n" +
+				"FROM" + partition +
+				"WHERE ((NOW() BETWEEN sta_datetime AND end_datetime) \n" +
+				"OR (end_datetime IS NULL AND NOW() > sta_datetime ))";
+		try {
+			Query query = entityManager.createNativeQuery(queryStr);
+			long count = 0;
+			List<BigInteger> list = query.getResultList();
+			for (BigInteger bigInteger : list) {
+				count = bigInteger.longValue();
+			}
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

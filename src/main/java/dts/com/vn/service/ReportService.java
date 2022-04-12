@@ -80,15 +80,15 @@ public class ReportService {
             amout += aLong;
         }
         return amout;
-
     }
 
 
     /**
      * Description - Báo cáo tổng hợp hệ thống vasp
      *
-     * @param -
-     * @return any
+     * @param - date: truyền vào ngày muốn tra cứu
+     * @param - page: truyền vào page cần hiển thị
+     * @return - Report Daily Response (bao gồm tổng số trang, danh sách các nhóm gói và báo cáo thuê bao hiệu lực)
      * @author - tinhbdt
      * @created - 12/04/2022
      */
@@ -96,11 +96,14 @@ public class ReportService {
         ApiResponse response = new ApiResponse();
         List<Long> listServiceTypeId = serviceTypeRepository.findListServiceTypeId();
         List<CompletableFuture<DailyReportResponse>> listDailyReportResponse = new ArrayList<>();
-        Integer totalPage = listServiceTypeId.size() / 10 + 1;
+        //Số lượng items default mỗi page
+        int defaultNumberOfPages = 10;
+        Integer totalPage = listServiceTypeId.size() / defaultNumberOfPages + 1;
         CompletableFuture<DailyReportResponse> future;
-        for (int i = page * 10 - 10; i < page * 10; i++) {
+        //Lấy các phần tử từ listServiceTypeId dựa theo page
+        for (int i = page * defaultNumberOfPages - defaultNumberOfPages; i < page * defaultNumberOfPages; i++) {
             int finalI = i;
-            if (finalI<=(listServiceTypeId.size()-1)) {
+            if (finalI <= (listServiceTypeId.size() - 1)) {
                 future = CompletableFuture.supplyAsync(() -> getDailyReportResponse(listServiceTypeId.get(finalI),
                                                                                     date));
                 listDailyReportResponse.add(future);
@@ -109,7 +112,7 @@ public class ReportService {
         List<DailyReportResponse> listResponse = listDailyReportResponse.stream()
                                                                         .map(CompletableFuture::join)
                                                                         .collect(Collectors.toList());
-        ReportDailyResponse data= new ReportDailyResponse();
+        ReportDailyResponse data = new ReportDailyResponse();
         data.setTotalPage(totalPage);
         data.setListReport(listResponse);
         response.setData(data);
@@ -117,7 +120,15 @@ public class ReportService {
         return response;
     }
 
-    //Lấy danh sách nhóm gói kèm báo cáo
+    /**
+     * Description - Lấy dữ liệu từ db bao gồm tên gói cước, mã gói cước, số lượng thuê bao còn hiệu lực
+     *
+     * @param - serviceTypeId : tra cứu theo từng nhóm gói
+     * @param - date : truyền vào ngày muốn tra cứu
+     * @return - DailyReportResponse (trả ra một danh sách các gói trong nhóm và báo cáo thuê bao hiệu lực)
+     * @author - tinhbdt
+     * @created - 12/04/2022
+     */
     private DailyReportResponse getDailyReportResponse(Long serviceTypeId, String date) {
         DailyReportResponse data = new DailyReportResponse();
         Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
@@ -150,15 +161,22 @@ public class ReportService {
         return data;
     }
 
-    //Lấy số thuê bao đang hiệu lực theo gói cước
+    /**
+     * Description - Lấy số lượng thuê bao còn hiệu lực từ bảng register theo package_id và date
+     *
+     * @param - packageCode: lấy số lượng thuê bao hiệu theo từng gói cước
+     * @param - date : truyền vào ngày muốn tra cứu
+     * @return totalNumberOfSubscribers(tổng số thuê bao đang dùng gói cước này)
+     * @author - tinhbdt
+     * @created - 12/04/2022
+     */
     private Long getTotalNumberOfSubscribers(String packageCode, String date) {
-        ListPackageResponse listPackageResponse = new ListPackageResponse();
         List<CompletableFuture<Long>> listCount = new ArrayList<>();
         CompletableFuture<Long> future;
         for (int i = 1; i < 10; i++) {
             int numberOfPartition = i;
             future = CompletableFuture.supplyAsync(() -> listPackageResponseRepository.getTotalNumberOfSubscribers(entityManager,
-                                                                                                         "\"" + "PART" + numberOfPartition + "\"", packageCode, date));
+                                                                                                                   "\"" + "PART" + numberOfPartition + "\"", packageCode, date));
             listCount.add(future);
         }
         List<Long> listResponse = listCount.stream()
@@ -169,7 +187,6 @@ public class ReportService {
             amout += aLong;
         }
         return amout;
-
     }
 
     //Tìm nguồn từ database Ilink

@@ -6,7 +6,7 @@ import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.entities.ServiceType;
 import dts.com.vn.ilarc.repository.IlArcTaskParameterRepository;
 import dts.com.vn.ilink.repository.SasReTaskParameterRepository;
-import dts.com.vn.repository.RegisterRepository;
+import dts.com.vn.repository.ListPackageResponseRepository;
 import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceTypeRepository;
 import dts.com.vn.response.*;
@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ReportService {
@@ -34,11 +33,11 @@ public class ReportService {
 
     private final ServiceTypeRepository serviceTypeRepository;
 
-    private final RegisterRepository registerRepository;
-
     private final SasReTaskParameterRepository sasReTaskParameterRepository;
 
     private final IlArcTaskParameterRepository ilArcTaskParameterRepository;
+
+    private final ListPackageResponseRepository listPackageResponseRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -46,14 +45,14 @@ public class ReportService {
     @Autowired
     public ReportService(ServicePackageRepository servicePackageRepository,
                          ServiceTypeRepository serviceTypeRepository,
-                         RegisterRepository registerRepository,
                          SasReTaskParameterRepository sasReTaskParameterRepository,
-                         IlArcTaskParameterRepository ilArcTaskParameterRepository) {
+                         IlArcTaskParameterRepository ilArcTaskParameterRepository,
+                         ListPackageResponseRepository listPackageResponseRepository) {
         this.servicePackageRepository = servicePackageRepository;
         this.serviceTypeRepository = serviceTypeRepository;
-        this.registerRepository = registerRepository;
         this.sasReTaskParameterRepository = sasReTaskParameterRepository;
         this.ilArcTaskParameterRepository = ilArcTaskParameterRepository;
+        this.listPackageResponseRepository = listPackageResponseRepository;
     }
 
     /**
@@ -74,8 +73,8 @@ public class ReportService {
             listCount.add(future);
         }
         List<Long> listResponse = listCount.stream()
-                                      .map(CompletableFuture::join)
-                                      .collect(Collectors.toList());
+                                           .map(CompletableFuture::join)
+                                           .collect(Collectors.toList());
         long amout = 0L;
         for (Long aLong : listResponse) {
             amout += aLong;
@@ -86,68 +85,94 @@ public class ReportService {
 
 
     /**
-     * Description -
+     * Description - Báo cáo tổng hợp hệ thống vasp
      *
-     * @param serviceTypeId -
+     * @param -
      * @return any
-     * @author - giangdh
-     * @created - 07/04/2022
+     * @author - tinhbdt
+     * @created - 12/04/2022
      */
-    public ApiResponse dailyReport(Long serviceTypeId, String date) throws InterruptedException {
+    public ApiResponse dailyReport(String date, Integer page) {
         ApiResponse response = new ApiResponse();
-        DailyReportResponse data = new DailyReportResponse();
-        List<CompletableFuture<ListPackageResponse>> result = new ArrayList<>();
-        Long timeDifference = isTwoDay(date);
-        Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
-        optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));
-        List<ServicePackage> listAllPackageSameGroup = servicePackageRepository.findAllByServiceTypeId(serviceTypeId);
-        Timestamp start = Timestamp.valueOf(date + " " + "00:00:00");
-        Timestamp end = Timestamp.valueOf(date + " " + "23:59:59");
-        int requestSize = listAllPackageSameGroup.size();
-        if (requestSize > 0) {
-            ExecutorService executorService = Executors.newFixedThreadPool(requestSize);
-            List<Callable<ListPackageResponse>> callables = new ArrayList<>();
-            listAllPackageSameGroup.forEach(servicePackage -> {
-                ListPackageResponse listPackageResponse = new ListPackageResponse();
-                callables.add(() -> {
-                    Integer numberRecordSuccess;
-                    Integer numberRecordFailed;
-                    if (timeDifference > 0) {
-                        numberRecordSuccess = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
-                        numberRecordFailed = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-                    } else if (timeDifference < 0) {
-                        numberRecordSuccess = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), start, end);
-                        numberRecordFailed = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), start, end);
-                    } else {
-                        Integer numberRecordSuccessIlarc = ilArcTaskParameterRepository.findAllSuccessByParameterValueInIlarc(servicePackage.getCode(), start, end);
-                        Integer numberRecordFailedIlarc = ilArcTaskParameterRepository.findAllFailByParameterValueInIlarc(servicePackage.getCode(), start, end);
-                        Integer numberRecordSuccessIlink = sasReTaskParameterRepository.findAllSuccessByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
-                        Integer numberRecordFailedIlink = sasReTaskParameterRepository.findAllFailByParameterValueInIlink(servicePackage.getCode(), Timestamp.valueOf(date + " " + "23:30:00"), Timestamp.valueOf(date + " " + "23:59:59"));
-                        numberRecordFailed = numberRecordFailedIlarc + numberRecordFailedIlink;
-                        numberRecordSuccess = numberRecordSuccessIlink + numberRecordSuccessIlarc;
-                    }
-                    listPackageResponse.setPackageCode(servicePackage.getCode());
-                    listPackageResponse.setPackageName(servicePackage.getName());
-                    listPackageResponse.setNumberRecordSuccess(numberRecordSuccess);
-                    listPackageResponse.setNumberRecordFailed(numberRecordFailed);
-                    return listPackageResponse;
-                });
-            });
-            List<Future<ListPackageResponse>> futures = executorService.invokeAll(callables);
-            data.setListPackage(futures.stream().map(listPackageResponseFuture -> {
-                try {
-                    return listPackageResponseFuture.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }).collect(Collectors.toList()));
+        List<Long> listServiceTypeId = serviceTypeRepository.findListServiceTypeId();
+        List<CompletableFuture<DailyReportResponse>> listDailyReportResponse = new ArrayList<>();
+        Integer totalPage = listServiceTypeId.size() / 10 + 1;
+        CompletableFuture<DailyReportResponse> future;
+        for (int i = page * 10 - 10; i < page * 10; i++) {
+            int finalI = i;
+            if (finalI<=(listServiceTypeId.size()-1)) {
+                future = CompletableFuture.supplyAsync(() -> getDailyReportResponse(listServiceTypeId.get(finalI),
+                                                                                    date));
+                listDailyReportResponse.add(future);
+            }
         }
-        response.setStatus(200);
+        List<DailyReportResponse> listResponse = listDailyReportResponse.stream()
+                                                                        .map(CompletableFuture::join)
+                                                                        .collect(Collectors.toList());
+        ReportDailyResponse data= new ReportDailyResponse();
+        data.setTotalPage(totalPage);
+        data.setListReport(listResponse);
         response.setData(data);
+        response.setStatus(200);
         return response;
     }
 
+    //Lấy danh sách nhóm gói kèm báo cáo
+    private DailyReportResponse getDailyReportResponse(Long serviceTypeId, String date) {
+        DailyReportResponse data = new DailyReportResponse();
+        Optional<ServiceType> optServiceType = serviceTypeRepository.findById(serviceTypeId);
+        optServiceType.ifPresent(serviceType -> data.setGroupName(serviceType.getName()));
+        List<ServicePackage> listAllPackageSameGroup = servicePackageRepository.findAllByServiceTypeId(serviceTypeId);
+        int requestSize = listAllPackageSameGroup.size();
+        if (requestSize > 0) {
+            List<CompletableFuture<ListPackageResponse>> listResponse = new ArrayList<>();
+            CompletableFuture<ListPackageResponse> future;
+            for (int i = 0; i < listAllPackageSameGroup.size(); i++) {
+                int finalI = i;
+                future = CompletableFuture.supplyAsync(() -> {
+                    ListPackageResponse listPackageResponse = new ListPackageResponse();
+                    Long total =
+                            getTotalNumberOfSubscribers(listAllPackageSameGroup.get(finalI).getPackageId()
+                                                                               .toString(),
+                                                        date);
+                    listPackageResponse.setPackageCode(listAllPackageSameGroup.get(finalI).getCode());
+                    listPackageResponse.setPackageName(listAllPackageSameGroup.get(finalI).getName());
+                    listPackageResponse.setTotalPhoneNumber(total);
+                    return listPackageResponse;
+                });
+                listResponse.add(future);
+            }
+            List<ListPackageResponse> responseFromDb = listResponse.stream()
+                                                                   .map(CompletableFuture::join)
+                                                                   .collect(Collectors.toList());
+            data.setListPackage(responseFromDb);
+        }
+        return data;
+    }
+
+    //Lấy số thuê bao đang hiệu lực theo gói cước
+    private Long getTotalNumberOfSubscribers(String packageCode, String date) {
+        ListPackageResponse listPackageResponse = new ListPackageResponse();
+        List<CompletableFuture<Long>> listCount = new ArrayList<>();
+        CompletableFuture<Long> future;
+        for (int i = 1; i < 10; i++) {
+            int numberOfPartition = i;
+            future = CompletableFuture.supplyAsync(() -> listPackageResponseRepository.getTotalNumberOfSubscribers(entityManager,
+                                                                                                         "\"" + "PART" + numberOfPartition + "\"", packageCode, date));
+            listCount.add(future);
+        }
+        List<Long> listResponse = listCount.stream()
+                                           .map(CompletableFuture::join)
+                                           .collect(Collectors.toList());
+        long amout = 0L;
+        for (Long aLong : listResponse) {
+            amout += aLong;
+        }
+        return amout;
+
+    }
+
+    //Tìm nguồn từ database Ilink
     private String getSourceContentIlink(Long requestId) {
         Optional<SourcesResponse> sourcesResponse = sasReTaskParameterRepository.findFlowSourceIlink(requestId, SOURCE_TYPE);
         if (!sourcesResponse.isPresent()) {

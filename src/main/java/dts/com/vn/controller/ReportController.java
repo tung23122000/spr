@@ -46,10 +46,10 @@ public class ReportController {
 
     @GetMapping("/dailyReport")
     @ResponseBody
-    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam Long serviceTypeId, @RequestParam String date) {
-        logger.info("=========> " + "groupPackageCode: " + serviceTypeId);
+    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam String date, Integer page) {
+        logger.info("=========> " + "groupPackageCode: " + date);
         try {
-            ApiResponse response = reportService.dailyReport(serviceTypeId, date);
+            ApiResponse response = reportService.dailyReport(date, page);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);

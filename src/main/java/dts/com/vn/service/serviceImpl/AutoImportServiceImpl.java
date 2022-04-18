@@ -52,20 +52,14 @@ public class AutoImportServiceImpl implements AutoImportService {
           // Kiểm tra xem tên file có phải isdn_list_id không
           if (isdnList.isPresent()) {
             handlingFileTxt(file.getName(), isdnList.get().getIsDisplay());
-          } else {
-            logger.warn("Folder này không phải folder chứa danh sách thuê bao!");
           }
         }
-      } else {
-        logger.warn("Không tồn tại folder nào trong thư mục này!");
       }
     } catch (IOException e) {
-      logger.error("Không tìm thấy folder trên server " + e.getMessage());
       e.printStackTrace();
     } finally {
       if (files != null) {
         files.stream().close();
-        logger.info("Đóng luồng lấy danh sách folder thành công!");
       }
     }
   }
@@ -84,20 +78,14 @@ public class AutoImportServiceImpl implements AutoImportService {
             logger.info(file.getName());
             readFileTxtAndInsertToDb(file.getName(), fileName, isDisplay);
             file.delete();
-          } else {
-            logger.warn("Không có file import nào trong folder " + fileName);
           }
         }
-      } else {
-        logger.warn("Không có file nào trong folder " + fileName);
       }
     } catch (IOException e) {
-      logger.error("Thực hiện tìm file và insert không thành công!" + e.getMessage());
       e.printStackTrace();
     } finally {
       if (files != null) {
         files.stream().close();
-        logger.info("Đóng luồng lấy danh sách file import thành công!");
       }
     }
   }
@@ -118,8 +106,6 @@ public class AutoImportServiceImpl implements AutoImportService {
         // Kiểm tra dữ liệu của file trước khi insert
         if (listFromFile.size() > 0) {
           insertToDb(listFromFile, folderName, isDisplay, fileName);
-        } else {
-          logger.warn("File import không có dữ liệu!");
         }
       } catch (InterruptedException error) {
         logger.error(error.getMessage());
@@ -153,8 +139,6 @@ public class AutoImportServiceImpl implements AutoImportService {
           if (map.size() > 0) {
             listDetailNew = new ListDetailNew(null, Long.valueOf(folderName), map, isDisplay);
             listDetailNewRepository.save(listDetailNew);
-          } else {
-            logger.warn("Dữ liệu trong file không đúng định dạng!");
           }
           return listDetailNew;
         });
@@ -172,8 +156,6 @@ public class AutoImportServiceImpl implements AutoImportService {
       if (map.size() > 0) {
         listDetailNew = new ListDetailNew(null, Long.valueOf(folderName), map, isDisplay);
         listDetailNewRepository.save(listDetailNew);
-      } else {
-        logger.warn("Dữ liệu trong file không đúng định dạng!");
       }
     }
   }

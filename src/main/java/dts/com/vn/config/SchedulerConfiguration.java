@@ -1,5 +1,6 @@
 package dts.com.vn.config;
 
+import dts.com.vn.service.AutoImportNeifService;
 import dts.com.vn.service.AutoImportService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -11,7 +12,12 @@ public class SchedulerConfiguration {
 
 	private final AutoImportService autoImportService;
 
-	public SchedulerConfiguration(AutoImportService autoImportService) {this.autoImportService = autoImportService;}
+	private final AutoImportNeifService autoImportNeifService;
+
+	public SchedulerConfiguration(AutoImportService autoImportService,
+								  AutoImportNeifService autoImportNeifService) {this.autoImportService = autoImportService;
+		this.autoImportNeifService = autoImportNeifService;
+	}
 
 	/**
 	 * Description - 1.Cron job query lấy data Báo cáo tổng hợp gói cước
@@ -76,9 +82,31 @@ public class SchedulerConfiguration {
 	 * @author - tinhbdt
 	 * @created - 31/03/2022
 	 */
-	@Scheduled(fixedDelay= 10000,initialDelay= 3000)
+	@Scheduled(fixedDelay= 10000,initialDelay= 6000)
 	private void autoImport() {
 		autoImportService.autoImport();
+	}
+
+	/**
+	 * Description - AutoImport neif từ file trong thư mục /home/spr/import-neif
+	 *
+	 * @author - tinhbdt
+	 * @created - 18/04/2022
+	 */
+	@Scheduled(fixedDelay= 10000,initialDelay= 9000)
+	private void autoImportNeif() {
+		autoImportNeifService.autoImportNeif();
+	}
+
+	/**
+	 * Description - Transfer file từ server khác sang thư mục /home/spr/import-neif
+	 *
+	 * @author - tinhbdt
+	 * @created - 18/04/2022
+	 */
+	@Scheduled(fixedDelay= 10000,initialDelay= 3000)
+	private void autoTransferFileNeif() {
+		autoImportNeifService.transferFile();
 	}
 
 }

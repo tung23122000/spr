@@ -10,12 +10,12 @@ import java.util.List;
 @Repository
 public class ListPackageResponseRepository {
 
-    public Long getTotalNumberOfSubscribers(EntityManager entityManager, String partition, String packageCode,
+    public Long getTotalNumberOfSubscribers(EntityManager entityManager, String partition, String packageId,
                                             String date) {
         String date1 = "'" + date + " 23:59:59'";
         String queryStr = "SELECT COUNT(DISTINCT isdn)\n" +
                 "FROM" + partition +
-                "WHERE package_id =" + packageCode +
+                "WHERE package_id =" + packageId +
                 "AND ((" + date1 + " BETWEEN sta_datetime AND end_datetime) \n" +
                 "OR (end_datetime IS NULL AND " + date1 + " > sta_datetime ))";
         try {

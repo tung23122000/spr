@@ -28,28 +28,12 @@ public class ReportController {
     }
 
 
-    @GetMapping("/getPhoneNumber")
-    @ResponseBody
-    public ResponseEntity<?> totalPhoneNumer() {
-        ApiResponse response;
-        try {
-            Long totalPhoneNumber = reportService.findAllPhoneNumberHaveActivePackage();
-            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), totalPhoneNumber, null, "Lấy tổng số thuê bao đang hoạt động thành công.");
-            LogUtil.writeLog(logger, LogConstants.RESPONSE, response);
-        } catch (Exception e) {
-            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), ErrorCode.REPORT_TOTAL_PHONE_NUMBER_ERROR.getMessage());
-            LogUtil.writeLog(logger, LogConstants.ERROR, response);
-        }
-        return ResponseEntity.ok().body(response);
-    }
-
-
     @GetMapping("/dailyReport")
     @ResponseBody
-    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam String date, Integer page) {
+    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam String date) {
         logger.info("=========> " + "groupPackageCode: " + date);
         try {
-            ApiResponse response = reportService.dailyReport(date, page);
+            ApiResponse response = reportService.dailyReport(date);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);
@@ -72,4 +56,5 @@ public class ReportController {
         }
         return ResponseEntity.ok().body(response);
     }
+
 }

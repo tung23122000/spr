@@ -1,12 +1,11 @@
 package dts.com.vn.service;
 
-import dts.com.vn.entities.CommandandSource;
-import dts.com.vn.entities.Register;
-import dts.com.vn.entities.ServicePackage;
-import dts.com.vn.entities.ServiceType;
+import com.google.gson.Gson;
+import dts.com.vn.entities.*;
 import dts.com.vn.ilarc.repository.IlArcTaskParameterRepository;
 import dts.com.vn.ilink.repository.SasReTaskParameterRepository;
 import dts.com.vn.repository.ListPackageResponseRepository;
+import dts.com.vn.repository.ReportsRepository;
 import dts.com.vn.repository.ServicePackageRepository;
 import dts.com.vn.repository.ServiceTypeRepository;
 import dts.com.vn.response.*;
@@ -39,6 +38,8 @@ public class ReportService {
 
     private final ListPackageResponseRepository listPackageResponseRepository;
 
+    private final ReportsRepository reportsRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -47,12 +48,14 @@ public class ReportService {
                          ServiceTypeRepository serviceTypeRepository,
                          SasReTaskParameterRepository sasReTaskParameterRepository,
                          IlArcTaskParameterRepository ilArcTaskParameterRepository,
-                         ListPackageResponseRepository listPackageResponseRepository) {
+                         ListPackageResponseRepository listPackageResponseRepository,
+                         ReportsRepository reportsRepository) {
         this.servicePackageRepository = servicePackageRepository;
         this.serviceTypeRepository = serviceTypeRepository;
         this.sasReTaskParameterRepository = sasReTaskParameterRepository;
         this.ilArcTaskParameterRepository = ilArcTaskParameterRepository;
         this.listPackageResponseRepository = listPackageResponseRepository;
+        this.reportsRepository = reportsRepository;
     }
 
     /**
@@ -63,7 +66,7 @@ public class ReportService {
      * @author - giangdh
      * @created - 07/04/2022
      */
-    public Long findAllPhoneNumberHaveActivePackage() {
+    private Long findAllPhoneNumberHaveActivePackage() {
         Register reg = new Register();
         List<CompletableFuture<Long>> listCount = new ArrayList<>();
         CompletableFuture<Long> future;
@@ -84,22 +87,72 @@ public class ReportService {
 
 
     /**
-     * Description - Báo cáo tổng hợp hệ thống vasp
+     * Description - Báo cáo hệ thống vasp
      *
      * @param - date: truyền vào ngày muốn tra cứu
-     * @param - page: truyền vào page cần hiển thị
-     * @return - Report Daily Response (bao gồm tổng số trang, danh sách các nhóm gói và báo cáo thuê bao hiệu lực)
+     * @return - reports : bao gồm các thông tin của phần báo cáo hệ thống VASP
      * @author - tinhbdt
      * @created - 12/04/2022
      */
-    public ApiResponse dailyReport(String date, Integer page) {
+    public ApiResponse dailyReport(String date) {
         ApiResponse response = new ApiResponse();
+        Reports reports = reportsRepository.getDataByDate(Timestamp.valueOf(date+" 23:59:59"));
+        if (reports!=null){
+            response.setStatus(0);
+            response.setErrorCode("00");
+            response.setData(reports.getReportData());
+            response.setMessage("Lấy dữ liệu báo cáo thành công!");
+        } else{
+            response.setStatus(1);
+            response.setErrorCode("00");
+            response.setMessage("Không tồn tại báo cáo của ngày này!");
+        }
+        return response;
+    }
+
+    /**
+     * Description - Lấy dữ liệu hàng đêm và insert vào bảng Reports
+     *
+     * @author - tinhbdt
+     * @created - 19/04/2022
+     */
+    public void insertDailyReportToReports() {
+        String dateNow = String.valueOf(LocalDate.now().minusDays(1));
         List<Long> listServiceTypeId = serviceTypeRepository.findListServiceTypeId();
-        List<CompletableFuture<DailyReportResponse>> listDailyReportResponse = new ArrayList<>();
+        List<DailyReportResponse> listInsertToDb = new ArrayList<>();
         //Số lượng items default mỗi page
         int defaultNumberOfPages = 10;
-        Integer totalPage = listServiceTypeId.size() / defaultNumberOfPages + 1;
+        int totalPage = listServiceTypeId.size() / defaultNumberOfPages + 2;
+        for (int i = 1; i < totalPage; i++) {
+            List<DailyReportResponse> newList = getDailyReportResponseFromDb(i, listServiceTypeId, dateNow);
+            listInsertToDb.addAll(newList);
+        }
+        Gson gson = new Gson();
+        ReportsInsert reportsInsert = new ReportsInsert();
+        reportsInsert.setDailyReport(listInsertToDb);
+        reportsInsert.setTotalIsdn(findAllPhoneNumberHaveActivePackage());
+        Reports reports = new Reports();
+        reports.setReportDate(Timestamp.valueOf(dateNow + " 23:59:59"));
+        reports.setReportType(1);
+        reports.setInsertAt(Timestamp.valueOf(dateNow + " 23:59:59"));
+        reports.setReportData(gson.toJson(reportsInsert));
+        reportsRepository.save(reports);
+    }
+
+    /**
+     * Description - Lấy dữ liệu từ db theo trang để giảm tải cho hệ thống, mỗi trang gồm 10 bản ghi
+     *
+     * @param - page : truyền vào trang thứ bao nhiêu
+     * @param - listServiceTypeId : danh sách id của các nhóm gói
+     * @param - date : thời gian cần tra cứu
+     * @return - DailyReportResponse (trả ra một danh sách các gói trong nhóm và báo cáo thuê bao hiệu lực)
+     * @author - tinhbdt
+     * @created - 19/04/2022
+     */
+    private List<DailyReportResponse> getDailyReportResponseFromDb(Integer page, List<Long> listServiceTypeId, String date) {
+        List<CompletableFuture<DailyReportResponse>> listDailyReportResponse = new ArrayList<>();
         CompletableFuture<DailyReportResponse> future;
+        int defaultNumberOfPages = 10;
         //Lấy các phần tử từ listServiceTypeId dựa theo page
         for (int i = page * defaultNumberOfPages - defaultNumberOfPages; i < page * defaultNumberOfPages; i++) {
             int finalI = i;
@@ -109,15 +162,9 @@ public class ReportService {
                 listDailyReportResponse.add(future);
             }
         }
-        List<DailyReportResponse> listResponse = listDailyReportResponse.stream()
-                                                                        .map(CompletableFuture::join)
-                                                                        .collect(Collectors.toList());
-        ReportDailyResponse data = new ReportDailyResponse();
-        data.setTotalPage(totalPage);
-        data.setListReport(listResponse);
-        response.setData(data);
-        response.setStatus(200);
-        return response;
+        return listDailyReportResponse.stream()
+                                      .map(CompletableFuture::join)
+                                      .collect(Collectors.toList());
     }
 
     /**

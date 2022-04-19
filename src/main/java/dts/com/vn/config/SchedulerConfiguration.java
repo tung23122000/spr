@@ -6,6 +6,7 @@ import dts.com.vn.ilink.service.CleanDataService;
 import dts.com.vn.repository.RequestSummaryRepository;
 import dts.com.vn.service.AutoImportNeifService;
 import dts.com.vn.service.AutoImportService;
+import dts.com.vn.service.ReportService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,18 @@ public class SchedulerConfiguration {
 
     private final AutoImportNeifService autoImportNeifService;
 
+    private final ReportService reportService;
+
     @Autowired
     public SchedulerConfiguration(AutoImportService autoImportService,
                                   RequestSummaryRepository requestSummaryRepository, CleanDataService dataService,
-                                  AutoImportNeifService autoImportNeifService) {
+                                  AutoImportNeifService autoImportNeifService,
+                                  ReportService reportService) {
         this.autoImportService = autoImportService;
         this.requestSummaryRepository = requestSummaryRepository;
         this.dataService = dataService;
         this.autoImportNeifService = autoImportNeifService;
+        this.reportService = reportService;
     }
 
     /**
@@ -69,14 +74,14 @@ public class SchedulerConfiguration {
     }
 
     /**
-     * Description - 1.Cron job query lấy data Báo cáo tổng hợp gói cước
+     * Description - 1.Cron job query lấy data Báo cáo tổng hợp gói cước mỗi 12h đêm
      *
      * @author - giangdh
      * @created - 07/03/2022
      */
-    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "0 0 0 * * ?")
     private void queryDataReport1() {
-
+        reportService.insertDailyReportToReports();
     }
 
     /**

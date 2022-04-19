@@ -57,21 +57,16 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
                         readFileTxtAndInsert(file.getName());
                         Path source = Paths.get("/home/spr/import-neif/" + file.getName());
                         Path newDir = Paths.get("/home/spr/import-neif/used");
-                        Files.move(source, newDir.resolve(source.getFileName()),
-                                   StandardCopyOption.REPLACE_EXISTING);
+                        Files.move(source, newDir.resolve(source.getFileName()), StandardCopyOption.REPLACE_EXISTING);
                         file.delete();
                     }
                 }
-            } else {
-                logger.warn("Không tồn tại file nào trong thư mục này!");
             }
         } catch (IOException e) {
-            logger.error("Không tìm thấy folder trên server " + e.getMessage());
             e.printStackTrace();
         } finally {
             if (files != null) {
                 files.stream().close();
-                logger.info("Đóng luồng lấy danh sách file thành công!");
             }
         }
     }
@@ -187,7 +182,7 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
                         isExist = true;
                     }
                 }
-            }else{
+            } else {
                 isExist = true;
             }
         } catch (IOException e) {

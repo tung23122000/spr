@@ -48,13 +48,13 @@ public class SchedulerConfiguration {
      * @author - giangdh
      * @created - 18/04/2022
      */
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0/5 * * * ?")
     private void cleanIlinkData() {
         RequestSummary lastRecord = requestSummaryRepository.findLastRequestSummary();
         Timestamp startTime, endTime;
         logger.info("==========> Last record in request log: {}", new Gson().toJson(lastRecord));
         if (lastRecord != null) {
-            startTime = new Timestamp(lastRecord.getReceivedDate().getTime());
+            startTime = new Timestamp(lastRecord.getResponseDate().getTime());
             endTime = new Timestamp(new Date().getTime());
         } else {
             // Xử lý trường hợp lần đầu chạy job

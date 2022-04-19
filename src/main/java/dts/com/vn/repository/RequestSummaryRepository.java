@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RequestSummaryRepository extends JpaRepository<RequestSummary, Integer> {
     @Query(nativeQuery = true,
-            value = "SELECT * FROM request_summary " +
-                    "WHERE received_date = (SELECT MAX (received_date) FROM request_summary)")
+            value = "SELECT * FROM request_summary ORDER BY response_date DESC LIMIT 1")
     RequestSummary findLastRequestSummary();
 
 }

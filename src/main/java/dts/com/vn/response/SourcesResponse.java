@@ -1,9 +1,8 @@
 package dts.com.vn.response;
 
 public interface SourcesResponse {
+    Long getRequestId();
 
-	Long getRequestId();
-
-	String getParametersValue();
+    String getParametersValue();
 
 }

@@ -1,12 +1,10 @@
 package dts.com.vn.response;
 
 public interface CommandResponse {
+    Long getRequestId();
 
-	Long getRequestId();
+    String getRequestCommand();
 
-	String getRequestCommand();
-
-	Integer getRequestStatus();
-
+    Integer getRequestStatus();
 
 }

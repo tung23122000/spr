@@ -52,7 +52,7 @@ public class IsdnListService {
         if (request.getCvCodeList() != null) {
             // Số lần xuất hiện của dấu phẩy
             int occurance = StringUtils.countOccurrencesOf(request.getCvCodeList(), ",");
-            String arr[] = request.getCvCodeList().split(",");
+            String[] arr = request.getCvCodeList().split(",");
             if (arr.length == occurance) {
                 throw new RestApiException(ErrorCode.VALIDATE_FAIL);
             } else {

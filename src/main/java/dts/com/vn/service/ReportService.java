@@ -2,20 +2,15 @@ package dts.com.vn.service;
 
 import com.google.gson.Gson;
 import dts.com.vn.entities.*;
-import dts.com.vn.ilarc.repository.IlArcTaskParameterRepository;
-import dts.com.vn.ilink.repository.SasReTaskParameterRepository;
-import dts.com.vn.repository.ListPackageResponseRepository;
-import dts.com.vn.repository.ReportsRepository;
-import dts.com.vn.repository.ServicePackageRepository;
-import dts.com.vn.repository.ServiceTypeRepository;
+import dts.com.vn.repository.*;
 import dts.com.vn.response.*;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
@@ -24,21 +19,15 @@ import java.util.stream.Collectors;
 @Service
 public class ReportService {
 
-    private static final String SOURCE_TYPE = "SOURCE_TYPE";
-
-    private static final String SMS = "SMS";
-
     private final ServicePackageRepository servicePackageRepository;
 
     private final ServiceTypeRepository serviceTypeRepository;
 
-    private final SasReTaskParameterRepository sasReTaskParameterRepository;
-
-    private final IlArcTaskParameterRepository ilArcTaskParameterRepository;
-
     private final ListPackageResponseRepository listPackageResponseRepository;
 
     private final ReportsRepository reportsRepository;
+
+    private  final RequestSummaryRepository requestSummaryRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -46,16 +35,14 @@ public class ReportService {
     @Autowired
     public ReportService(ServicePackageRepository servicePackageRepository,
                          ServiceTypeRepository serviceTypeRepository,
-                         SasReTaskParameterRepository sasReTaskParameterRepository,
-                         IlArcTaskParameterRepository ilArcTaskParameterRepository,
                          ListPackageResponseRepository listPackageResponseRepository,
-                         ReportsRepository reportsRepository) {
+                         ReportsRepository reportsRepository,
+                         RequestSummaryRepository requestSummaryRepository) {
         this.servicePackageRepository = servicePackageRepository;
         this.serviceTypeRepository = serviceTypeRepository;
-        this.sasReTaskParameterRepository = sasReTaskParameterRepository;
-        this.ilArcTaskParameterRepository = ilArcTaskParameterRepository;
         this.listPackageResponseRepository = listPackageResponseRepository;
         this.reportsRepository = reportsRepository;
+        this.requestSummaryRepository = requestSummaryRepository;
     }
 
     /**
@@ -96,13 +83,13 @@ public class ReportService {
      */
     public ApiResponse dailyReport(String date) {
         ApiResponse response = new ApiResponse();
-        Reports reports = reportsRepository.getDataByDate(Timestamp.valueOf(date+" 23:59:59"));
-        if (reports!=null){
+        Reports reports = reportsRepository.getDailyReportByDate(Timestamp.valueOf(date + " 23:59:59"));
+        if (reports != null) {
             response.setStatus(0);
             response.setErrorCode("00");
             response.setData(reports.getReportData());
             response.setMessage("Lấy dữ liệu báo cáo thành công!");
-        } else{
+        } else {
             response.setStatus(1);
             response.setErrorCode("00");
             response.setMessage("Không tồn tại báo cáo của ngày này!");
@@ -149,7 +136,8 @@ public class ReportService {
      * @author - tinhbdt
      * @created - 19/04/2022
      */
-    private List<DailyReportResponse> getDailyReportResponseFromDb(Integer page, List<Long> listServiceTypeId, String date) {
+    private List<DailyReportResponse> getDailyReportResponseFromDb(Integer page, List<Long> listServiceTypeId,
+                                                                   String date) {
         List<CompletableFuture<DailyReportResponse>> listDailyReportResponse = new ArrayList<>();
         CompletableFuture<DailyReportResponse> future;
         int defaultNumberOfPages = 10;
@@ -236,59 +224,6 @@ public class ReportService {
         return amout;
     }
 
-    //Tìm nguồn từ database Ilink
-    private String getSourceContentIlink(Long requestId) {
-        Optional<SourcesResponse> sourcesResponse = sasReTaskParameterRepository.findFlowSourceIlink(requestId, SOURCE_TYPE);
-        if (!sourcesResponse.isPresent()) {
-            return null;
-        }
-        switch (sourcesResponse.get().getParametersValue()) {
-            case "SMPP":
-                return SMS;
-            case "MBF":
-                Optional<SourcesResponse> sasReTaskParameter = sasReTaskParameterRepository.findFlowSourceIlink(sourcesResponse.get()
-                                                                                                                               .getRequestId(), "SourceSystem");
-                if (sasReTaskParameter.isPresent()) {
-                    return sasReTaskParameter.get().getParametersValue();
-                }
-            case "BATCH":
-                Optional<SourcesResponse> sasReTaskParameter1 = sasReTaskParameterRepository.findFlowSourceIlink(sourcesResponse.get()
-                                                                                                                                .getRequestId(), "SO1_SOURCE_CODE");
-                if (sasReTaskParameter1.isPresent()) {
-                    return sasReTaskParameter1.get().getParametersValue();
-                }
-            default:
-                return sourcesResponse.get().getParametersValue();
-        }
-    }
-
-
-    //Lấy nguồn từ db Ilarc
-    private String getSourceContentIlarc(Long requestId) {
-        Optional<SourcesResponse> sourcesResponse = ilArcTaskParameterRepository.findFlowSourceIlarc(requestId, SOURCE_TYPE);
-        if (!sourcesResponse.isPresent()) {
-            return null;
-        }
-        switch (sourcesResponse.get().getParametersValue()) {
-            case "SMPP":
-                return SMS;
-            case "MBF":
-                Optional<SourcesResponse> ilarcReTaskParameter = ilArcTaskParameterRepository.findFlowSourceIlarc(sourcesResponse.get()
-                                                                                                                                 .getRequestId(), "SourceSystem");
-                if (ilarcReTaskParameter.isPresent()) {
-                    return ilarcReTaskParameter.get().getParametersValue();
-                }
-            case "BATCH":
-                Optional<SourcesResponse> ilarcReTaskParameter1 = ilArcTaskParameterRepository.findFlowSourceIlarc(sourcesResponse.get()
-                                                                                                                                  .getRequestId(), "SO1_SOURCE_CODE");
-                if (ilarcReTaskParameter1.isPresent()) {
-                    return ilarcReTaskParameter1.get().getParametersValue();
-                }
-            default:
-                return sourcesResponse.get().getParametersValue();
-        }
-    }
-
 
     /**
      * Description - Xử lý báo cáo 10 số điện thoại có nhiều bản ghi fail nhất
@@ -296,124 +231,94 @@ public class ReportService {
      * @param date - Ngày cần truy xuất dữ liệu
      * @return any
      * @author - tinhbdt
-     * @created - 09/02/2022
+     * @created - 20/04/2022
      */
-    public ApiResponse dailyTop10IsdnReport(String date) {
+    public ApiResponse dailyTopIsdnReport(String date) {
         ApiResponse response = new ApiResponse();
-        List<CancelReportResponse> data = new ArrayList<>();
-        List<CancelReportResponse> newData = new ArrayList<>();
-        Timestamp startDate = Timestamp.valueOf(date + " " + "00:00:00");
-        Timestamp endDate = Timestamp.valueOf(date + " " + "23:59:59");
-        Long timeDifference = isTwoDay(date);
-        if (timeDifference > 0) {
-            List<String> listISDN = ilArcTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
-            if (listISDN.size() != 0) {
-                for (String isdn : listISDN) {
-                    List<CommandandSource> listComandSou = new ArrayList<>();
-                    CancelReportResponse cancelReportResponse = new CancelReportResponse();
-                    if (isdn.startsWith("84")) {
-                        cancelReportResponse.setPhoneNumber(isdn.substring(2));
-                    } else {
-                        cancelReportResponse.setPhoneNumber(isdn);
-                    }
-                    List<Long> listReqId = ilArcTaskParameterRepository.findReqIdByIsdn(isdn, startDate, endDate);
-                    for (Long reqId : listReqId) {
-                        CommandandSource commandandSource = new CommandandSource();
-                        String source = getSourceContentIlarc(reqId);
-                        String command = ilArcTaskParameterRepository.findCommandByReqId(reqId);
-                        commandandSource.setSource(source);
-                        commandandSource.setCommand(command);
-                        listComandSou.add(commandandSource);
-                    }
-                    Map<String, Long> result1 = listComandSou.stream()
-                                                             .collect(Collectors.groupingBy(CommandandSource::getSource, Collectors.counting()));
-                    result1.forEach((key2, value2) -> cancelReportResponse.setSourceContent(key2));
-                    result1.forEach((key1, value1) -> cancelReportResponse.setQuantity(value1));
-                    Map<String, Long> result2 = listComandSou.stream()
-                                                             .collect(Collectors.groupingBy(CommandandSource::getCommand, Collectors.counting()));
-                    result2.forEach((key, value) -> cancelReportResponse.setCommand(key));
-                    data.add(cancelReportResponse);
-                }
-                data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
-                for (int i = 0; i < data.size(); i++) {
-                    if (i < 10) {
-                        newData.add(data.get(i));
-                    }
-                }
-                response.setStatus(200);
-                response.setData(newData);
-            } else {
-                response.setMessage("Không có bản ghi nào cả");
-                response.setStatus(200);
-                response.setData(newData);
-            }
+        Reports reports = reportsRepository.getReportTopIsdnByDate(Timestamp.valueOf(date + " 23:59:59"));
+        if (reports != null) {
+            response.setStatus(0);
+            response.setErrorCode("00");
+            response.setData(reports.getReportData());
+            response.setMessage("Lấy dữ liệu báo cáo thành công!");
         } else {
-            List<String> listISDN = sasReTaskParameterRepository.findIsdnHasFailReq(startDate, endDate);
-            if (listISDN.size() != 0) {
-                for (String isdn : listISDN) {
-                    List<CommandandSource> listComandSou = new ArrayList<>();
-                    CancelReportResponse cancelReportResponse = new CancelReportResponse();
-                    if (isdn.startsWith("84")) {
-                        cancelReportResponse.setPhoneNumber(isdn.substring(0, 1));
-                    } else {
-                        cancelReportResponse.setPhoneNumber(isdn);
-                    }
-                    List<Long> listReqId = sasReTaskParameterRepository.findReqIdByIsdn(isdn, startDate, endDate);
-                    for (Long reqId : listReqId) {
-                        CommandandSource commandandSource = new CommandandSource();
-                        String source = getSourceContentIlink(reqId);
-                        String command = sasReTaskParameterRepository.findCommandByReqId(reqId);
-                        commandandSource.setSource(source);
-                        commandandSource.setCommand(command);
-                        listComandSou.add(commandandSource);
-                    }
-                    Map<String, Long> result1 = listComandSou.stream()
-                                                             .collect(Collectors.groupingBy(CommandandSource::getSource, Collectors.counting()));
-                    result1.forEach((key1, value1) -> cancelReportResponse.setQuantity(value1));
-                    result1.forEach((key2, value2) -> cancelReportResponse.setSourceContent(key2));
-                    Map<String, Long> result2 = listComandSou.stream()
-                                                             .collect(Collectors.groupingBy(CommandandSource::getCommand, Collectors.counting()));
-                    result2.forEach((key, value) -> cancelReportResponse.setCommand(key));
-                    data.add(cancelReportResponse);
-                }
-                data.sort((o1, o2) -> o2.getQuantity().compareTo(o1.getQuantity()));
-                for (int i = 0; i < data.size(); i++) {
-                    if (i < 10) {
-                        newData.add(data.get(i));
-                    }
-                }
-                response.setStatus(200);
-                response.setData(newData);
-            } else {
-                response.setMessage("Không có bản ghi nào cả");
-                response.setStatus(200);
-                response.setData(newData);
-            }
+            response.setStatus(1);
+            response.setErrorCode("00");
+            response.setMessage("Không tồn tại báo cáo của ngày này!");
         }
         return response;
     }
 
     /**
-     * Description -
+     * Description - Xử lý báo cáo gia hạn lỗi ngày hôm trước
      *
-     * @param date - Ngày cần kiểm tra
-     * @return true or false
+     * @param date - Ngày cần truy xuất dữ liệu
+     * @return any
      * @author - tinhbdt
-     * @created - 09/02/2022
+     * @created - 20/04/2022
      */
-    private Long isTwoDay(String date) {
-        long timeDistance = 0;
-        LocalDate dateminus = LocalDate.now().minusDays(2);
-        try {
-            String time2 = String.valueOf(dateminus);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date1 = format.parse(date);
-            Date date2 = format.parse(time2);
-            timeDistance = date2.getTime() - date1.getTime();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ApiResponse reportRenewFaildYesterday(String date){
+        ApiResponse response = new ApiResponse();
+        Reports reports = reportsRepository.getReportRenewFailed(Timestamp.valueOf(date + " 23:59:59"));
+        if (reports != null) {
+            response.setStatus(0);
+            response.setErrorCode("00");
+            response.setData(reports.getReportData());
+            response.setMessage("Lấy dữ liệu báo cáo thành công!");
+        } else {
+            response.setStatus(1);
+            response.setErrorCode("00");
+            response.setMessage("Không tồn tại báo cáo của ngày này!");
         }
-        return timeDistance;
+        return response;
+    }
+
+    /**
+     * Description - Xử lý báo cáo retry gia hạn gói cước ngày ... theo date truyền vào
+     *
+     * @param date - Ngày cần truy xuất dữ liệu
+     * @return any
+     * @author - tinhbdt
+     * @created - 20/04/2022
+     */
+    public ApiResponse reportRetryRenewPackage(String date){
+        ApiResponse response = new ApiResponse();
+        Reports reports = reportsRepository.getReportRetryRenewPackage(Timestamp.valueOf(date + " 23:59:59"));
+        if (reports != null) {
+            response.setStatus(0);
+            response.setErrorCode("00");
+            response.setData(reports.getReportData());
+            response.setMessage("Lấy dữ liệu báo cáo thành công!");
+        } else {
+            response.setStatus(1);
+            response.setErrorCode("00");
+            response.setMessage("Không tồn tại báo cáo của ngày này!");
+        }
+        return response;
+    }
+
+    /**
+     * Description - Xử lý báo cáo chốt số liệu hệ thống
+     *
+     * @param date - Ngày cần truy xuất dữ liệu
+     * @return any
+     * @author - tinhbdt
+     * @created - 20/04/2022
+     */
+    public ApiResponse reportDataSystem(String date){
+        ApiResponse response = new ApiResponse();
+        Reports reports = reportsRepository.getReportDataSystem(Timestamp.valueOf(date + " 23:59:59"));
+        if (reports != null) {
+            response.setStatus(0);
+            response.setErrorCode("00");
+            response.setData(reports.getReportData());
+            response.setMessage("Lấy dữ liệu báo cáo thành công!");
+        } else {
+            response.setStatus(1);
+            response.setErrorCode("00");
+            response.setMessage("Không tồn tại báo cáo của ngày này!");
+        }
+        return response;
     }
 
 }

@@ -90,10 +90,10 @@ public class SchedulerConfiguration {
      * @author - giangdh
      * @created - 07/03/2022
      */
-    @Scheduled(cron = "0/15 * * * * *")
-    private void queryDataReport2() {
-
-    }
+//    @Scheduled(cron = "0/15 * * * * *")
+//    private void queryDataReport2() {
+//        reportService.insertDailyReportTop100();
+//    }
 
 
     /**

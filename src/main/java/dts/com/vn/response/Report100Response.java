@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CancelReportResponse implements Comparable<CancelReportResponse> {
+public class Report100Response  {
 
 	private String phoneNumber;
 
@@ -18,8 +18,4 @@ public class CancelReportResponse implements Comparable<CancelReportResponse> {
 
 	private String sourceContent;
 
-	@Override
-	public int compareTo(CancelReportResponse o) {
-		return 0;
-	}
 }

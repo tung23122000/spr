@@ -116,16 +116,7 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
 
     // Bước 2: Ghi thông tin trong file vào bảng neif_info
     private void insertToDbNeifInfo(NeifInfo neifInfo) {
-        // Nếu tồn tại bản ghi chứa thuê bao này thì update lại bản ghi
-        if (neifInfoRepository.findDataByIsdn(neifInfo.getIsdn()) != null) {
-            neifInfoRepository.updateNeifInfo(neifInfo.getBonusAmount(), neifInfo.getInsertDate(),
-                                              neifInfo.getMainAmount(), neifInfo.getNeifMessage(), neifInfo.getProfile(),
-                                              neifInfo.getRegDate(), neifInfo.getStatus(), neifInfo.getIsdn());
-        }
-        // Nếu không tồn tại bản ghi nào chứa thuê bao này thì tạo mới bản ghi
-        else {
-            neifInfoRepository.save(neifInfo);
-        }
+        neifInfoRepository.save(neifInfo);
     }
 
     // Bước 3: Tìm trong bảng isdn_retry_extend các bản ghi trong vòng 30 ngày gần nhất, nếu có thì
@@ -147,7 +138,6 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
             ftpClient.login("relay_FO", "FO@ftp");
             String wD = ftpClient.printWorkingDirectory();
             FTPFile[] files = ftpClient.listFiles(wD);
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             for (FTPFile file : files) {
                 if (file.getName().startsWith("FO_dump_") && !file.getName().endsWith("_used.txt")) {
                     if (checkExist(file.getName())) {

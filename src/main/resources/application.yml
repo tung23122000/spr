@@ -32,8 +32,3 @@ cors:
   exposed-headers: "Authorization,Link,X-Total-Count"
   allow-credentials: true
   max-age: 1800
-
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

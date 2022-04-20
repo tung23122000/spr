@@ -7,6 +7,7 @@ import dts.com.vn.entities.ServicePackageList;
 import dts.com.vn.enumeration.ApiResponseStatus;
 import dts.com.vn.enumeration.ErrorCode;
 import dts.com.vn.exception.RestApiException;
+import dts.com.vn.properties.AppConfigProperties;
 import dts.com.vn.repository.BlacklistPackageListRepository;
 import dts.com.vn.repository.IsdnListRepository;
 import dts.com.vn.repository.ListDetailNewRepository;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
 import java.util.*;
@@ -33,6 +35,8 @@ public class ServicePackageListService {
 
     private final ServicePackageListRepository servicePackageListRepository;
 
+    private final AppConfigProperties appConfigProperties;
+
     private final IsdnListService isdnListService;
 
     private final ListDetailNewRepository listDetailNewRepository;
@@ -42,10 +46,14 @@ public class ServicePackageListService {
     private final IsdnListRepository isdnListRepository;
 
     @Autowired
-    public ServicePackageListService(ServicePackageListRepository servicePackageListRepository, IsdnListService isdnListService,
-                                     ListDetailNewRepository listDetailNewRepository, BlacklistPackageListRepository blacklistPackageListRepository,
+    public ServicePackageListService(ServicePackageListRepository servicePackageListRepository,
+                                     AppConfigProperties appConfigProperties,
+                                     IsdnListService isdnListService,
+                                     ListDetailNewRepository listDetailNewRepository,
+                                     BlacklistPackageListRepository blacklistPackageListRepository,
                                      IsdnListRepository isdnListRepository) {
         this.servicePackageListRepository = servicePackageListRepository;
+        this.appConfigProperties = appConfigProperties;
         this.isdnListService = isdnListService;
         this.listDetailNewRepository = listDetailNewRepository;
         this.blacklistPackageListRepository = blacklistPackageListRepository;
@@ -55,7 +63,7 @@ public class ServicePackageListService {
     @Transactional
     public void save(PackageListRequest packageListRequest) throws InterruptedException {
         ApiResponse response= new ApiResponse();
-        if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() != 0&& checkRequestIsdnListd(packageListRequest.getListIsdn())) {
+        if (packageListRequest.getFileName() != null && packageListRequest.getListIsdn().size() != 0) {
             //	Tạo danh sách đối tượng
             IsdnList isdnListRequest;
             if (packageListRequest.getStaDate() != null && packageListRequest.getEndDate() != null) {
@@ -78,9 +86,9 @@ public class ServicePackageListService {
                     callables.add(() -> {
                         ListDetailNew listDetailNew = null;
                         LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-                        for (int i = 0; i < item.size(); i++) {
-                            if(item.get(i).replaceAll("\r", "").length() == 9){
-                                map.put(item.get(i).replaceAll("\r", ""), 1);
+                        for (String s : item) {
+                            if (s.replaceAll("\r", "").length() == 9||s.replaceAll("\r", "").length() == 10) {
+                                map.put(s.replaceAll("\r", ""), 1);
                             }
                         }
                         if(map.size()>0){
@@ -95,7 +103,7 @@ public class ServicePackageListService {
                 ListDetailNew listDetailNew;
                 LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                 for (int i = 0; i < packageListRequest.getListIsdn().size(); i++) {
-                    if(packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 9){
+                    if(packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 9||packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 10){
                         map.put(packageListRequest.getListIsdn().get(i).replaceAll("\r", ""), 1);
                     }
                 }
@@ -129,19 +137,6 @@ public class ServicePackageListService {
             response.setMessage("Dữ liệu truyền vào sai!");
             throw new RestApiException(ErrorCode.DATA_FAILED);
         }
-    }
-
-    private Boolean checkRequestIsdnListd(List<String> list){
-        Boolean check= null;
-        for (int i = 0; i < list.size(); i++) {
-            if(list.get(i).trim().replaceAll("\r","").length()<9){
-                check = false;
-                break;
-            }else {
-                check = true;
-            }
-        }
-        return  check;
     }
 
     public void mapIsdnList(MapIsdnListRequest request) {

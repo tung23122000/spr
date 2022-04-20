@@ -45,11 +45,53 @@ public class ReportController {
 
     @GetMapping("/daily-top-10-isdn")
     @ResponseBody
-    public ResponseEntity<ApiResponse> dailyTop10IsdnReport(@RequestParam String date) {
+    public ResponseEntity<ApiResponse> dailyTopIsdnReport(@RequestParam String date) {
         logger.info("=========> " + "logger");
         ApiResponse response;
         try {
-            response = reportService.dailyTop10IsdnReport(date);
+            response = reportService.dailyTopIsdnReport(date);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/report-renew-failed")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> reportRenewFaildYesterday(@RequestParam String date) {
+        logger.info("=========> " + "logger");
+        ApiResponse response;
+        try {
+            response = reportService.reportRenewFaildYesterday(date);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/report-retry-renew-package")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> reportRetryRenewPackage(@RequestParam String date) {
+        logger.info("=========> " + "logger");
+        ApiResponse response;
+        try {
+            response = reportService.reportRetryRenewPackage(date);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/report-data-system")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> reportRetryDataSystem(@RequestParam String date) {
+        logger.info("=========> " + "logger");
+        ApiResponse response;
+        try {
+            response = reportService.reportDataSystem(date);
         } catch (RestApiException ex) {
             ex.printStackTrace();
             response = new ApiResponse(ex);

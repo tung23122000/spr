@@ -10,7 +10,19 @@ import java.sql.Timestamp;
 @Repository
 public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
-    @Query(nativeQuery = true, value ="SELECT * FROM report_part1 WHERE report_date = ?1")
-    Reports getDataByDate(Timestamp date);
+    @Query(nativeQuery = true, value ="SELECT * FROM reports WHERE report_type = 1 AND report_date = ?1")
+    Reports getDailyReportByDate(Timestamp date);
+
+    @Query(nativeQuery = true, value ="SELECT * FROM reports WHERE report_type = 2 AND report_date = ?1")
+    Reports getReportRetryRenewPackage(Timestamp date);
+
+    @Query(nativeQuery = true, value ="SELECT * FROM reports WHERE report_type = 3 AND report_date = ?1")
+    Reports getReportTopIsdnByDate(Timestamp date);
+
+    @Query(nativeQuery = true, value ="SELECT * FROM reports WHERE report_type = 4 AND report_date = ?1")
+    Reports getReportRenewFailed(Timestamp date);
+
+    @Query(nativeQuery = true, value ="SELECT * FROM reports WHERE report_type = 5 AND report_date = ?1")
+    Reports getReportDataSystem(Timestamp date);
 
 }

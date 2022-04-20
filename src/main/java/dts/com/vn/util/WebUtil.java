@@ -29,7 +29,7 @@ public class WebUtil {
     }
 
     public static String formatIsdn(String isdn) {
-        if (isdn.length() == 11 && isdn.startsWith("84")) return isdn.substring(2);
+        if ((isdn.length() == 11||isdn.length()==12) && isdn.startsWith("84")) return isdn.substring(2);
         return isdn;
     }
 

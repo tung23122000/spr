@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
@@ -81,6 +84,7 @@ public class ServicePackageListService {
                         .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / 1000000))
                         .values();
                 ExecutorService executorService = Executors.newFixedThreadPool(n + 1);
+                List<String> listIsdnFail = new ArrayList<>();
                 List<Callable<ListDetailNew>> callables = new ArrayList<>();
                 for (List<String> item : result) {
                     callables.add(() -> {
@@ -89,6 +93,8 @@ public class ServicePackageListService {
                         for (String s : item) {
                             if (s.replaceAll("\r", "").length() == 9||s.replaceAll("\r", "").length() == 10) {
                                 map.put(s.replaceAll("\r", ""), 1);
+                            }else {
+                                listIsdnFail.add(s.replaceAll("\r", ""));
                             }
                         }
                         if(map.size()>0){
@@ -99,12 +105,16 @@ public class ServicePackageListService {
                     });
                 }
                 executorService.invokeAll(callables);
+                writeLogIsdnFail(listIsdnFail,isdnListResponse.getIsdnListId());
             } else {
                 ListDetailNew listDetailNew;
+                List<String> listIsdnFail = new ArrayList<>();
                 LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                 for (int i = 0; i < packageListRequest.getListIsdn().size(); i++) {
                     if(packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 9||packageListRequest.getListIsdn().get(i).replaceAll("\r", "").length() == 10){
                         map.put(packageListRequest.getListIsdn().get(i).replaceAll("\r", ""), 1);
+                    }else {
+                        listIsdnFail.add(packageListRequest.getListIsdn().get(i).replaceAll("\r", ""));
                     }
                 }
                 //	Tạo danh sách chi tiết
@@ -112,6 +122,7 @@ public class ServicePackageListService {
                     listDetailNew = new ListDetailNew(null, isdnListResponse.getIsdnListId(), map, packageListRequest.getIsdnDisplay());
                     listDetailNewRepository.save(listDetailNew);
                 }
+                writeLogIsdnFail(listIsdnFail,isdnListResponse.getIsdnListId());
             }
             //Tạo danh sách whitelist or blacklist
             Instant endDate = null;
@@ -136,6 +147,21 @@ public class ServicePackageListService {
         } else {
             response.setMessage("Dữ liệu truyền vào sai!");
             throw new RestApiException(ErrorCode.DATA_FAILED);
+        }
+    }
+
+    private void writeLogIsdnFail(List<String> listIsdnFail, Long isdnListId)  {
+        try{
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            String fileName = "/home/spr/failed-folder/" +isdnListId+"_"+ timeStamp+"_"+
+                    ".txt";
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            for (String s : listIsdnFail) {
+                writer.write(s+"\r");
+            }
+            writer.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

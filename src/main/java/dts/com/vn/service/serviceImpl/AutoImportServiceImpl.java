@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -127,6 +128,7 @@ public class AutoImportServiceImpl implements AutoImportService {
                                                               .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / 1000000))
                                                               .values();
             ExecutorService executorService = Executors.newFixedThreadPool(n + 1);
+            List<String> listIsdnFail = new ArrayList<>();
             List<Callable<ListDetailNew>> callables = new ArrayList<>();
             for (List<String> item : result) {
                 callables.add(() -> {
@@ -135,6 +137,8 @@ public class AutoImportServiceImpl implements AutoImportService {
                     for (String s : item) {
                         if (s.replaceAll("\r", "").length() == 9) {
                             map.put(s.replaceAll("\r", ""), 1);
+                        }else {
+                            listIsdnFail.add(s.replaceAll("\r", ""));
                         }
                     }
                     if (map.size() > 0) {
@@ -145,12 +149,16 @@ public class AutoImportServiceImpl implements AutoImportService {
                 });
             }
             executorService.invokeAll(callables);
+            writeLogIsdnFail(listIsdnFail,folderName);
         } else {
             ListDetailNew listDetailNew;
+            List<String> listIsdnFail = new ArrayList<>();
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
             for (String s : listIsdnFromFile) {
                 if (s.replaceAll("\r", "").length() == 9||s.replaceAll("\r", "").length() == 10) {
                     map.put(s.replaceAll("\r", ""), 1);
+                }else {
+                    listIsdnFail.add(s.replaceAll("\r", ""));
                 }
             }
             // Tạo danh sách chi tiết
@@ -158,6 +166,23 @@ public class AutoImportServiceImpl implements AutoImportService {
                 listDetailNew = new ListDetailNew(null, Long.valueOf(folderName), map, isDisplay);
                 listDetailNewRepository.save(listDetailNew);
             }
+            writeLogIsdnFail(listIsdnFail,folderName);
+        }
+    }
+
+    //Ghi ra file những số sai định dạng vào thư mục failed-folder
+    private void writeLogIsdnFail(List<String> listIsdnFail, String isdnListId)  {
+        try{
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            String fileName = "/home/spr/failed-folder/" +isdnListId+"_"+ timeStamp+"_"+
+                    ".txt";
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            for (String s : listIsdnFail) {
+                writer.write(s+"\r");
+            }
+            writer.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

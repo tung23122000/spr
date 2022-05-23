@@ -33,6 +33,10 @@ public class MapConditionServicePackage {
 	@Column(name = "is_soap_confirm")
 	private Boolean isSoapConfirm;
 
+	// tích có reject qua soap hay không 29/04/2022
+	@Column(name = "is_soap_confirm_transaction")
+	private String isSoapConfirmTransaction;
+
 	@Column(name = "is_change")
 	private Boolean isChange;
 

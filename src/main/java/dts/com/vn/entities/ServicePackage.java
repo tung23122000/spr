@@ -15,8 +15,8 @@ import java.util.Date;
 public class ServicePackage {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "package_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long packageId;
 
 	@ManyToOne

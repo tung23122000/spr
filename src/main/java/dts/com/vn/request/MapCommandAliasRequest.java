@@ -1,7 +1,5 @@
 package dts.com.vn.request;
 
-import dts.com.vn.entities.ServicePackage;
-import dts.com.vn.entities.ServiceProgram;
 import lombok.Data;
 
 
@@ -18,4 +16,8 @@ public class MapCommandAliasRequest {
     private String smsMo;
 
     private String soapRequest;
+
+    private String nameInSelfCare;
+
+    private Boolean isDisplayInSelfCare;
 }

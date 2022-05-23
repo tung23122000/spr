@@ -101,7 +101,7 @@ public class BucketsInfo implements Cloneable {
 				DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
 		this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
 		this.accountType = request.getAccountType();
-		this.serviceIn = request.getServiceIn();
+		this.subServiceName = request.getServiceIn();
 	}
 
 	public BucketsInfo() {

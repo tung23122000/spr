@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @Service
 public class ServiceProgramService {
+
+    private final SubServiceProgramRepository subServiceProgramRepository;
 
     @Autowired
     private ServiceProgramRepository serviceProgramRepository;
@@ -67,6 +67,9 @@ public class ServiceProgramService {
     @Autowired
     private LogActionService logActionService;
 
+    public ServiceProgramService(
+            SubServiceProgramRepository subServiceProgramRepository) {this.subServiceProgramRepository = subServiceProgramRepository;}
+
     public Page<ServiceProgram> findAll(String search, Pageable pageable) {
         if (StringUtils.hasLength(search))
             return serviceProgramRepository.findAll(search, pageable);
@@ -80,7 +83,7 @@ public class ServiceProgramService {
         // Tìm ra tất cả serviceProgram trùng program_code
         List<ServiceProgram> listFindByProgramCode = serviceProgramRepository.findByProgramCode(request.getProgramCode());
         if (listFindByProgramCode.size() > 0) {
-            for (ServiceProgram item: listFindByProgramCode) {
+            for (ServiceProgram item : listFindByProgramCode) {
                 // Check 2 service program có trùng lặp thời gian hay không?
                 if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
                     // Nếu 1 trường hợp trùng là loại bỏ luôn.
@@ -94,10 +97,10 @@ public class ServiceProgramService {
             request.setProgramCode(null);
         }
         // Check DEFAULT_PROGRAM
-        if (request.getIsDefaultProgram() == true){
+        if (request.getIsDefaultProgram()) {
             List<ServiceProgram> listFindDefaultProgram = serviceProgramRepository.findDefaultProgram(servicePackage.getPackageId());
             if (listFindDefaultProgram.size() > 0) {
-                for (ServiceProgram item: listFindDefaultProgram) {
+                for (ServiceProgram item : listFindDefaultProgram) {
                     item.setIsDefaultProgram(false);
                     serviceProgramRepository.save(item);
                 }
@@ -118,11 +121,80 @@ public class ServiceProgramService {
                 throw new RestApiException(ErrorCode.VALIDATE_FAIL);
             }
         }
-        return serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
+        ServiceProgram entitySave = serviceProgramRepository.save(new ServiceProgram(request, servicePackage));
+        //Lưu sub_service_program
+        SubServiceProgram subServiceProgram = new SubServiceProgram();
+        subServiceProgram.setSubServiceProgramId(null);
+        if(entitySave.getProgramId()!=null&&entitySave.getServicePackage().getPackageId()!=null){
+            subServiceProgram.setProgramId(entitySave.getProgramId());
+            subServiceProgram.setPackageId(entitySave.getServicePackage().getPackageId());
+        }
+        subServiceProgram.setMaxPackageExclude(request.getMaxPackageExclude());
+        subServiceProgram.setMaxPcrfServiceExclude(request.getMaxPcrfServiceExclude());
+        subServiceProgram.setMaxPackageGroupExclude(request.getMaxPackageGroupExclude());
+        if(request.getFlexSubProgramId()!=null){
+            subServiceProgram.setFlexSubProgramId(request.getFlexSubProgramId());
+            subServiceProgram.setFlexFilterBundle(request.getFlexFilterBundle());
+            subServiceProgram.setFlexMinQty(request.getFlexMinQty());
+        }
+        subServiceProgramRepository.save(subServiceProgram);
+        return entitySave;
     }
 
     public ServiceProgram findById(Long id) {
         return serviceProgramRepository.findByProgramId(id);
+    }
+
+    public ServiceProgramResponse getDetail(Long id) {
+        ServiceProgramResponse serviceProgramResponse = new ServiceProgramResponse();
+        ServiceProgram serviceProgram = serviceProgramRepository.findByProgramId(id);
+        SubServiceProgram subServiceProgram = subServiceProgramRepository.findByProgramId(id);
+        serviceProgramResponse.setProgramId(serviceProgram.getProgramId());
+        serviceProgramResponse.setPackageId(serviceProgram.getServicePackage().getPackageId());
+        serviceProgramResponse.setPackageCode(serviceProgram.getServicePackage().getCode());
+        serviceProgramResponse.setChargePrice(serviceProgram.getChargePrice());
+        serviceProgramResponse.setIsMinusIn(serviceProgram.getIsNinusIn());
+        serviceProgramResponse.setChargeTime(serviceProgram.getChargeTime());
+        serviceProgramResponse.setAutoExtend(serviceProgram.getAutoExtend());
+        serviceProgramResponse.setNumExtend(serviceProgram.getNumExtend());
+        serviceProgramResponse.setVnptPckCode(serviceProgram.getVnptPckCode());
+        serviceProgramResponse.setVnptPromCode(serviceProgram.getVnptPromCode());
+        serviceProgramResponse.setDescription(serviceProgram.getDescription());
+        serviceProgramResponse.setChargeType(serviceProgram.getChargeType());
+        serviceProgramResponse.setMinusMethod(serviceProgram.getMinusMethod());
+        serviceProgramResponse.setStaDate(Objects.nonNull(serviceProgram.getStaDate())
+                                          ? DateTimeUtil.formatInstant(serviceProgram.getStaDate(), "dd/MM/yyyy HH:mm:ss")
+                                          : "");
+        serviceProgramResponse.setEndDate(Objects.nonNull(serviceProgram.getEndDate())
+                                          ? DateTimeUtil.formatInstant(serviceProgram.getEndDate(), "dd/MM/yyyy HH:mm:ss")
+                                          : "");
+        serviceProgramResponse.setMinStepMinus(serviceProgram.getMinStepMinus());
+        serviceProgramResponse.setCheckStepType(serviceProgram.getCheckStepType());
+        serviceProgramResponse.setProgramCode(serviceProgram.getProgramCode());
+        serviceProgramResponse.setAllowIsdnStatus(serviceProgram.getAllowIsdnStatus());
+        serviceProgramResponse.setCcspServiceCode(serviceProgram.getCcspServiceCode());
+        serviceProgramResponse.setCcspResultCode(serviceProgram.getCcspResultCode());
+        serviceProgramResponse.setNumber1(serviceProgram.getNumber1());
+        serviceProgramResponse.setNumber2(serviceProgram.getNumber2());
+        serviceProgramResponse.setTotalUnit(serviceProgram.getTotalUnit());
+        serviceProgramResponse.setDateBeforeRenew(serviceProgram.getDateBeforeRenew());
+        serviceProgramResponse.setPackageIdNext(serviceProgram.getPackageIdNext());
+        serviceProgramResponse.setProgramIdNext(serviceProgram.getProgramIdNext());
+        serviceProgramResponse.setMsgBeforeRenew(serviceProgram.getMsgBeforeRenew());
+        serviceProgramResponse.setIsDefaultProgram(serviceProgram.getIsDefaultProgram());
+        serviceProgramResponse.setIsOnKtPro(serviceProgram.getIsOnKtPro());
+        serviceProgramResponse.setExpireByOldPackage(serviceProgram.getExpireByOldPackage());
+        serviceProgramResponse.setIsCalculateExpireDate(serviceProgram.getIsCalculateExpireDate());
+        serviceProgramResponse.setMsgBeforeRenewEn(serviceProgram.getMsgBeforeRenewEn());
+        if (subServiceProgram != null) {
+            serviceProgramResponse.setMaxPcrfServiceExclude(subServiceProgram.getMaxPcrfServiceExclude());
+            serviceProgramResponse.setMaxPackageExclude(subServiceProgram.getMaxPackageExclude());
+            serviceProgramResponse.setMaxPackageGroupExclude(subServiceProgram.getMaxPackageGroupExclude());
+            serviceProgramResponse.setFlexSubProgramId(subServiceProgram.getFlexSubProgramId());
+            serviceProgramResponse.setFlexFilterBundle(subServiceProgram.getFlexFilterBundle());
+            serviceProgramResponse.setFlexMinQty(subServiceProgram.getFlexMinQty());
+        }
+        return serviceProgramResponse;
     }
 
     public ServiceProgram update(AddServiceProgramRequest request) {
@@ -132,7 +204,7 @@ public class ServiceProgramService {
         // Tìm ra tất cả serviceProgram trùng program_code
         List<ServiceProgram> listFindByProgramCode = serviceProgramRepository.findByProgramIdAndProgramCode(request.getServiceProgramId(), request.getProgramCode());
         if (listFindByProgramCode.size() > 0) {
-            for (ServiceProgram item: listFindByProgramCode) {
+            for (ServiceProgram item : listFindByProgramCode) {
                 // Check 2 service program có trùng lặp thời gian hay không?
                 if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
                     // Nếu 1 trường hợp trùng là loại bỏ luôn.
@@ -143,12 +215,12 @@ public class ServiceProgramService {
         }
         // Tìm ra tất cả command_alias liên quan đến service_program
         List<MapCommandAlias> listMapCommandAlias = mapCommandAliasRepository.findByProgramId(request.getServiceProgramId());
-        for (MapCommandAlias mapCommandAlias: listMapCommandAlias) {
+        for (MapCommandAlias mapCommandAlias : listMapCommandAlias) {
             // Tìm ra tất cả serviceProgram trùng smsMo
             List<ServiceProgram> listServiceProgram = mapCommandAliasRepository.findBySmsMoAndCmdAliasId(mapCommandAlias.getSmsMo(), mapCommandAlias.getCmdAliasId());
             // Check trùng khoảng thời gian
             if (listServiceProgram.size() > 0) {
-                for (ServiceProgram item: listServiceProgram) {
+                for (ServiceProgram item : listServiceProgram) {
                     // Check 2 service program có trùng lặp thời gian hay không?
                     if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
                         // Nếu 1 trường hợp trùng là loại bỏ luôn.
@@ -159,10 +231,10 @@ public class ServiceProgramService {
             }
         }
         // Check DEFAULT_PROGRAM
-        if (request.getIsDefaultProgram() == true){
+        if (request.getIsDefaultProgram()) {
             List<ServiceProgram> listFindDefaultProgram = serviceProgramRepository.findDefaultProgram(request.getServicePackageId());
             if (listFindDefaultProgram.size() > 0) {
-                for (ServiceProgram item: listFindDefaultProgram) {
+                for (ServiceProgram item : listFindDefaultProgram) {
                     item.setIsDefaultProgram(false);
                     serviceProgramRepository.save(item);
                 }
@@ -194,6 +266,7 @@ public class ServiceProgramService {
             servicePr.setChargeTime(request.getChargeTime());
             servicePr.setAutoExtend(request.getAutoExtend());
             servicePr.setNumExtend(request.getNumExtend());
+            servicePr.setVnptPromCode(request.getVnptPromCode());
             servicePr.setVnptPckCode(request.getVnptPckCode());
             servicePr.setChargeType(request.getChargeType());
             servicePr.setMinusMethod(request.getMinusMethod());
@@ -228,6 +301,30 @@ public class ServiceProgramService {
             servicePr.setIsCalculateExpireDate(request.getIsCalculateExpireDate());
             //Thêm ngôn ngữ cho tin nhắn trước gia hạn
             servicePr.setMsgBeforeRenewEn(request.getMsgBeforeRenewEn());
+            SubServiceProgram subServiceProgramFromDb =
+                    subServiceProgramRepository.findByProgramId(servicePr.getProgramId());
+            if (subServiceProgramFromDb != null) {
+                if(request.getMaxPcrfServiceExclude()!=null&&request.getMaxPackageExclude()!=null){
+                    subServiceProgramRepository.updateMaxByProgramId(servicePr.getProgramId(),
+                                                                     request.getMaxPcrfServiceExclude(),
+                                                                     request.getMaxPackageExclude(), request.getMaxPackageGroupExclude());
+                }
+                if(request.getFlexSubProgramId()!=null){
+                    subServiceProgramRepository.updateFlexByProgramId(servicePr.getProgramId(),
+                                                                      request.getFlexSubProgramId(),
+                                                                      request.getFlexFilterBundle(), request.getFlexMinQty());
+                }
+            } else {
+                //Lưu sub_service_program
+                SubServiceProgram subServiceProgram = new SubServiceProgram();
+                subServiceProgram.setSubServiceProgramId(null);
+                subServiceProgram.setProgramId(servicePr.getProgramId());
+                subServiceProgram.setPackageId(servicePr.getServicePackage().getPackageId());
+                subServiceProgram.setMaxPackageExclude(request.getMaxPackageExclude());
+                subServiceProgram.setMaxPcrfServiceExclude(request.getMaxPcrfServiceExclude());
+                subServiceProgram.setMaxPackageGroupExclude(request.getMaxPackageGroupExclude());
+                subServiceProgramRepository.save(subServiceProgram);
+            }
             return serviceProgramRepository.save(servicePr);
         }
         throw new RestApiException(ErrorCode.UPDATE_SERVICE_PROGRAM_FAILED);
@@ -235,16 +332,17 @@ public class ServiceProgramService {
 
     public DetailServicePackageResponse findByPackageId(Long packageId, Pageable pageable) {
         ServicePackage entity = servicePackageRepository.findById(packageId)
-                .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND));
+                                                        .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND));
         ServicePackageResponse response = new ServicePackageResponse(entity);
         Page<ServiceProgram> listPage = serviceProgramRepository.findByPackageId(packageId, pageable);
-        Page<ServiceProgramResponse> pageResponse = listPage.map(ServiceProgramResponse::new);
+        Page<ServiceProgramResponse> pageResponse = listPage.map(service -> getDetail(service.getProgramId()));
+        ;
         return new DetailServicePackageResponse(response, pageResponse);
     }
 
     public List<ServiceProgram> findByPackageIdWithoutPageable(Long packageId) {
         ServicePackage entity = servicePackageRepository.findById(packageId)
-                .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND));
+                                                        .orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PACKAGE_NOT_FOUND));
         List<ServiceProgram> serviceProgramList = serviceProgramRepository.findByPackageIdWithoutPageable(packageId);
         return serviceProgramList;
     }
@@ -309,7 +407,7 @@ public class ServiceProgramService {
         List<MinusMoney> listMinusMoney = minusMoneyRepository.findAllByProgramId(programId);
 //        Page<ServiceInfo> pageService =
 //                serviceInfoRepository.findAllByProgramId(programId, pageServiceInfo);
-        Page<CcspInfo> pageCcsp =  ccspInfoRepository.findAllByProgramId(programId, pageCcspInfo);
+        Page<CcspInfo> pageCcsp = ccspInfoRepository.findAllByProgramId(programId, pageCcspInfo);
         Page<CcspInfoResponse> pageCcspInfoRes =
                 pageCcsp.map(new Function<CcspInfo, CcspInfoResponse>() {
 
@@ -327,7 +425,7 @@ public class ServiceProgramService {
 //                    }
 //                });
         return new DetailServiceProgramResponse(serviceProgramResponse, pageInRes, pageBillingRes,
-                pagePCRFRes, pageTransactionRes, listMinusMoney, pageCcspInfoRes);
+                                                pagePCRFRes, pageTransactionRes, listMinusMoney, pageCcspInfoRes);
     }
 
 
@@ -351,7 +449,8 @@ public class ServiceProgramService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ApiResponse cloneOneServiceProgram(Long newPackageId, Long oldPackageId, ServicePackage service, ServiceProgram oldProgram) {
+    public ApiResponse cloneOneServiceProgram(Long newPackageId, Long oldPackageId, ServicePackage service,
+                                              ServiceProgram oldProgram) {
         ApiResponse response = new ApiResponse();
         // 3 Clone chương trình
         ServiceProgram newProgram = cloneServiceProgram(oldProgram, newPackageId);
@@ -365,6 +464,24 @@ public class ServiceProgramService {
         logAction.setTimeAction(new Date());
         logAction.setIdAction(newProgram.getProgramId());
         logActionService.add(logAction);
+
+        SubServiceProgram subServiceProgramFromDb =
+                subServiceProgramRepository.findByProgramId(oldProgram.getProgramId());
+
+        //Lưu sub_service_program
+        SubServiceProgram subServiceProgram = new SubServiceProgram();
+        subServiceProgram.setSubServiceProgramId(null);
+        subServiceProgram.setProgramId(newProgram.getProgramId());
+        subServiceProgram.setPackageId(newProgram.getServicePackage().getPackageId());
+        if(subServiceProgramFromDb!=null){
+            subServiceProgram.setMaxPackageExclude(subServiceProgramFromDb.getMaxPackageExclude());
+            subServiceProgram.setMaxPcrfServiceExclude(subServiceProgramFromDb.getMaxPcrfServiceExclude());
+            subServiceProgram.setMaxPackageGroupExclude(subServiceProgramFromDb.getMaxPackageGroupExclude());
+            subServiceProgram.setFlexSubProgramId(subServiceProgramFromDb.getFlexSubProgramId());
+            subServiceProgram.setFlexFilterBundle(subServiceProgramFromDb.getFlexFilterBundle());
+            subServiceProgram.setFlexMinQty(subServiceProgramFromDb.getFlexMinQty());
+        }
+        subServiceProgramRepository.save(subServiceProgram);
 
         // 3.1 Tìm những thông tin đấu nối IN của gói cước và chương trình cũ
         List<BucketsInfo> lstOldBucketInfos = bucketsInfoRepository.findByPackageIdAndProgramId(oldPackageId, oldProgram.getProgramId());
@@ -395,7 +512,7 @@ public class ServiceProgramService {
         // 3.5 Clone thông tin bổ sung (Service_info)
         List<ServiceInfo> listServiceInfo = serviceInfoRepository.findAllByPackageId(oldPackageId, oldProgram.getProgramId());
         if (listServiceInfo.size() > 0) {
-            for (ServiceInfo serviceInfo: listServiceInfo) {
+            for (ServiceInfo serviceInfo : listServiceInfo) {
                 cloneServiceInfo(serviceInfo, service, newProgram);
             }
         }
@@ -441,7 +558,8 @@ public class ServiceProgramService {
     @SneakyThrows(CloneNotSupportedException.class)
     private void cloneMapServicePackage(MapServicePackage msp, Long newPackageId, ServiceProgram newProgram) {
         MapServicePackage mapServicePackage = (MapServicePackage) msp.clone();
-        mapServicePackage.setMapId(null);
+        Long maxId = mapServicePackageRepository.findIdMax();
+        mapServicePackage.setMapId(maxId + 1);
         mapServicePackage.setPackageId(newPackageId);
         mapServicePackage.setServiceProgram(newProgram);
         MapServicePackage mapServicePackageReturn = mapServicePackageRepository.saveAndFlush(mapServicePackage);
@@ -457,7 +575,8 @@ public class ServiceProgramService {
     }
 
     @SneakyThrows(CloneNotSupportedException.class)
-    private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, ServicePackage newPackage, ServiceProgram newProgram) {
+    private void cloneNdsTypeParamProgram(NdsTypeParamProgram ntpp, ServicePackage newPackage,
+                                          ServiceProgram newProgram) {
         NdsTypeParamProgram ndsTypeParamProgram = (NdsTypeParamProgram) ntpp.clone();
         ndsTypeParamProgram.setNdsTypeParamKey(null);
         ndsTypeParamProgram.setServicePackage(newPackage);
@@ -505,7 +624,8 @@ public class ServiceProgramService {
         logActionService.add(logAction);
         // Xóa các thành phần liên quan
         // Buckets_info
-        List<BucketsInfo> listBucketsInfo = bucketsInfoRepository.findByPackageIdAndProgramId(serviceProgram.getServicePackage().getPackageId(), serviceProgram.getProgramId());
+        List<BucketsInfo> listBucketsInfo = bucketsInfoRepository.findByPackageIdAndProgramId(serviceProgram.getServicePackage()
+                                                                                                            .getPackageId(), serviceProgram.getProgramId());
         for (BucketsInfo bucketsInfo : listBucketsInfo) {
             // Tạo Log Action
             LogAction logActionBucketsInfo = new LogAction();
@@ -612,7 +732,7 @@ public class ServiceProgramService {
 
         // SMS Respond
         List<MapSmsRespond> mapSmsRespondList = mapSmsRespondRepository.findAllByProgramId(serviceProgram.getProgramId());
-        for (MapSmsRespond mapSmsRespond: mapSmsRespondList) {
+        for (MapSmsRespond mapSmsRespond : mapSmsRespondList) {
             // Tạo Log Action
             LogAction logActionServiceInfo = new LogAction();
             logActionServiceInfo.setTableAction("map_sms_respond");
@@ -626,6 +746,8 @@ public class ServiceProgramService {
             //
             mapSmsRespondRepository.delete(mapSmsRespond);
         }
+
+        subServiceProgramRepository.deleteByProgramId(serviceProgram.getProgramId());
 
         serviceProgramRepository.delete(serviceProgram);
     }
@@ -652,5 +774,10 @@ public class ServiceProgramService {
             }
         }
         return false;
+    }
+
+    public List<ServiceProgram> findAllProgramByPackageId(Long id){
+        List<ServiceProgram> listServiceProgram = serviceProgramRepository.findAllByPackageId(id);
+        return new ArrayList<>(listServiceProgram);
     }
 }

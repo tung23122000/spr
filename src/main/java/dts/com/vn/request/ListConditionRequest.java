@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class ListConditionRequest {
 
+	private Long packageId;
+
 	private String programCode;
 
 	private String transaction;

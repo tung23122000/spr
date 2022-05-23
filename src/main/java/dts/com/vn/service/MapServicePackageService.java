@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Objects;
+
 @Service
 public class MapServicePackageService {
 
@@ -36,11 +38,30 @@ public class MapServicePackageService {
 	}
 
 	public MapServicePackage add(AddMapServicePackageRequest request) {
+		Long maxId = mapServicePackageRepository.findIdMax();
 		ServiceProgram serviceProgram = serviceProgramRepository.findById(request.getProgramId())
 				.orElseThrow(() -> new RestApiException(ErrorCode.SERVICE_PROGRAM_NOT_FOUND));
 		ExternalSystem externalSystem = externalSystemRepository.findById(request.getExtSystemId())
 				.orElseThrow(() -> new RestApiException(ErrorCode.EXTERNAL_SYSTEM_NOT_FOUND));
-		return mapServicePackageRepository.save(new MapServicePackage(request, externalSystem, serviceProgram));
+		MapServicePackage mapServicePackage = new MapServicePackage();
+		mapServicePackage.setMapId(maxId+1L);
+		mapServicePackage.setPackageId(serviceProgram.getServicePackage().getPackageId());
+		mapServicePackage.setExtSystem(externalSystem);
+		mapServicePackage.setServiceProgram(serviceProgram);
+		mapServicePackage.setStaDate(DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss"));
+		if(request.getEndDate()!=null){
+			mapServicePackage.setEndDate(DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+		}else{
+			mapServicePackage.setEndDate(null);
+		}
+		mapServicePackage.setPromCode(request.getPromCode());
+		mapServicePackage.setMobType(request.getMobType());
+		mapServicePackage.setPromDays(request.getPromDays());
+		mapServicePackage.setOnOff(request.getOnOff());
+		mapServicePackage.setRegMapCode(request.getRegMapCode());
+		mapServicePackage.setDelMapCode(request.getDelMapCode());
+		mapServicePackage.setChgMapCode(request.getChgMapCode());
+		return mapServicePackageRepository.save(mapServicePackage);
 	}
 
 	public MapServicePackage update(AddMapServicePackageRequest request) {

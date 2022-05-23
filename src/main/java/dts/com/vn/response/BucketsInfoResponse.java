@@ -73,7 +73,7 @@ public class BucketsInfoResponse {
 				? bucketsInfo.getServiceProgram().getDescription()
 				: "";
 		this.accountType = bucketsInfo.getAccountType();
-		this.serviceIn = bucketsInfo.getServiceIn();
+		this.serviceIn = bucketsInfo.getSubServiceName();
 	}
 
 }

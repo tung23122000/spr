@@ -32,6 +32,12 @@ public class MapCommandAlias implements Cloneable {
     @Column(name = "soap_request")
     private String soapRequest;
 
+    @Column(name = "name_in_selfcare")
+    private String nameInSelfCare;
+
+    @Column(name = "is_display_in_selfcare")
+    private Boolean isDisplayInSelfCare;
+
     public MapCommandAlias() {
     }
 
@@ -41,6 +47,8 @@ public class MapCommandAlias implements Cloneable {
         this.cmdTransCode = request.getCmdTransCode();
         this.smsMo = request.getSmsMo();
         this.soapRequest = request.getSoapRequest();
+        this.nameInSelfCare = request.getNameInSelfCare();
+        this.isDisplayInSelfCare = request.getIsDisplayInSelfCare();
     }
 
     @Override

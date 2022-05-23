@@ -21,17 +21,16 @@ public class CleanILinkDataController {
     @Autowired
     public CleanILinkDataController(CleanDataService dataService) {this.dataService = dataService;}
 
-    @ApiOperation(value = "Lấy danh sách param của 1 request")
-    @GetMapping("/cleanData")
+    @ApiOperation(value = "Clean dữ liệu từ archive")
+    @GetMapping("/clean-archive-data")
     @ResponseBody
-    public ResponseEntity<ApiResponse> cleanIlinkData(@RequestParam String strStartDate,
-                                                      @RequestParam String strEndDate) {
+    public ResponseEntity<ApiResponse> cleanIlinkData(@RequestParam Integer startRequestId,
+                                                      @RequestParam Integer endRequestId) {
         ApiResponse response;
         try {
-            dataService.cleanIlinkData(strStartDate, strEndDate);
+            dataService.cleanArchiveData(startRequestId, endRequestId);
             response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, "0",
-                                       "Làm sạch dữ liệu ilink từ " + strStartDate + " đến " + strStartDate + " thành" +
-                                               " công");
+                                       "Làm sạch dữ liệu archive từ requestId " + startRequestId + " đến " + endRequestId + " thành công");
             return ResponseEntity.ok().body(response);
         } catch (Exception ex) {
             logger.error(ex.toString());

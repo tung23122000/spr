@@ -32,4 +32,7 @@ public interface MapServicePackageRepository extends JpaRepository<MapServicePac
 	@Query("SELECT msp FROM MapServicePackage msp WHERE msp.packageId = ?1 AND msp.serviceProgram.programId = ?2 and msp.extSystem.extSystemId = 382")
 	List<MapServicePackage> findByPackageIdAndProgramId(Long packageId, Long programId);
 
+	@Query(value = "SELECT MAX(msp.mapId) FROM MapServicePackage msp")
+	Long findIdMax();
+
 }

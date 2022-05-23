@@ -20,7 +20,9 @@ public class AddServiceProgramRequest {
 
 	private Long numExtend;// Số lần gia hạn
 
-	private String vnptPckCode;// Mã KM VNPT
+	private String vnptPckCode;
+
+	private String vnptPromCode;// Mã KM VNPT
 
 	private String staDate;// Ngày hiệu lực
 
@@ -70,4 +72,17 @@ public class AddServiceProgramRequest {
 	private Boolean isCalculateExpireDate;// Hạn sử dụng riêng cho Roaming'
 
 	private String msgBeforeRenewEn;// Message trước gia hạn tiếng anh
+
+	private String maxPcrfServiceExclude;
+
+	private String maxPackageExclude;
+
+	private String maxPackageGroupExclude;
+
+	private Long flexSubProgramId;
+
+	private String flexFilterBundle;
+
+	private String flexMinQty;
+
 }

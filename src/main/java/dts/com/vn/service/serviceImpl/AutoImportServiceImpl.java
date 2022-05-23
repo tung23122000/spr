@@ -5,7 +5,6 @@ import dts.com.vn.entities.ListDetailNew;
 import dts.com.vn.repository.IsdnListRepository;
 import dts.com.vn.repository.ListDetailNewRepository;
 import dts.com.vn.service.AutoImportService;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,10 +48,10 @@ public class AutoImportServiceImpl implements AutoImportService {
             }
             if (files.size() > 0) {
                 for (File file : files) {
-                    Optional<IsdnList> isdnList = isdnListRepository.findById(Long.valueOf(file.getName()));
-                    // Kiểm tra xem tên file có phải isdn_list_id không
-                    if (isdnList.isPresent()) {
-                        handlingFileTxt(file.getName(), isdnList.get().getIsDisplay());
+                    if(!file.getName().equalsIgnoreCase("used")){
+                        Optional<IsdnList> isdnList = isdnListRepository.findById(Long.valueOf(file.getName()));
+                        // Kiểm tra xem tên file có phải isdn_list_id không
+                        isdnList.ifPresent(list -> handlingFileTxt(file.getName(), list.getIsDisplay()));
                     }
                 }
             }
@@ -75,9 +74,12 @@ public class AutoImportServiceImpl implements AutoImportService {
             if (files.size() > 0) {
                 for (File file : files) {
                     // Chỉ lấy những file có đuôi .txt
-                    if (!file.getName().endsWith("-used.txt") && file.getName().endsWith(".txt")) {
+                    if (file.getName().endsWith(".txt")) {
                         logger.info(file.getName());
                         readFileTxtAndInsertToDb(file.getName(), fileName, isDisplay);
+                        Path source = Paths.get("/home/spr/import/"+fileName+"/" + file.getName());
+                        Path newDir = Paths.get("/home/spr/import/used");
+                        Files.move(source, newDir.resolve(source.getFileName()), StandardCopyOption.REPLACE_EXISTING);
                         file.delete();
                     }
                 }

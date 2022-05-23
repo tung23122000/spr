@@ -30,10 +30,10 @@ public class ReportController {
 
     @GetMapping("/dailyReport")
     @ResponseBody
-    public ResponseEntity<ApiResponse> dailyReport1(@RequestParam String date) {
+    public ResponseEntity<ApiResponse> getReport1(@RequestParam String date) {
         logger.info("=========> " + "groupPackageCode: " + date);
         try {
-            ApiResponse response = reportService.dailyReport(date);
+            ApiResponse response = reportService.getReport1(date);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ApiResponse response = new ApiResponse(e, ErrorCode.DATA_FAILED);
@@ -42,14 +42,28 @@ public class ReportController {
         }
     }
 
-
-    @GetMapping("/daily-top-10-isdn")
+    @GetMapping("/report-retry-renew-package")
     @ResponseBody
-    public ResponseEntity<ApiResponse> dailyTopIsdnReport(@RequestParam String date) {
+    public ResponseEntity<ApiResponse> getReport2(@RequestParam String date) {
         logger.info("=========> " + "logger");
         ApiResponse response;
         try {
-            response = reportService.dailyTopIsdnReport(date);
+            response = reportService.getReport2(date);
+        } catch (RestApiException ex) {
+            ex.printStackTrace();
+            response = new ApiResponse(ex);
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    @GetMapping("/daily-top-10-isdn")
+    @ResponseBody
+    public ResponseEntity<ApiResponse> getReport3(@RequestParam String date) {
+        logger.info("=========> " + "logger");
+        ApiResponse response;
+        try {
+            response = reportService.getReport3(date);
         } catch (RestApiException ex) {
             ex.printStackTrace();
             response = new ApiResponse(ex);
@@ -63,21 +77,7 @@ public class ReportController {
         logger.info("=========> " + "logger");
         ApiResponse response;
         try {
-            response = reportService.reportRenewFaildYesterday(date);
-        } catch (RestApiException ex) {
-            ex.printStackTrace();
-            response = new ApiResponse(ex);
-        }
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping("/report-retry-renew-package")
-    @ResponseBody
-    public ResponseEntity<ApiResponse> reportRetryRenewPackage(@RequestParam String date) {
-        logger.info("=========> " + "logger");
-        ApiResponse response;
-        try {
-            response = reportService.reportRetryRenewPackage(date);
+            response = reportService.getReport4(date);
         } catch (RestApiException ex) {
             ex.printStackTrace();
             response = new ApiResponse(ex);
@@ -91,7 +91,7 @@ public class ReportController {
         logger.info("=========> " + "logger");
         ApiResponse response;
         try {
-            response = reportService.reportDataSystem(date);
+            response = reportService.getReport5(date);
         } catch (RestApiException ex) {
             ex.printStackTrace();
             response = new ApiResponse(ex);

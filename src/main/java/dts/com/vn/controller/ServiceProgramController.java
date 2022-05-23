@@ -57,12 +57,7 @@ public class ServiceProgramController {
 		try {
 			Page<ServiceProgram> page = serviceProgramService.findAll(search, pageable);
 			Page<ServiceProgramResponse> pageResponse =
-					page.map(new Function<ServiceProgram, ServiceProgramResponse>() {
-						@Override
-						public ServiceProgramResponse apply(ServiceProgram service) {
-							return new ServiceProgramResponse(service);
-						}
-					});
+					page.map(service -> serviceProgramService.getDetail(service.getProgramId()));
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), pageResponse);
 		} catch (Exception e) {
 			response = new ApiResponse(e, ErrorCode.DATA_FAILED);
@@ -87,7 +82,7 @@ public class ServiceProgramController {
 			logAction.setIdAction(data.getProgramId());
 			logActionService.add(logAction);
 			//
-			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
+			ServiceProgramResponse responseEntity = serviceProgramService.getDetail(data.getProgramId());
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
@@ -119,7 +114,7 @@ public class ServiceProgramController {
 			logAction.setTimeAction(new Date());
 			logActionService.add(logAction);
 
-			ServiceProgramResponse responseEntity = new ServiceProgramResponse(data);
+			ServiceProgramResponse responseEntity = serviceProgramService.getDetail(data.getProgramId());
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
@@ -136,8 +131,7 @@ public class ServiceProgramController {
 	public ResponseEntity<ApiResponse> findById(@PathVariable(name = "id", required = true) Long id) {
 		ApiResponse response;
 		try {
-			ServiceProgram servicePackage = serviceProgramService.findById(id);
-			ServiceProgramResponse responseEntity = new ServiceProgramResponse(servicePackage);
+			ServiceProgramResponse responseEntity = serviceProgramService.getDetail(id);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
@@ -299,6 +293,22 @@ public class ServiceProgramController {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.UPDATE_CHECK_MAX_REGISTED);
 			logger.error("UPDATE_CHECK_MAX_REGISTED", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-all-program-by-package-id/{id}")
+	public ResponseEntity<ApiResponse> findAllProgramByPackageId(@PathVariable(name = "id", required = true) Long id) {
+		ApiResponse response;
+		try {
+			List<ServiceProgram> responseEntity = serviceProgramService.findAllProgramByPackageId(id);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+			logger.error("FIND_BY_ID_SERVICE_PROGRAM_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

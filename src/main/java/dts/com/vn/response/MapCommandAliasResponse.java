@@ -20,6 +20,10 @@ public class MapCommandAliasResponse {
 
 	private String soapRequest;
 
+	private String nameInSelfCare;
+
+	private Boolean isDisplayInSelfCare;
+
 	public MapCommandAliasResponse(MapCommandAlias entity) {
 		this.cmdAliasId = entity.getCmdAliasId();
 		this.servicePackageId = Objects.nonNull(entity.getServicePackage()) ? entity.getServicePackage().getPackageId() : null;
@@ -27,6 +31,8 @@ public class MapCommandAliasResponse {
 		this.smsMo = entity.getSmsMo();
 		this.cmdTransCode = entity.getCmdTransCode();
 		this.soapRequest = entity.getSoapRequest();
+		this.nameInSelfCare = entity.getNameInSelfCare();
+		this.isDisplayInSelfCare = entity.getIsDisplayInSelfCare();
 	}
 
 }

@@ -36,6 +36,9 @@ public class RequestSummary {
     @Column(name = "response_message")
     private String responseMessage;
 
+    @Column(name = "response_error")
+    private String responseError;
+
     @Column(name = "status")
     private Integer status;
 

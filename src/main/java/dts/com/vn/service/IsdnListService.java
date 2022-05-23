@@ -32,7 +32,10 @@ public class IsdnListService {
 
     private final ListDetailNewRepository listDetailNewRepository;
 
-    public IsdnListService(IsdnListRepository isdnListRepository, AppConfigProperties appConfigProperties, ServicePackageListRepository servicePackageListRepository, BlacklistPackageListRepository blacklistPackageListRepository, ListDetailNewRepository listDetailNewRepository) {
+    public IsdnListService(IsdnListRepository isdnListRepository, AppConfigProperties appConfigProperties,
+                           ServicePackageListRepository servicePackageListRepository,
+                           BlacklistPackageListRepository blacklistPackageListRepository,
+                           ListDetailNewRepository listDetailNewRepository) {
         this.isdnListRepository = isdnListRepository;
         this.appConfigProperties = appConfigProperties;
         this.servicePackageListRepository = servicePackageListRepository;
@@ -71,14 +74,14 @@ public class IsdnListService {
             if (request.getListType().equals("0")) {
                 // Cập nhật WhiteList
                 if (request.getEndDate() != null) {
-                    servicePackageListRepository.updateWhiteListByIsdnListId(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+                    servicePackageListRepository.updateWhiteListByIsdnListId(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"), DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
                 } else {
                     servicePackageListRepository.updateWhiteListByIsdnListIdByStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
                 }
             } else {
                 //Cập nhật Blacklist
                 if (request.getEndDate() != null) {
-                    blacklistPackageListRepository.updateBlackListByIsdnListId(request.getIsdnListId(),DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"),DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+                    blacklistPackageListRepository.updateBlackListByIsdnListId(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"), DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
                 } else {
                     blacklistPackageListRepository.updateBlackListByIsdnListIdAndStaDate(request.getIsdnListId(), DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
                 }
@@ -91,7 +94,9 @@ public class IsdnListService {
         isdnList.setIsDisplay(request.getIsDisplay());
         isdnList.setListType(request.getListType());
         isdnList.setCreateDate(DateTimeUtil.convertStringToInstant(request.getCreateDate(), "dd/MM/yyyy HH:mm:ss"));
-        isdnList.setEndDate(DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+        if (request.getEndDate() != null) {
+            isdnList.setEndDate(DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss"));
+        }
         isdnList = isdnListRepository.save(isdnList);
 
         // Sau khi lưu, tự động tạo ra một thư mục với tên thư mục chính là ID của danh sách tại vị trí: /home/spr/import: Ví dụ: /home/spr/import/3544

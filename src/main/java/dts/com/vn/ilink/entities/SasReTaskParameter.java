@@ -33,6 +33,7 @@ public class SasReTaskParameter {
 
         @Column(name = "taskId")
         private Long taskId;
+
     }
 
 }

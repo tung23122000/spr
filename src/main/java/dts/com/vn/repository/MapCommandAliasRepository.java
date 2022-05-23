@@ -36,4 +36,10 @@ public interface MapCommandAliasRepository extends JpaRepository<MapCommandAlias
             " INNER JOIN MapCommandAlias mca ON mca.serviceProgram.programId = sp.programId " +
             " WHERE mca.soapRequest = ?1 ")
     List<ServiceProgram> findBySoapRequest(String soapRequest);
+
+    @Query("SELECT sp FROM ServiceProgram sp " +
+            " INNER JOIN MapCommandAlias mca ON mca.serviceProgram.programId = sp.programId " +
+            " WHERE mca.nameInSelfCare = ?1 ")
+    List<ServiceProgram> findByNameInSelfcare(String nameInSelfCare);
+
 }

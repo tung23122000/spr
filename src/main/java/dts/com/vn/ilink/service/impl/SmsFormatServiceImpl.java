@@ -103,7 +103,7 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 				}
 			} else {
 				// Create
-				Long rowId = lookupTableRowRepository.getMaxRowId(tableId) + 1;
+				Long rowId = lookupTableRowRepository.getMaxRowId("LKT_CHECK_CONDITIONS") + 1;
 				StringBuilder valueBuilder = new StringBuilder();
 				for (Value value : request.getValues()) {
 					valueBuilder.append("\"").append(value.getValue()).append("\"").append(",,");

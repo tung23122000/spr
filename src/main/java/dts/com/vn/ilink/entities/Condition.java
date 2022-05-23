@@ -9,4 +9,6 @@ public class Condition {
 
 	private Integer order;
 
+	private Boolean isSPR;
+
 }

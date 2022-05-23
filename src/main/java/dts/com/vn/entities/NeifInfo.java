@@ -29,6 +29,9 @@ public class NeifInfo {
     @Column(name= "isdn")
     private String isdn;
 
+    @Column(name= "ip_remote")
+    private String ipRemote;
+
     @Column(name= "main_amount")
     private String mainAmount;
 

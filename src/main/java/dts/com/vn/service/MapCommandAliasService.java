@@ -64,6 +64,21 @@ public class MapCommandAliasService {
             }
         }
 
+        // Tìm ra tất cả serviceProgram trùng nameInSelfcare
+        List<ServiceProgram> listDuplicateNameInSelfcare =
+                mapCommandAliasRepository.findByNameInSelfcare(request.getNameInSelfCare());
+        // Check trùng khoảng thời gian
+        if (listDuplicateNameInSelfcare.size() > 0) {
+            for (ServiceProgram item: listDuplicateNameInSelfcare) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_NAME_IN_SELFCARE);
+                }
+            }
+        }
+
         return mapCommandAliasRepository.save(new MapCommandAlias(request, serviceProgram));
     }
 
@@ -82,7 +97,7 @@ public class MapCommandAliasService {
         // Check trùng khoảng thời gian
         for (ServiceProgram item: list) {
 //            Check 2 service program có trùng lặp thời gian hay không?
-            if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+            if (areTwoDateTimeRangesOverlapping(serviceProgram, item)&&!item.getProgramId().equals(entity.getServiceProgram().getProgramId())) {
                 // Nếu 1 trường hợp trùng là loại bỏ luôn.
                 // Nếu tất cả trường hợp đều không trùng thì mới save
                 throw new RestApiException(ErrorCode.DUPLICATE_SMS_MO);
@@ -94,13 +109,30 @@ public class MapCommandAliasService {
         if (listDuplicateSoapRequest.size() > 0) {
             for (ServiceProgram item: listDuplicateSoapRequest) {
                 // Check 2 service program có trùng lặp thời gian hay không?
-                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)) {
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)&&!item.getProgramId().equals(entity.getServiceProgram().getProgramId())) {
                     // Nếu 1 trường hợp trùng là loại bỏ luôn.
                     // Nếu tất cả trường hợp đều không trùng thì mới save
                     throw new RestApiException(ErrorCode.DUPLICATE_SOAP_REQUEST);
                 }
             }
         }
+
+        // Tìm ra tất cả serviceProgram trùng nameInSelfcare
+        List<ServiceProgram> listDuplicateNameInSelfcare =
+                mapCommandAliasRepository.findByNameInSelfcare(request.getNameInSelfCare());
+        // Check trùng khoảng thời gian
+        if (listDuplicateNameInSelfcare.size() > 0) {
+            for (ServiceProgram item: listDuplicateNameInSelfcare) {
+                // Check 2 service program có trùng lặp thời gian hay không?
+                if (areTwoDateTimeRangesOverlapping(serviceProgram, item)&&!item.getProgramId().equals(entity.getServiceProgram().getProgramId())) {
+                    // Nếu 1 trường hợp trùng là loại bỏ luôn.
+                    // Nếu tất cả trường hợp đều không trùng thì mới save
+                    throw new RestApiException(ErrorCode.DUPLICATE_NAME_IN_SELFCARE);
+                }
+            }
+        }
+        entity.setNameInSelfCare(request.getNameInSelfCare());
+        entity.setIsDisplayInSelfCare(request.getIsDisplayInSelfCare());
         entity.setSmsMo(request.getSmsMo());
         entity.setSoapRequest(request.getSoapRequest());
         return mapCommandAliasRepository.save(entity);

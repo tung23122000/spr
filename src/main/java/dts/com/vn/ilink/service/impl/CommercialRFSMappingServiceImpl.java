@@ -75,7 +75,7 @@ public class CommercialRFSMappingServiceImpl implements CommercialRFSMappingServ
 				}
 			} else {
 				// Create
-				Long rowId = repository.getMaxRowId(tableId) + 1;
+				Long rowId = repository.getMaxRowId("LKT_CHECK_CONDITIONS") + 1;
 				BstLookupTableRow row = new BstLookupTableRow();
 				row.setTableId(tableId);
 				row.setRowId(rowId);

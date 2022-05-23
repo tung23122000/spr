@@ -14,7 +14,7 @@ public class DbJsonRequest {
 
     private List<Value> serviceProgramCode;
 
-    private List<Value> listCatalogFlow;
+    //private List<Value> listCatalogFlow;
 
     private List<Value> listConditionConfig;
 

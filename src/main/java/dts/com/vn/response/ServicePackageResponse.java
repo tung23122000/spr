@@ -1,7 +1,6 @@
 package dts.com.vn.response;
 
 import dts.com.vn.entities.FlowGroup;
-import dts.com.vn.entities.PCRFGroup;
 import dts.com.vn.entities.ServicePackage;
 import dts.com.vn.util.DateTimeUtil;
 import lombok.Getter;
@@ -66,6 +65,11 @@ public class ServicePackageResponse {
 	private String isRetry; // Có tự động gia hạn hay không? 1: có, 0: không
 
 	private String systemOwner; // Hệ thống quản lý
+
+	private Long flexSubPackageId;
+
+	public ServicePackageResponse(){
+	}
 
 	public ServicePackageResponse(ServicePackage service) {
 		super();

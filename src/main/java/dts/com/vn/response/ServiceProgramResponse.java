@@ -27,7 +27,9 @@ public class ServiceProgramResponse {
 
 	private Long numExtend;// Số lần gia hạn
 
-	private String vnptPckCode;// Mã KM VNPT
+	private String vnptPckCode;
+
+	private String vnptPromCode;// Mã KM VNPT
 
 	private String staDate;// Ngày hiệu lực
 
@@ -76,6 +78,21 @@ public class ServiceProgramResponse {
 
 	private String msgBeforeRenewEn;
 
+	private String maxPcrfServiceExclude;
+
+	private String maxPackageExclude;
+
+	private String maxPackageGroupExclude;
+
+	private Long flexSubProgramId;
+
+	private String flexFilterBundle;
+
+	private String flexMinQty;
+	
+	public ServiceProgramResponse(){
+	}
+
 	public ServiceProgramResponse(ServiceProgram service) {
 		super();
 		this.programId = service.getProgramId();
@@ -90,6 +107,7 @@ public class ServiceProgramResponse {
 		this.autoExtend = service.getAutoExtend();
 		this.numExtend = service.getNumExtend();
 		this.vnptPckCode = service.getVnptPckCode();
+		this.vnptPromCode = service.getVnptPromCode();
 		this.description = service.getDescription();
 		this.chargeType = service.getChargeType();
 		this.minusMethod = service.getMinusMethod();

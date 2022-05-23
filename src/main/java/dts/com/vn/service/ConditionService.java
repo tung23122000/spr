@@ -41,6 +41,7 @@ public class ConditionService {
 		mapConditionServicePackage.setIsConfirm(input.getIsConfirm());
 		mapConditionServicePackage.setIsSoapConfirm(input.getIsSoapConfirm());
 		mapConditionServicePackage.setIsChange(input.getIsChange());
+		mapConditionServicePackage.setIsSoapConfirmTransaction(input.getIsSoapConfirmTransaction());
 		// Message tiếng việt
 		mapConditionServicePackage.setMessageMt(input.getMessageMt());
 		// Message tiếng anh

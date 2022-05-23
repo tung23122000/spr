@@ -30,4 +30,8 @@ public interface IsdnListRepository  extends JpaRepository<IsdnList, Long> {
             " left join BlacklistPackageList bpl on bpl.isdnListId = il.isdnListId " +
             " where bpl.programId = :programId ")
     List<IsdnList> getBlackListByProgramId(Long programId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM isdn_list WHERE isdn_list_id = ?1 " +
+            "AND (end_date > NOW() OR end_date IS NULL)")
+    IsdnList findByIsdnListId(Long isdnListId);
 }

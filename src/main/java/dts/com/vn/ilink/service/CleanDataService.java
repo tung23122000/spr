@@ -12,4 +12,14 @@ public interface CleanDataService {
      */
     void cleanIlinkData(String strStartDate, String strEndDate);
 
+    /**
+     * Description - Hàm làm sạch dữ liệu của ilarc
+     *
+     * @param startRequestId - RequestId bắt đầu
+     * @param endRequestId   - RequestId kết thúc
+     * @author - giangdh
+     * @created - 4/20/2022
+     */
+    void cleanArchiveData(Integer startRequestId, Integer endRequestId);
+
 }

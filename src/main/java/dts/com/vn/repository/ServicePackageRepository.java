@@ -97,4 +97,9 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query(value = "SELECT sp FROM ServicePackage sp WHERE sp.systemOwner = 'FO'")
 	List<ServicePackage> findAllFOPackage();
 
+	@Query(value = "SELECT MAX(sp.packageId) FROM ServicePackage sp")
+	Long findIdMax();
+
+	@Query(value = "SELECT sp FROM ServicePackage sp WHERE sp.code LIKE '%FLEX%'")
+	List<ServicePackage> findAllFlexPackage();
 }

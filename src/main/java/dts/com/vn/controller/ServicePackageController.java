@@ -94,8 +94,7 @@ public class ServicePackageController {
 	public ResponseEntity<ApiResponse> findById(@PathVariable(name = "id", required = true) Long id) {
 		ApiResponse response;
 		try {
-			ServicePackage servicePackage = servicePackageService.findById(id);
-			ServicePackageResponse responseEntity = new ServicePackageResponse(servicePackage);
+			ServicePackageResponse responseEntity = servicePackageService.getDetaiById(id);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);
@@ -366,6 +365,36 @@ public class ServicePackageController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response = new ApiResponse(ex, ErrorCode.API_FAILED_UNKNOWN);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-all-package")
+	public ResponseEntity<ApiResponse> findAllPackage() {
+		ApiResponse response;
+		try {
+			response = servicePackageService.findAllPackage();
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/find-all-flex-package")
+	public ResponseEntity<ApiResponse> findAllFlexPackage() {
+		ApiResponse response;
+		try {
+			response = servicePackageService.findAllFlexPackage();
+		} catch (RestApiException ex) {
+			response = new ApiResponse(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = new ApiResponse(ex, ErrorCode.DATA_FAILED);
+			logger.error("DATA_SERVICE_PACKAGE_CONVERT_FAILED", response);
 		}
 		return ResponseEntity.ok().body(response);
 	}

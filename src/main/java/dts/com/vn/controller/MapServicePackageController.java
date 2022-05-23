@@ -69,7 +69,7 @@ public class MapServicePackageController {
             LogAction logAction = new LogAction();
             logAction.setTableAction("map_service_package");
             logAction.setAccount(tokenProvider.account);
-            logAction.setAction("CREATE");
+            logAction.setAction("CRE TE");
             logAction.setOldValue(null);
             logAction.setIdAction(entity.getMapId());
             logAction.setNewValue(entity.toString());

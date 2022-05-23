@@ -24,7 +24,7 @@ public interface ServicePackageListRepository extends JpaRepository<ServicePacka
 	@Transactional
 	@Modifying
 	@Query(nativeQuery =true,value ="UPDATE service_package_list \n" +
-			"SET sta_date = :staDate, end_date = NUll" +
+			"SET sta_date = :staDate, end_date = NUll " +
 			"WHERE isdn_list_id = :isdnListId")
 	void updateWhiteListByIsdnListIdByStaDate(Long isdnListId, Instant staDate);
 

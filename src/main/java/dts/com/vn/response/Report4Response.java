@@ -3,7 +3,7 @@ package dts.com.vn.response;
 import lombok.Data;
 
 @Data
-public class RenewFailedResponse {
+public class Report4Response {
 
     private String packageCode;
 

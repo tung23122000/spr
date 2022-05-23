@@ -41,4 +41,13 @@ public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, 
 
 	@Query(nativeQuery = true,value = "SELECT * FROM service_program WHERE program_id= ?1")
 	ServiceProgram findByProgramId(Long id);
+
+	@Query(nativeQuery = true,value = "SELECT program_id FROM service_program  " +
+			"WHERE program_code = ?1 AND package_id = ?2 ")
+	Long findProgramIdByCode(String programCode, Long packageId );
+
+	@Query(nativeQuery = true, value="SELECT*FROM service_program WHERE package_id = ?1 " +
+			"AND ((sta_date < NOW() AND end_date > NOW()) OR (sta_date < NOW() AND end_date IS NULL))")
+	List<ServiceProgram> findAllActiveByPackageId(Long packageId);
+
 }

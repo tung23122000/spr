@@ -124,16 +124,18 @@ public class Register {
 
 	public Long getPhoneNumber(EntityManager entityManager,String partition) {
 
-		String queryStr = "SELECT COUNT(DISTINCT isdn)\n" +
+		String queryStr = "SELECT COUNT(DISTINCT isdn) " +
 				"FROM" + partition +
-				"WHERE ((NOW() BETWEEN sta_datetime AND end_datetime) \n" +
+				"WHERE ((NOW() BETWEEN sta_datetime AND end_datetime) " +
 				"OR (end_datetime IS NULL AND NOW() > sta_datetime ))";
 		try {
 			Query query = entityManager.createNativeQuery(queryStr);
 			long count = 0;
 			List<BigInteger> list = query.getResultList();
 			for (BigInteger bigInteger : list) {
-				count = bigInteger.longValue();
+				if(bigInteger!=null){
+					count = bigInteger.longValue();
+				}
 			}
 			return count;
 		} catch (Exception e) {

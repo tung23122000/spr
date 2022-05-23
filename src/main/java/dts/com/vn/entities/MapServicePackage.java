@@ -14,7 +14,6 @@ import java.util.Objects;
 public class MapServicePackage implements Cloneable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "map_id")
 	private Long mapId;
 
@@ -75,7 +74,11 @@ public class MapServicePackage implements Cloneable {
 		this.serviceProgram = serviceProgram;
 		this.packageId = Objects.nonNull(serviceProgram.getServicePackage()) ? serviceProgram.getServicePackage().getPackageId() : null;
 		this.staDate = DateTimeUtil.convertStringToInstant(request.getStartDate(), "dd/MM/yyyy HH:mm:ss");
-		this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
+		if(request.getEndDate()!=null){
+			this.endDate = DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");
+		}else{
+			this.endDate = null;
+		}
 		this.promCode = request.getPromCode();
 		this.mobType = request.getMobType();
 		this.promDays = request.getPromDays();
@@ -84,4 +87,5 @@ public class MapServicePackage implements Cloneable {
 		this.delMapCode = request.getDelMapCode();
 		this.chgMapCode = request.getChgMapCode();
 	}
+
 }

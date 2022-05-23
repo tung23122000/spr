@@ -29,4 +29,10 @@ public class MapConditionProgram {
 	@Type(type = "jsonb")
 	private String conditionValue;
 
+	@Column(name = "is_spr")
+	private Boolean isSpr;
+
+	@Column(name = "transaction")
+	private String transaction;
+
 }

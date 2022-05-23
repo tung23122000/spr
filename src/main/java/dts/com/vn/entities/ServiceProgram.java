@@ -169,6 +169,7 @@ public class ServiceProgram implements Cloneable {
 		this.autoExtend = request.getAutoExtend();
 		this.numExtend = request.getNumExtend();
 		this.vnptPckCode = request.getVnptPckCode();
+		this.vnptPromCode = request.getVnptPromCode();
 		this.staDate = DateTimeUtil.convertStringToInstant(request.getStaDate(), "dd/MM/yyyy HH:mm:ss");
 //		this.extendEndDate =
 //				DateTimeUtil.convertStringToInstant(request.getEndDate(), "dd/MM/yyyy HH:mm:ss");

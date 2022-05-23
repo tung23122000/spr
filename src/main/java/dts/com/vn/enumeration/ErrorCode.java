@@ -50,6 +50,8 @@ public enum ErrorCode {
 	DELETE_SERVICE_INFO_FAILED("error.delete.service.info", "Lỗi khi xóa thông tin bổ sung"),
 	DUPLICATE_SMS_MO("error.duplicate.sms.mo", "Cú pháp không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_SOAP_REQUEST("error.duplicate.soap.request", "Soap Request không được trùng trong cùng 1 thời điểm"),
+	DUPLICATE_NAME_IN_SELFCARE("error.duplicate.name.in.self.care", "Tên trên hệ thống selfcare không được trùng " +
+			"trong cùng một thời điểm"),
 	DUPLICATE_PROGRAM_CODE("error.duplicate.program.code", "Mã chương trình không được trùng trong cùng 1 thời điểm"),
 	DUPLICATE_SMS_RESPOND("error.duplicate.sms.respond", "SMS Respond đã tồn tại trong hệ thống"),
 	ADD_ISDN_DETAIL_CENTER("error.add.isdn.detail.center", "Lỗi khi thêm mới CTKV"),
@@ -100,6 +102,10 @@ public enum ErrorCode {
 	CONFIG_FLOW_CONDITION_DELETE_ERROR("error.data","Xóa data không hợp lệ."),
 	CONFIG_FLOW_CONDITION_UPDATE_ERROR("error.data","Update data không hợp lệ."),
 	REPORT_TOTAL_PHONE_NUMBER_ERROR("error.data","Dữ liệu tổng số phone lấy ra không thông công."),
+
+	//tinhbdt add
+	DEFAULT_PROGRAM_REQUIRED("error.null.defaultProgram", "Gói cước này chưa có chương trình mặc định."),
+	SERVICE_PROGRAM_REQUIRED("error.null.serviceProgram", "Gói cước này chưa có chương trình nào tồn tại.")
 	;
 	private String errorCode;
 

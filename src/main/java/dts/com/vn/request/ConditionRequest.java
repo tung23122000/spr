@@ -17,6 +17,9 @@ public class ConditionRequest {
 
 	private Boolean isSoapConfirm;
 
+	// tích có reject qua soap hay không 29/04/2022
+	private String isSoapConfirmTransaction;
+
 	private Boolean isChange;
 
 }

@@ -27,8 +27,9 @@ public interface BstLookupTableRowRepository extends JpaRepository<BstLookupTabl
 
 	@Query(nativeQuery = true, value = "SELECT max(row_id) " +
 			"FROM bst_lookup_table_row AS r " +
-			"WHERE r.table_id = ?1")
-	Long getMaxRowId(Long tableId);
+			"INNER JOIN bst_lookup_table AS lt ON r.table_id = lt.table_id " +
+			"WHERE lt.name = ?1")
+	Long getMaxRowId(String tableName);
 
 	@Query(nativeQuery = true, value = "SELECT r.* " +
 			"FROM bst_lookup_table_row AS r " +

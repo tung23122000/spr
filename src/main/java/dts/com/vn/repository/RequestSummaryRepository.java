@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface RequestSummaryRepository extends JpaRepository<RequestSummary, Integer> {
+public interface RequestSummaryRepository extends JpaRepository<RequestSummary, Long> {
+
     @Query(nativeQuery = true,
             value = "SELECT * FROM request_summary ORDER BY response_date DESC LIMIT 1")
     RequestSummary findLastRequestSummary();
@@ -20,6 +21,7 @@ public interface RequestSummaryRepository extends JpaRepository<RequestSummary, 
             "WHERE received_date BETWEEN ?1 AND ?2\n" +
             "GROUP BY request_command,chanel,isdn " +
             "ORDER BY count DESC " +
-            "LIMIT 100 ")
+            "LIMIT 100")
     List<Report3FromDbResponse> getDataFromDbByIsdnAndDate(Timestamp startDate, Timestamp endDate);
+
 }

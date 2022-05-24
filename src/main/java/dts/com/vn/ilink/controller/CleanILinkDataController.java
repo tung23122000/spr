@@ -14,29 +14,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CleanILinkDataController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CleanILinkDataController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CleanILinkDataController.class);
 
-    private final CleanDataService dataService;
+	private final CleanDataService dataService;
 
-    @Autowired
-    public CleanILinkDataController(CleanDataService dataService) {this.dataService = dataService;}
+	@Autowired
+	public CleanILinkDataController(CleanDataService dataService) {this.dataService = dataService;}
 
-    @ApiOperation(value = "Clean dữ liệu từ archive")
-    @GetMapping("/clean-archive-data")
-    @ResponseBody
-    public ResponseEntity<ApiResponse> cleanIlinkData(@RequestParam Integer startRequestId,
-                                                      @RequestParam Integer endRequestId) {
-        ApiResponse response;
-        try {
-            dataService.cleanArchiveData(startRequestId, endRequestId);
-            response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, "0",
-                                       "Làm sạch dữ liệu archive từ requestId " + startRequestId + " đến " + endRequestId + " thành công");
-            return ResponseEntity.ok().body(response);
-        } catch (Exception ex) {
-            logger.error(ex.toString());
-            response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "0", ex.getMessage());
-            return ResponseEntity.ok().body(response);
-        }
-    }
+	@ApiOperation(value = "Clean dữ liệu từ archive")
+	@GetMapping("/get-short-code")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> getShortcode(@RequestParam Integer startRequestId,
+	                                                @RequestParam Integer endRequestId) {
+		ApiResponse response;
+		try {
+			dataService.getShortcode(startRequestId, endRequestId);
+			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), null, "0",
+			                           "Làm sạch dữ liệu archive từ requestId " + startRequestId + " đến " + endRequestId + " thành công");
+			return ResponseEntity.ok().body(response);
+		} catch (Exception ex) {
+			logger.error(ex.toString());
+			response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "0", ex.getMessage());
+			return ResponseEntity.ok().body(response);
+		}
+	}
 
 }

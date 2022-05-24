@@ -73,4 +73,11 @@ public interface IlArcTaskParameterRepository extends JpaRepository<IlArcTaskPar
                     "AND parameter_name IN ( 'SMS_CONTENT', 'SO1_SMESSAGE', 'MESSAGE', 'SOURCE_TYPE', 'TRANS_CODE' )")
     List<IlArcTaskParameter> findParamsNeeded(Long requestId);
 
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM il_arc_task_parameter " +
+                    "WHERE request_id = ?1 " +
+                    "AND parameter_name = 'SHORT_CODE' LIMIT 1")
+    Optional<IlArcTaskParameter> findShortCode(Long requestId);
+
 }

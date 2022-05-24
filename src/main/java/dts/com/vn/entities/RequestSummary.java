@@ -39,13 +39,16 @@ public class RequestSummary {
     @Column(name = "response_error")
     private String responseError;
 
-    @Column(name = "status")
-    private Integer status;
+	@Column(name = "status")
+	private Integer status;
 
-    @Column(name = "chanel")
-    private String chanel;
+	@Column(name = "chanel")
+	private String chanel;
 
-    @Column(name = "transaction")
-    private String transaction;
+	@Column(name = "transaction")
+	private String transaction;
+
+	@Column(name = "service_number")
+	private Integer serviceNumber;
 
 }

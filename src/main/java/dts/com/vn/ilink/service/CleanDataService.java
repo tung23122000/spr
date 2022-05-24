@@ -22,4 +22,14 @@ public interface CleanDataService {
      */
     void cleanArchiveData(Integer startRequestId, Integer endRequestId);
 
+    /**
+     * Description - Hàm lấy thêm short code của từng request
+     *
+     * @param startRequestId - RequestId bắt đầu
+     * @param endRequestId   - RequestId kết thúc
+     * @author - giangdh
+     * @created - 4/20/2022
+     */
+    void getShortcode(Integer startRequestId, Integer endRequestId);
+
 }

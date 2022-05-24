@@ -43,4 +43,7 @@ public class MapConditionServicePackage {
 	@Column(name = "message_mt_2")
 	private String messageMt2;
 
+	@Column(name = "is_delete")
+	private Boolean isDelete;
+
 }

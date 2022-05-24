@@ -5,9 +5,11 @@
 
 ## Thông tin của project
 
-##### - SPR Config API bao gồm các API liên quan đến việc tương tác với cơ sở dữ liệu của Mobiphone
-
 ##### - SPR Config API đảm nhận việc khai báo các thông tin đấu nối dành cho quản trị viên của MBF
+
+##### - Tên service web-api
+
+##### - Port sử dụng 9001
 
 ## Requirements
 

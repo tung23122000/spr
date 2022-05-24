@@ -89,6 +89,12 @@ public class ServiceProgramResponse {
 	private String flexFilterBundle;
 
 	private String flexMinQty;
+
+	private Boolean isDKRetry;
+
+	private Boolean isCancel;
+
+	private Boolean isInsert;
 	
 	public ServiceProgramResponse(){
 	}

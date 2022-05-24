@@ -137,6 +137,9 @@ public class ServiceProgramService {
             subServiceProgram.setFlexFilterBundle(request.getFlexFilterBundle());
             subServiceProgram.setFlexMinQty(request.getFlexMinQty());
         }
+        subServiceProgram.setIsDkRetry(request.getIsDKRetry());
+        subServiceProgram.setIsCancel(request.getIsCancel());
+        subServiceProgram.setIsInsert(request.getIsInsert());
         subServiceProgramRepository.save(subServiceProgram);
         return entitySave;
     }
@@ -193,6 +196,9 @@ public class ServiceProgramService {
             serviceProgramResponse.setFlexSubProgramId(subServiceProgram.getFlexSubProgramId());
             serviceProgramResponse.setFlexFilterBundle(subServiceProgram.getFlexFilterBundle());
             serviceProgramResponse.setFlexMinQty(subServiceProgram.getFlexMinQty());
+            serviceProgramResponse.setIsDKRetry(subServiceProgram.getIsDkRetry());
+            serviceProgramResponse.setIsCancel(subServiceProgram.getIsCancel());
+            serviceProgramResponse.setIsInsert(subServiceProgram.getIsInsert());
         }
         return serviceProgramResponse;
     }
@@ -314,6 +320,8 @@ public class ServiceProgramService {
                                                                       request.getFlexSubProgramId(),
                                                                       request.getFlexFilterBundle(), request.getFlexMinQty());
                 }
+                subServiceProgramRepository.updateByProgramId(servicePr.getProgramId(),request.getIsDKRetry(),
+                                                              request.getIsCancel(),request.getIsInsert());
             } else {
                 //Lưu sub_service_program
                 SubServiceProgram subServiceProgram = new SubServiceProgram();
@@ -323,6 +331,9 @@ public class ServiceProgramService {
                 subServiceProgram.setMaxPackageExclude(request.getMaxPackageExclude());
                 subServiceProgram.setMaxPcrfServiceExclude(request.getMaxPcrfServiceExclude());
                 subServiceProgram.setMaxPackageGroupExclude(request.getMaxPackageGroupExclude());
+                subServiceProgram.setIsDkRetry(subServiceProgram.getIsDkRetry());
+                subServiceProgram.setIsCancel(subServiceProgram.getIsCancel());
+                subServiceProgram.setIsInsert(subServiceProgram.getIsInsert());
                 subServiceProgramRepository.save(subServiceProgram);
             }
             return serviceProgramRepository.save(servicePr);
@@ -480,6 +491,9 @@ public class ServiceProgramService {
             subServiceProgram.setFlexSubProgramId(subServiceProgramFromDb.getFlexSubProgramId());
             subServiceProgram.setFlexFilterBundle(subServiceProgramFromDb.getFlexFilterBundle());
             subServiceProgram.setFlexMinQty(subServiceProgramFromDb.getFlexMinQty());
+            subServiceProgram.setIsDkRetry(subServiceProgram.getIsDkRetry());
+            subServiceProgram.setIsCancel(subServiceProgram.getIsCancel());
+            subServiceProgram.setIsInsert(subServiceProgram.getIsInsert());
         }
         subServiceProgramRepository.save(subServiceProgram);
 
@@ -776,8 +790,13 @@ public class ServiceProgramService {
         return false;
     }
 
-    public List<ServiceProgram> findAllProgramByPackageId(Long id){
-        List<ServiceProgram> listServiceProgram = serviceProgramRepository.findAllByPackageId(id);
-        return new ArrayList<>(listServiceProgram);
+    public List<ServiceProgramResponse> findAllProgramByPackageId(Long packageId){
+        List<Long> listProgramId = serviceProgramRepository.findAllProgramId(packageId);
+        List<ServiceProgramResponse> listResponse = new ArrayList<>();
+        for (Long id : listProgramId) {
+            ServiceProgramResponse response = getDetail(id);
+            listResponse.add(response);
+        }
+        return listResponse;
     }
 }

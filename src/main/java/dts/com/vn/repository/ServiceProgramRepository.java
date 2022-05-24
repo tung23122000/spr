@@ -50,4 +50,7 @@ public interface ServiceProgramRepository extends JpaRepository<ServiceProgram, 
 			"AND ((sta_date < NOW() AND end_date > NOW()) OR (sta_date < NOW() AND end_date IS NULL))")
 	List<ServiceProgram> findAllActiveByPackageId(Long packageId);
 
+	@Query("SELECT sp.programId FROM ServiceProgram sp WHERE sp.servicePackage.packageId = ?1")
+	List<Long> findAllProgramId(Long packageId);
+
 }

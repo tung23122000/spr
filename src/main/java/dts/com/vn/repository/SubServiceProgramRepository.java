@@ -31,6 +31,13 @@ public interface SubServiceProgramRepository extends JpaRepository<SubServicePro
 
     @Modifying
     @Transactional
+    @Query(nativeQuery = true, value= "UPDATE sub_service_program " +
+            "SET is_dk_retry = ?2 , is_cancel = ?3, is_insert = ?4 " +
+            "WHERE program_id = ?1")
+    void updateByProgramId(Long programId, Boolean isDkRetry, Boolean isCancel, Boolean isInsert);
+
+    @Modifying
+    @Transactional
     @Query(nativeQuery = true, value= "DELETE FROM sub_service_program WHERE program_id = ?1")
     void deleteByProgramId(Long programId);
 

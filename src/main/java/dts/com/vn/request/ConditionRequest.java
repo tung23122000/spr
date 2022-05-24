@@ -22,4 +22,7 @@ public class ConditionRequest {
 
 	private Boolean isChange;
 
+	// tích có được phép huỷ không (Anh Khánh confirm 23-5-2022)
+	private Boolean isDelete;
+
 }

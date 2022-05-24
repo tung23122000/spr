@@ -38,4 +38,13 @@ public class SubServiceProgram {
     @Column(name = "flex_min_qty")
     private String flexMinQty;
 
+    @Column(name = "is_dk_retry")
+    private Boolean isDkRetry;//Có retry đăng ký không
+
+    @Column(name = "is_cancel")
+    private Boolean isCancel;//có huỷ đối tượng sau khi đăng ký không
+
+    @Column(name = "is_insert")
+    private Boolean isInsert;//có chỉ được đăng ký CTKM 1 lần không
+
 }

@@ -85,4 +85,10 @@ public class AddServiceProgramRequest {
 
 	private String flexMinQty;
 
+	private Boolean isDKRetry;
+
+	private Boolean isCancel;
+
+	private Boolean isInsert;
+
 }

@@ -301,7 +301,7 @@ public class ServiceProgramController {
 	public ResponseEntity<ApiResponse> findAllProgramByPackageId(@PathVariable(name = "id", required = true) Long id) {
 		ApiResponse response;
 		try {
-			List<ServiceProgram> responseEntity = serviceProgramService.findAllProgramByPackageId(id);
+			List<ServiceProgramResponse> responseEntity = serviceProgramService.findAllProgramByPackageId(id);
 			response = new ApiResponse(ApiResponseStatus.SUCCESS.getValue(), responseEntity);
 		} catch (RestApiException ex) {
 			response = new ApiResponse(ex);

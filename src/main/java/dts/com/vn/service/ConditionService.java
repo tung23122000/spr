@@ -46,6 +46,8 @@ public class ConditionService {
 		mapConditionServicePackage.setMessageMt(input.getMessageMt());
 		// Message tiếng anh
 		mapConditionServicePackage.setMessageMt2(input.getMessageMt2());
+		// tích có được phép huỷ không (Anh Khánh confirm 23-5-2022)
+		mapConditionServicePackage.setIsDelete(input.getIsDelete());
 		mapConditionServicePackageRepository.save(mapConditionServicePackage);
 	}
 

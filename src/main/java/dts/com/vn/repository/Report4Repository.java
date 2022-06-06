@@ -32,7 +32,7 @@ public class Report4Repository {
 
     public Long getTotalNotRetryYet(EntityManager entityManager, String partition, String packageId) {
         String queryStr = "SELECT COUNT ( reg_id ) FROM "+ partition +
-                "WHERE ext_retry_num != 3 " +
+                " WHERE ext_retry_num != 3 " +
                 " AND package_id = " + packageId +
                 " AND expire_datetime < ( NOW( ) - INTERVAL '30 MINUTE' )";
         try {

@@ -47,4 +47,12 @@ public class SubServiceProgram {
     @Column(name = "is_insert")
     private Boolean isInsert;//có chỉ được đăng ký CTKM 1 lần không
 
+    @Column(name ="register_number_day")
+    private Long registerNumberDay;
+
+    @Column(name ="renew_number_day")
+    private Long renewNumberDay;
+
+    @Column(name ="sale_charge_price")
+    private String saleChargePrice;
 }

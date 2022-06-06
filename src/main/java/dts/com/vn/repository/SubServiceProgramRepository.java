@@ -38,6 +38,20 @@ public interface SubServiceProgramRepository extends JpaRepository<SubServicePro
 
     @Modifying
     @Transactional
+    @Query(nativeQuery = true, value= "UPDATE sub_service_program " +
+            "SET register_number_day = ?2, renew_number_day = ?3 " +
+            "WHERE program_id = ?1")
+    void updateWithProgramId(Long programId, Long registerNumberDay, Long renewNumberDay);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true, value= "UPDATE sub_service_program " +
+            "SET sale_charge_price = ?2 " +
+            "WHERE program_id = ?1")
+    void updateSaleCharge(Long programId, String saleChargePrice);
+
+    @Modifying
+    @Transactional
     @Query(nativeQuery = true, value= "DELETE FROM sub_service_program WHERE program_id = ?1")
     void deleteByProgramId(Long programId);
 

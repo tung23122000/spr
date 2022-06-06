@@ -53,14 +53,11 @@ public class ConjobTransferFileIsdnListServiceImpl implements CronjobTransferFil
             FTPClient ftpClient = new FTPClient();
             ftpClient.connect(hostname, port);
             ftpClient.login(user, password);
-            String wD = ftpClient.printWorkingDirectory() + targetFolder;
-            //logger.info(wD);
-            FTPFile[] files = ftpClient.listFiles(wD);
+            FTPFile[] files = ftpClient.listFiles(targetFolder);
             for (FTPFile file : files) {
-                logger.info(file.getName());
                 if (file.getName().endsWith(".txt")) {
                     if (checkExist(file.getName())) {
-                        String remoteFile1 = wD+ "/" + file.getName();
+                        String remoteFile1 = targetFolder + "/" + file.getName();
                         File downloadFile1 = new File("/home/spr/import/" + isdnListId + "/" + file.getName());
                         OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));
                         boolean success = ftpClient.retrieveFile(remoteFile1, outputStream1);

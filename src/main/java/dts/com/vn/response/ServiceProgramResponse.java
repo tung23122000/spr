@@ -95,6 +95,16 @@ public class ServiceProgramResponse {
 	private Boolean isCancel;
 
 	private Boolean isInsert;
+
+	private Long registerNumberDay;
+
+	private Long renewNumberDay;
+
+	private Boolean hasRegisterNumberDay;
+
+	private Boolean hasRenewNumberDay;
+
+	private String saleChargePrice;
 	
 	public ServiceProgramResponse(){
 	}

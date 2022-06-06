@@ -20,10 +20,19 @@ public interface ListConditionRepository extends JpaRepository<ListCondition, In
 
     @Modifying
     @Transactional
+    @Query(nativeQuery = true,value="UPDATE list_condition SET status = true WHERE id= ?1")
+    void activeConditionById(Integer id);
+
+    @Modifying
+    @Transactional
     @Query(nativeQuery = true,value="UPDATE list_condition SET is_package = ?2 WHERE id= ?1")
     void updateIsPackgeById(Integer id, Boolean isPackage);
 
     @Query(nativeQuery = true,value = "SELECT * FROM list_condition  WHERE condition_name = ?1")
     ListCondition findConditionIdByName(String conditionName);
+
+    @Query(nativeQuery = true,value= "SELECT EXISTS(SELECT * FROM list_condition WHERE condition_name = ?1 AND " +
+            " ilink_service_name = ?2 )")
+    Boolean checkExist(String conditionName, String ilinkServiceName);
 
 }

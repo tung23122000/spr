@@ -11,5 +11,5 @@ public interface ListConditionService {
 
     ApiResponse updateIsPackage(Integer id, Boolean isPackage);
 
-    ApiResponse deleteListCondition(Integer id);
+    ApiResponse deleteListCondition(Integer id, Boolean status);
 }

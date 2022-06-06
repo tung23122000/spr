@@ -12,14 +12,11 @@ import java.sql.Timestamp;
 @Repository
 public interface IsdnRetryExtendRepository extends JpaRepository<IsdnRetryExtend, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM isdn_retry_extend WHERE isdn = ?1")
-    IsdnRetryExtend findDataFromIsdnRetryExtendByIsdn(String isdn);
-
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE isdn_retry_extend " +
             "SET status = '2', last_recharge_date = ?2 " +
-            "WHERE isdn = ?1 " +
+            "WHERE isdn = ?1  AND status='1' " +
             "AND insert_date BETWEEN (NOW()-INTERVAL '30 DAY') AND NOW()")
     void updateNeifInfo(String isdn, Timestamp lastRechargeDate);
 

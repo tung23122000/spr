@@ -14,8 +14,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
@@ -129,10 +134,10 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 19/04/2022
      */
-//    @Scheduled(fixedDelay = 10000, initialDelay = 1000)
-//    private void autoTransferFile() {
-//        cronjobTransferFileIsdnListService.autoTransferFile();
-//    }
+    @Scheduled(fixedDelay = 10000, initialDelay = 1000)
+    private void autoTransferFile() {
+        cronjobTransferFileIsdnListService.autoTransferFile();
+    }
 
     /**
      * Description - 2.Cron job query lấy data Báo cáo retry gia hạn gói cước ngày...
@@ -200,10 +205,10 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 18/04/2022
      */
-//    @Scheduled(fixedDelay = 10000, initialDelay = 9000)
-//    private void autoImportNeif() {
-//        autoImportNeifService.autoImportNeif();
-//    }
+    @Scheduled(fixedDelay = 10000, initialDelay = 9000)
+    private void autoImportNeif() {
+        autoImportNeifService.autoImportNeif();
+    }
 
     /**
      * Description - Transfer file từ server khác sang thư mục /home/spr/import-neif
@@ -211,9 +216,9 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 18/04/2022
      */
-//    @Scheduled(fixedDelay = 10000, initialDelay = 3000)
-//    private void autoTransferFileNeif() {
-//        autoImportNeifService.transferFile();
-//    }
+    @Scheduled(fixedDelay = 10000, initialDelay = 3000)
+    private void autoTransferFileNeif() {
+        autoImportNeifService.transferFile();
+    }
 
 }

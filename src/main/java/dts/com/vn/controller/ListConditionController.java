@@ -51,10 +51,11 @@ public class ListConditionController {
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteListCondition(@RequestParam(name="id") Integer id) {
+    public ResponseEntity<ApiResponse> deleteListCondition(@RequestParam(name="id") Integer id,
+                                                           @RequestParam(name="status") Boolean status) {
         ApiResponse response ;
         try{
-            response = listConditionService.deleteListCondition(id);
+            response = listConditionService.deleteListCondition(id, status);
         }catch (Exception ex){
             logger.error(ex.toString());
             response = new ApiResponse(ApiResponseStatus.FAILED.getValue(), null, "00", ex.getMessage());

@@ -30,6 +30,13 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
 	@Query("select sp from ServicePackage sp where sp.serviceType.serviceTypeId = :serviceTypeId order by sp.systemOwner asc, sp.packageId desc")
 	Page<ServicePackage> findAll(@Param("serviceTypeId") Long serviceTypeId, Pageable pageable);
 
+	@Query("select sp from ServicePackage sp where sp.packageId=:packageId AND sp.serviceType.serviceTypeId = :serviceTypeId order by sp.systemOwner asc, sp.packageId desc")
+	Page<ServicePackage> findAll(@Param("packageId") Long packageId ,@Param("serviceTypeId") Long serviceTypeId,
+								 Pageable pageable);
+
+	@Query("select sp from ServicePackage sp where sp.packageId=:packageId order by sp.systemOwner asc, sp.packageId desc")
+	Page<ServicePackage> findAllByPackageId(@Param("packageId") Long packageId , Pageable pageable);
+
 	@Query("select sp from ServicePackage sp order by sp.systemOwner asc, sp.packageId desc")
 	Page<ServicePackage> findAll(Pageable pageable);
 

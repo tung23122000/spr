@@ -1,5 +1,6 @@
 package dts.com.vn.service.serviceImpl;
 
+import dts.com.vn.entities.IsdnRetryExtend;
 import dts.com.vn.entities.NeifInfo;
 import dts.com.vn.repository.IsdnRetryExtendRepository;
 import dts.com.vn.repository.NeifInfoRepository;
@@ -93,8 +94,20 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
                     neifInfo.setProfile(dataFromLine[4]);
                     neifInfo.setRegDate(convertDateToTimestamp(dataFromLine[11] + " 00:00:00"));
                     neifInfo.setStatus("1");
+                    if(fileName.startsWith("FO_dump_")){
+                        neifInfo.setIpRemote("10.151.244.225");
+                    }
+                    else if(fileName.startsWith("FLOW_ONE_dump")){
+                        neifInfo.setIpRemote("10.3.20.40");
+                    }
+                    else{
+                        neifInfo.setIpRemote("10.3.15.123");
+                    }
                     insertToDbNeifInfo(neifInfo);
-                    insertToDbIsdnRetryExtend(dataFromLine[2], dataFromLine[5]);
+                    long check = Long.parseLong(dataFromLine[3]);
+                    if(check == 10){
+                        insertToDbIsdnRetryExtend(dataFromLine[2], dataFromLine[5]);
+                    }
                 }
             }
             bufferreader.close();
@@ -120,9 +133,7 @@ public class AutoImportNeifServiceImpl implements AutoImportNeifService {
     // update status của
     // bản ghi đó từ 1 thành 2, thêm vào trường last_recharge_date
     private void insertToDbIsdnRetryExtend(String isdn, String lastRechargeDate) {
-        if (isdnRetryExtendRepository.findDataFromIsdnRetryExtendByIsdn(isdn) != null) {
-            isdnRetryExtendRepository.updateNeifInfo(isdn, convertDateToTimestamp(lastRechargeDate));
-        }
+                isdnRetryExtendRepository.updateNeifInfo(isdn, convertDateToTimestamp(lastRechargeDate));
     }
 
     //Chuyển file từ server HCM họ sang thư mục home/spr/import-neif của mình

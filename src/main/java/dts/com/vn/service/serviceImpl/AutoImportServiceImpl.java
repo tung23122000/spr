@@ -137,7 +137,7 @@ public class AutoImportServiceImpl implements AutoImportService {
                     ListDetailNew listDetailNew = null;
                     LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                     for (String s : item) {
-                        if (s.replaceAll("\r", "").length() == 9) {
+                        if (s.replaceAll("\r", "").length() == 9||s.replaceAll("\r", "").length() == 10) {
                             map.put(s.replaceAll("\r", ""), 1);
                         }else {
                             listIsdnFail.add(s.replaceAll("\r", ""));

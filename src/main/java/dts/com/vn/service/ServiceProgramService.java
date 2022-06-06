@@ -125,14 +125,14 @@ public class ServiceProgramService {
         //Lưu sub_service_program
         SubServiceProgram subServiceProgram = new SubServiceProgram();
         subServiceProgram.setSubServiceProgramId(null);
-        if(entitySave.getProgramId()!=null&&entitySave.getServicePackage().getPackageId()!=null){
+        if (entitySave.getProgramId() != null && entitySave.getServicePackage().getPackageId() != null) {
             subServiceProgram.setProgramId(entitySave.getProgramId());
             subServiceProgram.setPackageId(entitySave.getServicePackage().getPackageId());
         }
         subServiceProgram.setMaxPackageExclude(request.getMaxPackageExclude());
         subServiceProgram.setMaxPcrfServiceExclude(request.getMaxPcrfServiceExclude());
         subServiceProgram.setMaxPackageGroupExclude(request.getMaxPackageGroupExclude());
-        if(request.getFlexSubProgramId()!=null){
+        if (request.getFlexSubProgramId() != null) {
             subServiceProgram.setFlexSubProgramId(request.getFlexSubProgramId());
             subServiceProgram.setFlexFilterBundle(request.getFlexFilterBundle());
             subServiceProgram.setFlexMinQty(request.getFlexMinQty());
@@ -140,6 +140,21 @@ public class ServiceProgramService {
         subServiceProgram.setIsDkRetry(request.getIsDKRetry());
         subServiceProgram.setIsCancel(request.getIsCancel());
         subServiceProgram.setIsInsert(request.getIsInsert());
+        if (request.getRegisterNumberDay() != null) {
+            subServiceProgram.setRegisterNumberDay(request.getRegisterNumberDay());
+        } else {
+            subServiceProgram.setRegisterNumberDay(0L);
+        }
+        if (request.getRenewNumberDay() != null) {
+            subServiceProgram.setRenewNumberDay(request.getRenewNumberDay());
+        } else {
+            subServiceProgram.setRenewNumberDay(0L);
+        }
+        if(request.getSaleChargePrice()!=null){
+            subServiceProgram.setSaleChargePrice(request.getSaleChargePrice());
+        }else {
+            subServiceProgram.setSaleChargePrice("0");
+        }
         subServiceProgramRepository.save(subServiceProgram);
         return entitySave;
     }
@@ -199,6 +214,25 @@ public class ServiceProgramService {
             serviceProgramResponse.setIsDKRetry(subServiceProgram.getIsDkRetry());
             serviceProgramResponse.setIsCancel(subServiceProgram.getIsCancel());
             serviceProgramResponse.setIsInsert(subServiceProgram.getIsInsert());
+            if (subServiceProgram.getRegisterNumberDay() != null && subServiceProgram.getRegisterNumberDay() > 0) {
+                serviceProgramResponse.setHasRegisterNumberDay(true);
+                serviceProgramResponse.setRegisterNumberDay(subServiceProgram.getRegisterNumberDay());
+            } else {
+                serviceProgramResponse.setHasRegisterNumberDay(false);
+                serviceProgramResponse.setRegisterNumberDay(0L);
+            }
+            if (subServiceProgram.getRenewNumberDay() != null && subServiceProgram.getRenewNumberDay() > 0) {
+                serviceProgramResponse.setHasRenewNumberDay(true);
+                serviceProgramResponse.setRenewNumberDay(subServiceProgram.getRenewNumberDay());
+            } else {
+                serviceProgramResponse.setHasRenewNumberDay(false);
+                serviceProgramResponse.setRenewNumberDay(0L);
+            }
+            if(subServiceProgram.getSaleChargePrice()!=null){
+                serviceProgramResponse.setSaleChargePrice(subServiceProgram.getSaleChargePrice());
+            }else {
+                serviceProgramResponse.setSaleChargePrice("0");
+            }
         }
         return serviceProgramResponse;
     }
@@ -310,18 +344,37 @@ public class ServiceProgramService {
             SubServiceProgram subServiceProgramFromDb =
                     subServiceProgramRepository.findByProgramId(servicePr.getProgramId());
             if (subServiceProgramFromDb != null) {
-                if(request.getMaxPcrfServiceExclude()!=null&&request.getMaxPackageExclude()!=null){
+                if (request.getMaxPcrfServiceExclude() != null && request.getMaxPackageExclude() != null) {
                     subServiceProgramRepository.updateMaxByProgramId(servicePr.getProgramId(),
                                                                      request.getMaxPcrfServiceExclude(),
                                                                      request.getMaxPackageExclude(), request.getMaxPackageGroupExclude());
                 }
-                if(request.getFlexSubProgramId()!=null){
+                if (request.getFlexSubProgramId() != null) {
                     subServiceProgramRepository.updateFlexByProgramId(servicePr.getProgramId(),
                                                                       request.getFlexSubProgramId(),
                                                                       request.getFlexFilterBundle(), request.getFlexMinQty());
                 }
-                subServiceProgramRepository.updateByProgramId(servicePr.getProgramId(),request.getIsDKRetry(),
-                                                              request.getIsCancel(),request.getIsInsert());
+                subServiceProgramRepository.updateByProgramId(servicePr.getProgramId(), request.getIsDKRetry(),
+                                                              request.getIsCancel(), request.getIsInsert());
+                if (request.getHasRegisterNumberDay() || request.getHasRenewNumberDay()) {
+                    if (!request.getHasRenewNumberDay() && request.getHasRegisterNumberDay()) {
+                        subServiceProgramRepository.updateWithProgramId(servicePr.getProgramId(),
+                                                                        request.getRegisterNumberDay(), 0L);
+                    } else if (request.getHasRenewNumberDay() && !request.getHasRegisterNumberDay()) {
+                        subServiceProgramRepository.updateWithProgramId(servicePr.getProgramId(),
+                                                                        0L, request.getRenewNumberDay());
+                    } else {
+                        subServiceProgramRepository.updateWithProgramId(servicePr.getProgramId(),
+                                                                        request.getRegisterNumberDay(), request.getRenewNumberDay());
+                    }
+                } else {
+                    subServiceProgramRepository.updateWithProgramId(servicePr.getProgramId(), 0L, 0L);
+                }
+                if(request.getSaleChargePrice()!=null){
+                    subServiceProgramRepository.updateSaleCharge(servicePr.getProgramId(), request.getSaleChargePrice());
+                }else {
+                    subServiceProgramRepository.updateSaleCharge(servicePr.getProgramId(),"0");
+                }
             } else {
                 //Lưu sub_service_program
                 SubServiceProgram subServiceProgram = new SubServiceProgram();
@@ -331,9 +384,24 @@ public class ServiceProgramService {
                 subServiceProgram.setMaxPackageExclude(request.getMaxPackageExclude());
                 subServiceProgram.setMaxPcrfServiceExclude(request.getMaxPcrfServiceExclude());
                 subServiceProgram.setMaxPackageGroupExclude(request.getMaxPackageGroupExclude());
-                subServiceProgram.setIsDkRetry(subServiceProgram.getIsDkRetry());
-                subServiceProgram.setIsCancel(subServiceProgram.getIsCancel());
-                subServiceProgram.setIsInsert(subServiceProgram.getIsInsert());
+                subServiceProgram.setIsDkRetry(request.getIsDKRetry());
+                subServiceProgram.setIsCancel(request.getIsCancel());
+                subServiceProgram.setIsInsert(request.getIsInsert());
+                if (request.getRegisterNumberDay() != null) {
+                    subServiceProgram.setRegisterNumberDay(request.getRegisterNumberDay());
+                } else {
+                    subServiceProgram.setRegisterNumberDay(0L);
+                }
+                if (request.getRenewNumberDay() != null) {
+                    subServiceProgram.setRenewNumberDay(request.getRenewNumberDay());
+                } else {
+                    subServiceProgram.setRenewNumberDay(0L);
+                }
+                if(request.getSaleChargePrice()!=null){
+                    subServiceProgram.setSaleChargePrice(subServiceProgram.getSaleChargePrice());
+                }else {
+                    subServiceProgram.setSaleChargePrice("0");
+                }
                 subServiceProgramRepository.save(subServiceProgram);
             }
             return serviceProgramRepository.save(servicePr);
@@ -484,16 +552,31 @@ public class ServiceProgramService {
         subServiceProgram.setSubServiceProgramId(null);
         subServiceProgram.setProgramId(newProgram.getProgramId());
         subServiceProgram.setPackageId(newProgram.getServicePackage().getPackageId());
-        if(subServiceProgramFromDb!=null){
+        if (subServiceProgramFromDb != null) {
             subServiceProgram.setMaxPackageExclude(subServiceProgramFromDb.getMaxPackageExclude());
             subServiceProgram.setMaxPcrfServiceExclude(subServiceProgramFromDb.getMaxPcrfServiceExclude());
             subServiceProgram.setMaxPackageGroupExclude(subServiceProgramFromDb.getMaxPackageGroupExclude());
             subServiceProgram.setFlexSubProgramId(subServiceProgramFromDb.getFlexSubProgramId());
             subServiceProgram.setFlexFilterBundle(subServiceProgramFromDb.getFlexFilterBundle());
             subServiceProgram.setFlexMinQty(subServiceProgramFromDb.getFlexMinQty());
-            subServiceProgram.setIsDkRetry(subServiceProgram.getIsDkRetry());
-            subServiceProgram.setIsCancel(subServiceProgram.getIsCancel());
-            subServiceProgram.setIsInsert(subServiceProgram.getIsInsert());
+            subServiceProgram.setIsDkRetry(subServiceProgramFromDb.getIsDkRetry());
+            subServiceProgram.setIsCancel(subServiceProgramFromDb.getIsCancel());
+            subServiceProgram.setIsInsert(subServiceProgramFromDb.getIsInsert());
+            if (subServiceProgramFromDb.getRegisterNumberDay() != null) {
+                subServiceProgram.setRegisterNumberDay(subServiceProgramFromDb.getRegisterNumberDay());
+            } else {
+                subServiceProgram.setRegisterNumberDay(0L);
+            }
+            if (subServiceProgramFromDb.getRenewNumberDay() != null) {
+                subServiceProgram.setRenewNumberDay(subServiceProgramFromDb.getRenewNumberDay());
+            } else {
+                subServiceProgram.setRenewNumberDay(0L);
+            }
+            if(subServiceProgramFromDb.getSaleChargePrice()!=null){
+                subServiceProgram.setSaleChargePrice(subServiceProgramFromDb.getSaleChargePrice());
+            }else {
+                subServiceProgram.setSaleChargePrice("0");
+            }
         }
         subServiceProgramRepository.save(subServiceProgram);
 
@@ -790,7 +873,7 @@ public class ServiceProgramService {
         return false;
     }
 
-    public List<ServiceProgramResponse> findAllProgramByPackageId(Long packageId){
+    public List<ServiceProgramResponse> findAllProgramByPackageId(Long packageId) {
         List<Long> listProgramId = serviceProgramRepository.findAllProgramId(packageId);
         List<ServiceProgramResponse> listResponse = new ArrayList<>();
         for (Long id : listProgramId) {

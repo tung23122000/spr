@@ -70,10 +70,18 @@ public class ServicePackageService {
 
     public Page<ServicePackage> findAll(String search, Long serviceTypeId, Pageable pageable) {
         if (StringUtils.hasLength(search)) {
-            if (Objects.nonNull(serviceTypeId)) {
-                return servicePackageRepository.findAll(search, serviceTypeId, pageable);
+            try {
+                Long packageId = Long.parseLong(search);
+                if (Objects.nonNull(serviceTypeId)) {
+                    return servicePackageRepository.findAll(packageId, serviceTypeId, pageable);
+                }
+                return servicePackageRepository.findAllByPackageId(packageId, pageable);
+            } catch (NumberFormatException e) {
+                if (Objects.nonNull(serviceTypeId)) {
+                    return servicePackageRepository.findAll(search, serviceTypeId, pageable);
+                }
+                return servicePackageRepository.findAll(search, pageable);
             }
-            return servicePackageRepository.findAll(search, pageable);
         } else {
             if (Objects.nonNull(serviceTypeId)) {
                 return servicePackageRepository.findAll(serviceTypeId, pageable);
@@ -101,13 +109,13 @@ public class ServicePackageService {
         ServicePackage service = new ServicePackage(request, serviceType, services);
         if (request.getFlexSubPackageId() != null) {
             List<ServiceProgram> listProgramFlexPackage = serviceProgramRepository.findAllActiveByPackageId(request.getFlexSubPackageId());
-            if(listProgramFlexPackage.size() > 0) {
+            if (listProgramFlexPackage.size() > 0) {
                 for (ServiceProgram serviceProgram : listProgramFlexPackage) {
                     if (!serviceProgram.getIsDefaultProgram()) {
                         throw new RestApiException(ErrorCode.DEFAULT_PROGRAM_REQUIRED);
                     }
                 }
-            }else {
+            } else {
                 throw new RestApiException(ErrorCode.SERVICE_PROGRAM_REQUIRED);
             }
         }
@@ -130,7 +138,7 @@ public class ServicePackageService {
     public ServicePackageResponse getDetaiById(Long id) {
         ServicePackage servicePackage = servicePackageRepository.findByPackageId(id);
         ServicePackageResponse response = new ServicePackageResponse();
-        if(servicePackage!=null){
+        if (servicePackage != null) {
             response.setPackageId(servicePackage.getPackageId());
             response.setName(servicePackage.getName());
             response.setCode(servicePackage.getCode());
@@ -227,29 +235,29 @@ public class ServicePackageService {
             servicePackage.setDisplayStatus("1");
             SubPackageInfo fromDb = subPackageInfoRepository.findByPackageId(servicePackage.getPackageId());
             if (fromDb != null) {
-                if(request.getFlexSubPackageId() != null){
+                if (request.getFlexSubPackageId() != null) {
                     List<ServiceProgram> listProgramFlexPackage = serviceProgramRepository.findAllActiveByPackageId(request.getFlexSubPackageId());
-                    if(listProgramFlexPackage.size() > 0) {
+                    if (listProgramFlexPackage.size() > 0) {
                         for (ServiceProgram serviceProgram : listProgramFlexPackage) {
                             if (!serviceProgram.getIsDefaultProgram()) {
                                 throw new RestApiException(ErrorCode.DEFAULT_PROGRAM_REQUIRED);
                             }
                         }
-                    }else {
+                    } else {
                         throw new RestApiException(ErrorCode.SERVICE_PROGRAM_REQUIRED);
                     }
-                    subPackageInfoRepository.upadetFlexSubPackageInfo(request.getFlexSubPackageId(),servicePackage.getPackageId());
+                    subPackageInfoRepository.upadetFlexSubPackageInfo(request.getFlexSubPackageId(), servicePackage.getPackageId());
                 }
             } else {
                 if (request.getFlexSubPackageId() != null) {
                     List<ServiceProgram> listProgramFlexPackage = serviceProgramRepository.findAllActiveByPackageId(request.getFlexSubPackageId());
-                    if(listProgramFlexPackage.size() > 0) {
+                    if (listProgramFlexPackage.size() > 0) {
                         for (ServiceProgram serviceProgram : listProgramFlexPackage) {
                             if (!serviceProgram.getIsDefaultProgram()) {
                                 throw new RestApiException(ErrorCode.DEFAULT_PROGRAM_REQUIRED);
                             }
                         }
-                    }else {
+                    } else {
                         throw new RestApiException(ErrorCode.SERVICE_PROGRAM_REQUIRED);
                     }
                     SubPackageInfo subPackageInfo = new SubPackageInfo();
@@ -474,7 +482,7 @@ public class ServicePackageService {
         logAction.setIdAction(servicePackage.getPackageId());
         logActionService.add(logAction);
         SubPackageInfo fromDb = subPackageInfoRepository.findByPackageId(servicePackage.getPackageId());
-        if(fromDb!=null){
+        if (fromDb != null) {
             subPackageInfoRepository.delete(fromDb);
         }
         List<ServiceProgram> listServiceProgram = serviceProgramService.findAllByPackageId(servicePackage.getPackageId());

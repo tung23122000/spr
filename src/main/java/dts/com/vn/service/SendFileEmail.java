@@ -7,7 +7,9 @@ import javax.activation.*;
 
 public class SendFileEmail {
 
-  public static void main(String[] args) {
+
+
+  private void sendMail(String[] args) {
 
     // Recipient's email ID needs to be mentioned.
     String to = "tinhbdt@dts.com.vn";

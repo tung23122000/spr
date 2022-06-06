@@ -15,6 +15,9 @@ import java.time.Instant;
 public class IsdnRetryExtend {
 
 	@Id
+	@Column(name = "id")
+	private Long id;
+
 	@Column(name = "insert_date")
 	private Instant insertDate;
 

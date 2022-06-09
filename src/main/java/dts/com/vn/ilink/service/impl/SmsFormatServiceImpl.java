@@ -60,7 +60,7 @@ public class SmsFormatServiceImpl implements SmsFormatService {
 		ApiResponse response = new ApiResponse();
 		Page<BstLookupTableRow> page;
 		if (StringUtils.isNotBlank(search)) {
-			String keySearch = "\"" + search.toUpperCase() + "\"";
+			String keySearch = "%\"" + search.toUpperCase() + "%\"";
 			page = lookupTableRowRepository.findAllWithSearch(IlinkTableName.LKT_SMS_FORMAT, keySearch, pageable);
 		} else {
 			page = lookupTableRowRepository.findAllWithoutSearch(IlinkTableName.LKT_SMS_FORMAT, pageable);

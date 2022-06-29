@@ -194,10 +194,10 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 31/03/2022
      */
-    @Scheduled(fixedDelay = 10000, initialDelay = 6000)
-    private void autoImport() {
-      autoImportService.autoImport();
-    }
+//    @Scheduled(fixedDelay = 10000, initialDelay = 6000)
+//    private void autoImport() {
+//      autoImportService.autoImport();
+//    }
 
     /**
      * Description - Transfer file từ server khác sang thư mục /home/spr/import-neif
@@ -205,10 +205,10 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 18/04/2022
      */
-    @Scheduled(fixedDelay = 10000, initialDelay = 9000)
-    private void autoImportNeif() {
-        autoImportNeifService.autoImportNeif();
-    }
+//    @Scheduled(fixedDelay = 10000, initialDelay = 9000)
+//    private void autoImportNeif() {
+//        autoImportNeifService.autoImportNeif();
+//    }
 
     /**
      * Description - Transfer file từ server khác sang thư mục /home/spr/import-neif
@@ -216,9 +216,9 @@ public class SchedulerConfiguration {
      * @author - tinhbdt
      * @created - 18/04/2022
      */
-    @Scheduled(fixedDelay = 10000, initialDelay = 3000)
-    private void autoTransferFileNeif() {
-        autoImportNeifService.transferFile();
-    }
+//    @Scheduled(fixedDelay = 10000, initialDelay = 3000)
+//    private void autoTransferFileNeif() {
+//        autoImportNeifService.transferFile();
+//    }
 
 }
